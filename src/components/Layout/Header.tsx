@@ -1,11 +1,9 @@
 import React from 'react';
-import {
-  AppBar, Toolbar, IconButton, Typography, Tooltip,
-} from '@mui/material';
-import {
-  Menu as MenuIcon, LightMode, DarkMode, AccessTime,
-} from '@mui/icons-material';
+import { AppBar, Toolbar, IconButton, Typography, Tooltip } from '@mui/material';
+import { Menu as MenuIcon, LightMode, DarkMode, AccessTime } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 import { useSettingsStore } from '@/store/settingsStore';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import type { ThemeMode } from '@/types';
 
 interface HeaderProps {
@@ -15,25 +13,26 @@ interface HeaderProps {
 
 const THEME_ICONS: Record<ThemeMode, React.ReactNode> = {
   light: <LightMode />,
-  dark:  <DarkMode />,
-  time:  <AccessTime />,
-};
-
-const THEME_LABELS: Record<ThemeMode, string> = {
-  light: 'Switch to Dark',
-  dark:  'Switch to Time-based',
-  time:  'Switch to Light',
+  dark: <DarkMode />,
+  time: <AccessTime />,
 };
 
 const THEME_CYCLE: Record<ThemeMode, ThemeMode> = {
   light: 'dark',
-  dark:  'time',
-  time:  'light',
+  dark: 'time',
+  time: 'light',
 };
 
-/** Top application bar with menu toggle and theme switcher */
+/** Top application bar with menu toggle, theme switcher, and language switcher */
 export const Header: React.FC<HeaderProps> = ({ onMenuClick, title }) => {
   const { settings, setThemeMode } = useSettingsStore();
+  const { t } = useTranslation();
+
+  const themeLabels: Record<ThemeMode, string> = {
+    light: t('theme.switchToDark'),
+    dark: t('theme.switchToTime'),
+    time: t('theme.switchToLight'),
+  };
 
   const cycleTheme = () => {
     setThemeMode(THEME_CYCLE[settings.themeMode]);
@@ -55,12 +54,13 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, title }) => {
           {title}
         </Typography>
 
-        {/* Theme toggle cycles: light → dark → time → light */}
-        <Tooltip title={THEME_LABELS[settings.themeMode]}>
+        <Tooltip title={themeLabels[settings.themeMode]}>
           <IconButton color="inherit" onClick={cycleTheme}>
             {THEME_ICONS[settings.themeMode]}
           </IconButton>
         </Tooltip>
+
+        <LanguageSwitcher />
       </Toolbar>
     </AppBar>
   );

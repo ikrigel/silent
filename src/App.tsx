@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ThemeProvider, CssBaseline } from '@mui/material';
+import { ThemeProvider, CssBaseline, createTheme } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useAppTheme } from '@/hooks/useAppTheme';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import Dashboard from '@/pages/Dashboard';
@@ -9,17 +10,31 @@ import LogsPage from '@/pages/Logs';
 import SettingsPage from '@/pages/Settings';
 import AboutPage from '@/pages/About';
 import HelpPage from '@/pages/Help';
+import '@/i18n';
 
 /**
  * Root application component.
- * Sets up routing, theming, and the global layout shell.
+ * Sets up routing, theming (with RTL support), and the global layout shell.
  */
 const App: React.FC = () => {
-  const theme = useAppTheme(); // Dynamic theme (light/dark/time-based)
+  const baseTheme = useAppTheme();
+  const { i18n } = useTranslation();
+  const isRTL = i18n.language === 'he';
+
+  // Rebuild theme with correct direction whenever language changes
+  const theme = React.useMemo(
+    () => createTheme({ ...baseTheme, direction: isRTL ? 'rtl' : 'ltr' }),
+    [baseTheme, isRTL]
+  );
+
+  // Sync document direction
+  useEffect(() => {
+    document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+    document.documentElement.lang = i18n.language;
+  }, [isRTL, i18n.language]);
 
   return (
     <ThemeProvider theme={theme}>
-      {/* CssBaseline normalizes browser default styles */}
       <CssBaseline />
       <BrowserRouter>
         <Routes>

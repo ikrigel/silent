@@ -1,17 +1,19 @@
 import React from 'react';
 import {
   Box, Typography, Card, CardContent, FormControl,
-  InputLabel, Select, MenuItem, TextField, Switch,
-  FormControlLabel, Button, Divider, Stack, Alert,
+  InputLabel, Select, MenuItem, Switch,
+  FormControlLabel, Button, Divider, Stack,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useSettingsStore } from '@/store/settingsStore';
 import type { ThemeMode, LogLevel } from '@/types';
 
-/** Settings page — configure theme, logging, EmailJS, and notifications */
+/** Settings page — configure theme, logging, and notifications */
 const SettingsPage: React.FC = () => {
+  const { t } = useTranslation();
   const {
     settings, setThemeMode, setLogLevel,
-    setEmailjsPublicKey, setNotificationsEnabled, resetSettings,
+    setNotificationsEnabled, resetSettings,
   } = useSettingsStore();
 
   const requestNotificationPermission = async () => {
@@ -22,70 +24,46 @@ const SettingsPage: React.FC = () => {
 
   return (
     <Box>
-      <Typography variant="h4" fontWeight="bold" gutterBottom>Settings</Typography>
-
+      <Typography variant="h4" fontWeight="bold" gutterBottom>{t('settings.title')}</Typography>
       <Stack spacing={3}>
-        {/* Appearance */}
         <Card>
           <CardContent>
-            <Typography variant="h6" gutterBottom>Appearance</Typography>
+            <Typography variant="h6" gutterBottom>{t('settings.appearance')}</Typography>
             <FormControl fullWidth>
-              <InputLabel>Theme Mode</InputLabel>
+              <InputLabel>{t('settings.themeMode')}</InputLabel>
               <Select
                 value={settings.themeMode}
-                label="Theme Mode"
+                label={t('settings.themeMode')}
                 onChange={(e) => setThemeMode(e.target.value as ThemeMode)}
               >
-                <MenuItem value="light">Light</MenuItem>
-                <MenuItem value="dark">Dark</MenuItem>
-                <MenuItem value="time">Time-based (Auto)</MenuItem>
+                <MenuItem value="light">{t('settings.light')}</MenuItem>
+                <MenuItem value="dark">{t('settings.dark')}</MenuItem>
+                <MenuItem value="time">{t('settings.timeBased')}</MenuItem>
               </Select>
             </FormControl>
           </CardContent>
         </Card>
-
-        {/* Logging */}
         <Card>
           <CardContent>
-            <Typography variant="h6" gutterBottom>Logging</Typography>
+            <Typography variant="h6" gutterBottom>{t('settings.logging')}</Typography>
             <FormControl fullWidth>
-              <InputLabel>Log Level</InputLabel>
+              <InputLabel>{t('settings.logLevel')}</InputLabel>
               <Select
                 value={settings.logLevel}
-                label="Log Level"
+                label={t('settings.logLevel')}
                 onChange={(e) => setLogLevel(e.target.value as LogLevel)}
               >
-                <MenuItem value="none">None (disabled)</MenuItem>
-                <MenuItem value="error">Error only</MenuItem>
-                <MenuItem value="info">Info + Error</MenuItem>
-                <MenuItem value="verbose">Verbose (all)</MenuItem>
+                <MenuItem value="none">{t('settings.logNone')}</MenuItem>
+                <MenuItem value="error">{t('settings.logError')}</MenuItem>
+                <MenuItem value="info">{t('settings.logInfo')}</MenuItem>
+                <MenuItem value="verbose">{t('settings.logVerbose')}</MenuItem>
               </Select>
             </FormControl>
           </CardContent>
         </Card>
-
-        {/* EmailJS */}
         <Card>
           <CardContent>
-            <Typography variant="h6" gutterBottom>EmailJS</Typography>
-            <Alert severity="info" sx={{ mb: 2 }}>
-              Get your Public Key from emailjs.com dashboard → Account → API Keys
-            </Alert>
-            <TextField
-              label="EmailJS Public Key"
-              value={settings.emailjsPublicKey}
-              onChange={(e) => setEmailjsPublicKey(e.target.value)}
-              fullWidth
-              type="password"
-              helperText="Stored locally, never sent to any server"
-            />
-          </CardContent>
-        </Card>
-
-        {/* Notifications */}
-        <Card>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>Browser Notifications</Typography>
+            <Typography variant="h6" gutterBottom>{t('settings.notifications')}</Typography>
             <FormControlLabel
               control={
                 <Switch
@@ -93,21 +71,19 @@ const SettingsPage: React.FC = () => {
                   onChange={(e) => setNotificationsEnabled(e.target.checked)}
                 />
               }
-              label="Enable schedule change notifications"
+              label={t('settings.notificationsLabel')}
             />
             <Box mt={1}>
               <Button variant="outlined" size="small" onClick={requestNotificationPermission}>
-                Grant Notification Permission
+                {t('settings.grantPermission')}
               </Button>
             </Box>
           </CardContent>
         </Card>
-
-        {/* Reset */}
         <Divider />
         <Box>
           <Button variant="outlined" color="error" onClick={resetSettings}>
-            Reset All Settings to Default
+            {t('settings.reset')}
           </Button>
         </Box>
       </Stack>

@@ -3,6 +3,7 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead,
   TableRow, Paper, Checkbox, Chip, Typography, Box,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import type { LogEntry, LogLevel } from '@/types';
 import { format } from 'date-fns';
 
@@ -22,15 +23,16 @@ interface LogListProps {
 
 /** Table displaying log entries with multi-select checkboxes */
 const LogList: React.FC<LogListProps> = ({ logs, selectedIds, onToggleSelect, onSelectAll, onClearSelection }) => {
+  const { t } = useTranslation();
+  const allSelected = logs.length > 0 && selectedIds.length === logs.length;
+
   if (logs.length === 0) {
     return (
       <Box textAlign="center" py={6}>
-        <Typography color="text.secondary">No log entries found.</Typography>
+        <Typography color="text.secondary">{t('logs.noLogs')}</Typography>
       </Box>
     );
   }
-
-  const allSelected = logs.length > 0 && selectedIds.length === logs.length;
 
   return (
     <TableContainer component={Paper} variant="outlined">
@@ -38,25 +40,19 @@ const LogList: React.FC<LogListProps> = ({ logs, selectedIds, onToggleSelect, on
         <TableHead>
           <TableRow>
             <TableCell padding="checkbox">
-              <Checkbox
-                indeterminate={selectedIds.length > 0 && !allSelected}
-                checked={allSelected}
-                onChange={allSelected ? onClearSelection : onSelectAll}
-              />
+              <Checkbox indeterminate={selectedIds.length > 0 && !allSelected} checked={allSelected}
+                onChange={allSelected ? onClearSelection : onSelectAll} />
             </TableCell>
-            <TableCell>Timestamp</TableCell>
-            <TableCell>Level</TableCell>
-            <TableCell>Message</TableCell>
+            <TableCell>{t('logs.timestamp')}</TableCell>
+            <TableCell>{t('logs.level')}</TableCell>
+            <TableCell>{t('logs.message')}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {logs.map((log) => (
             <TableRow key={log.id} selected={selectedIds.includes(log.id)}>
               <TableCell padding="checkbox">
-                <Checkbox
-                  checked={selectedIds.includes(log.id)}
-                  onChange={() => onToggleSelect(log.id)}
-                />
+                <Checkbox checked={selectedIds.includes(log.id)} onChange={() => onToggleSelect(log.id)} />
               </TableCell>
               <TableCell>
                 <Typography variant="caption" fontFamily="monospace">

@@ -20,9 +20,11 @@
     "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.16.7",
     "date-fns": "^4.1.0",
+    "i18next": "^25.8.18",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.1",
+    "react-i18next": "^16.5.8",
     "react-router-dom": "^6.26.2",
     "zustand": "^5.0.1"
   },

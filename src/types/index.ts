@@ -6,37 +6,34 @@ export interface ScheduleEntry {
   id: string;
   name: string;
   enabled: boolean;
-  startTime: string;       // "HH:mm"
-  endTime: string;         // "HH:mm"
+  startTime: string;
+  endTime: string;
   repeatMode: RepeatMode;
-  daysOfWeek: DayOfWeek[]; // for weekly repeat
-  startDate?: string;      // ISO date, for date-range
-  endDate?: string;        // ISO date, for date-range
-  createdAt: string;       // ISO datetime
+  daysOfWeek: DayOfWeek[];
+  startDate?: string;
+  endDate?: string;
+  createdAt: string;
 }
 
-// ─── Log Types ──────────────────────────────────────────────────────
 export type LogLevel = 'verbose' | 'info' | 'error' | 'none';
 
 export interface LogEntry {
   id: string;
   level: Exclude<LogLevel, 'none'>;
   message: string;
-  timestamp: string; // ISO datetime
+  timestamp: string;
   meta?: Record<string, unknown>;
 }
 
-// ─── Settings Types ─────────────────────────────────────────────────
 export type ThemeMode = 'light' | 'dark' | 'time';
 
+// emailjsPublicKey removed — hardcoded in emailService.ts
 export interface AppSettings {
   themeMode: ThemeMode;
   logLevel: LogLevel;
-  emailjsPublicKey: string;
   notificationsEnabled: boolean;
 }
 
-// ─── LocalStorage Schema ─────────────────────────────────────────────
 export type LocalStorageSchema = {
   schedules: ScheduleEntry[];
   logs: LogEntry[];

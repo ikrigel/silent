@@ -5,6 +5,7 @@ import {
   Grid, Typography, Box,
 } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import type { ScheduleEntry, RepeatMode, DayOfWeek } from '@/types';
 
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -29,6 +30,7 @@ interface SchedulerFormProps {
 
 /** Dialog form for creating/editing a schedule entry */
 const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, onClose }) => {
+  const { t } = useTranslation();
   const { control, handleSubmit, watch, reset } = useForm<FormValues>({
     defaultValues: {
       name: initial?.name ?? '',
@@ -41,7 +43,6 @@ const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, 
     },
   });
 
-  // Watch repeatMode to conditionally show day/date fields
   const repeatMode = watch('repeatMode');
 
   const onValid = (data: FormValues) => {
@@ -61,43 +62,37 @@ const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, 
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>{initial ? 'Edit Schedule' : 'New Schedule'}</DialogTitle>
+      <DialogTitle>{initial ? t('scheduler.editSchedule') : t('scheduler.newSchedule')}</DialogTitle>
       <DialogContent>
         <Box component="form" sx={{ pt: 1 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Controller name="name" control={control} rules={{ required: true }}
-                render={({ field }) => (
-                  <TextField {...field} label="Schedule Name" fullWidth required />
-                )}
+                render={({ field }) => <TextField {...field} label={t('scheduler.name')} fullWidth required />}
               />
             </Grid>
             <Grid item xs={6}>
               <Controller name="startTime" control={control}
-                render={({ field }) => (
-                  <TextField {...field} label="Start Time" type="time" fullWidth InputLabelProps={{ shrink: true }} />
-                )}
+                render={({ field }) => <TextField {...field} label={t('scheduler.startTime')} type="time" fullWidth InputLabelProps={{ shrink: true }} />}
               />
             </Grid>
             <Grid item xs={6}>
               <Controller name="endTime" control={control}
-                render={({ field }) => (
-                  <TextField {...field} label="End Time" type="time" fullWidth InputLabelProps={{ shrink: true }} />
-                )}
+                render={({ field }) => <TextField {...field} label={t('scheduler.endTime')} type="time" fullWidth InputLabelProps={{ shrink: true }} />}
               />
             </Grid>
             <Grid item xs={12}>
               <Controller name="repeatMode" control={control}
                 render={({ field }) => (
-                  <TextField {...field} label="Repeat" select fullWidth>
-                    {REPEAT_MODES.map((m) => <MenuItem key={m} value={m}>{m}</MenuItem>)}
+                  <TextField {...field} label={t('scheduler.repeat')} select fullWidth>
+                    {REPEAT_MODES.map((m) => <MenuItem key={m} value={m}>{t(`scheduler.repeatModes.${m}`)}</MenuItem>)}
                   </TextField>
                 )}
               />
             </Grid>
             {repeatMode === 'weekly' && (
               <Grid item xs={12}>
-                <Typography variant="body2" gutterBottom>Days of Week</Typography>
+                <Typography variant="body2" gutterBottom>{t('scheduler.daysOfWeek')}</Typography>
                 <Controller name="daysOfWeek" control={control}
                   render={({ field }) => (
                     <Box display="flex" flexWrap="wrap" gap={1}>
@@ -119,16 +114,12 @@ const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, 
               <>
                 <Grid item xs={6}>
                   <Controller name="startDate" control={control}
-                    render={({ field }) => (
-                      <TextField {...field} label="From Date" type="date" fullWidth InputLabelProps={{ shrink: true }} />
-                    )}
+                    render={({ field }) => <TextField {...field} label={t('scheduler.fromDate')} type="date" fullWidth InputLabelProps={{ shrink: true }} />}
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <Controller name="endDate" control={control}
-                    render={({ field }) => (
-                      <TextField {...field} label="To Date" type="date" fullWidth InputLabelProps={{ shrink: true }} />
-                    )}
+                    render={({ field }) => <TextField {...field} label={t('scheduler.toDate')} type="date" fullWidth InputLabelProps={{ shrink: true }} />}
                   />
                 </Grid>
               </>
@@ -137,9 +128,9 @@ const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, 
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={onClose}>{t('scheduler.cancel')}</Button>
         <Button variant="contained" onClick={handleSubmit(onValid)}>
-          {initial ? 'Update' : 'Create'}
+          {initial ? t('scheduler.update') : t('scheduler.create')}
         </Button>
       </DialogActions>
     </Dialog>

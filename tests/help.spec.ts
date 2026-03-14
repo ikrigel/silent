@@ -77,11 +77,28 @@ test.describe('Help', () => {
       /repeat modes/i,
       /time-based theme/i,
       /where is my data stored/i,
-      /configure the contact form/i,
+      /how do i contact the developer/i,
     ];
 
     for (const q of expectedQuestions) {
       await expect(page.getByText(q).first()).toBeVisible();
     }
+  });
+
+  test('contact form submits and shows success (mocked EmailJS)', async ({ page }) => {
+    // Mock the EmailJS API endpoint so no real email is sent
+    await page.route('**/api.emailjs.com/**', (route) => {
+      route.fulfill({ status: 200, body: JSON.stringify({ status: 200, text: 'OK' }) });
+    });
+
+    await page.getByLabel(/your name/i).fill('Test User');
+    await page.getByLabel(/email address/i).fill('test@playwright.dev');
+    await page.getByLabel(/subject/i).fill('Playwright Test');
+    await page.getByLabel(/message/i).fill('This is an automated test message.');
+
+    await page.getByRole('button', { name: /send message/i }).click();
+
+    // Success alert should appear
+    await expect(page.getByText(/message sent/i)).toBeVisible({ timeout: 10000 });
   });
 });

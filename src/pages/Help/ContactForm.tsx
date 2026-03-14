@@ -3,13 +3,13 @@ import {
   Box, TextField, Button, Alert, CircularProgress, Stack,
 } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { sendEmail, ContactFormData } from '@/services/emailService';
-import { useSettingsStore } from '@/store/settingsStore';
 import { writeLog } from '@/services/logService';
 
 /** Contact form using EmailJS to send messages to the developer */
 const ContactForm: React.FC = () => {
-  const { settings } = useSettingsStore();
+  const { t } = useTranslation();
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -20,7 +20,8 @@ const ContactForm: React.FC = () => {
   const onSubmit = async (data: ContactFormData) => {
     setStatus('sending');
     try {
-      await sendEmail(data, settings.emailjsPublicKey);
+      // Public key is hardcoded in emailService — no need to pass from settings
+      await sendEmail(data, '');
       setStatus('success');
       writeLog('info', 'Contact form submitted successfully');
       reset();
@@ -34,27 +35,26 @@ const ContactForm: React.FC = () => {
   return (
     <Box component="form" onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={2}>
-        {status === 'success' && <Alert severity="success">Message sent! I'll get back to you soon.</Alert>}
+        {status === 'success' && <Alert severity="success">{t('help.form.success')}</Alert>}
         {status === 'error' && <Alert severity="error">{errorMsg}</Alert>}
-
-        <Controller name="name" control={control} rules={{ required: 'Name is required' }}
+        <Controller name="name" control={control} rules={{ required: t('help.form.nameRequired') }}
           render={({ field, fieldState }) => (
-            <TextField {...field} label="Your Name" fullWidth error={!!fieldState.error} helperText={fieldState.error?.message} />
+            <TextField {...field} label={t('help.form.name')} fullWidth error={!!fieldState.error} helperText={fieldState.error?.message} />
           )}
         />
-        <Controller name="email" control={control} rules={{ required: 'Email is required' }}
+        <Controller name="email" control={control} rules={{ required: t('help.form.emailRequired') }}
           render={({ field, fieldState }) => (
-            <TextField {...field} label="Email Address" type="email" fullWidth error={!!fieldState.error} helperText={fieldState.error?.message} />
+            <TextField {...field} label={t('help.form.email')} type="email" fullWidth error={!!fieldState.error} helperText={fieldState.error?.message} />
           )}
         />
-        <Controller name="subject" control={control} rules={{ required: 'Subject is required' }}
+        <Controller name="subject" control={control} rules={{ required: t('help.form.subjectRequired') }}
           render={({ field, fieldState }) => (
-            <TextField {...field} label="Subject" fullWidth error={!!fieldState.error} helperText={fieldState.error?.message} />
+            <TextField {...field} label={t('help.form.subject')} fullWidth error={!!fieldState.error} helperText={fieldState.error?.message} />
           )}
         />
-        <Controller name="message" control={control} rules={{ required: 'Message is required' }}
+        <Controller name="message" control={control} rules={{ required: t('help.form.messageRequired') }}
           render={({ field, fieldState }) => (
-            <TextField {...field} label="Message" multiline rows={4} fullWidth error={!!fieldState.error} helperText={fieldState.error?.message} />
+            <TextField {...field} label={t('help.form.message')} multiline rows={4} fullWidth error={!!fieldState.error} helperText={fieldState.error?.message} />
           )}
         />
         <Button
@@ -63,7 +63,7 @@ const ContactForm: React.FC = () => {
           disabled={status === 'sending'}
           startIcon={status === 'sending' ? <CircularProgress size={16} /> : undefined}
         >
-          {status === 'sending' ? 'Sending...' : 'Send Message'}
+          {status === 'sending' ? t('help.form.sending') : t('help.form.send')}
         </Button>
       </Stack>
     </Box>
