@@ -1,0 +1,46 @@
+name: Deploy to Vercel
+
+# Trigger on every push to master — auto-deploys live site
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out the code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Node.js (matches local dev version)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Build the project (TypeScript check + Vite bundle)
+      - name: Build
+        run: npm run build
+
+      # 5. Deploy built output to Vercel production
+      #    Requires these GitHub repository secrets:
+      #      VERCEL_TOKEN      — from vercel.com/account/tokens
+      #      VERCEL_ORG_ID     — from .vercel/project.json after `vercel link`
+      #      VERCEL_PROJECT_ID — from .vercel/project.json after `vercel link`
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: --prod
+          working-directory: .
