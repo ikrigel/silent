@@ -1,0 +1,398 @@
+You can treat “darkness” as a value between 0 (lightest) and 1 (darkest), then map the current hour to that value with a triangular wave over 24h, and use it to interpolate your theme colors.
+
+Core idea
+At 12:00 → lightest (0)
+
+At 24:00/0:00 → darkest (1)
+
+At 06:00 and 18:00 → medium (0.5)
+
+Smooth linear change each hour.
+
+TypeScript utility
+ts
+// darkness: 0 = lightest, 1 = darkest
+export function getDarknessFactor(date = new Date()): number {
+  const h = date.getHours() + date.getMinutes() / 60; // 0–24
+
+  // Map 0–24h to a triangular wave peaking at 0 and 24, lowest at 12
+  // distance from 12: goes 12→0→12 over the day
+  const distFromNoon = Math.abs(h - 12); // 0 at 12:00, 12 at 0:00/24:00
+  // Normalize: 0 at noon, 1 at midnight
+  const darkness = distFromNoon / 12;
+
+  return Math.min(1, Math.max(0, darkness));
+}
+This satisfies: darker between 12:00–24:00 (darkness grows from 0→1), lighter between 0:00–12:00 (darkness drops 1→0), changing smoothly each hour.
+
+Color interpolation helper
+ts
+function lerp(a: number, b: number, t: number): number {
+  return a + (b - a) * t;
+}
+
+function lerpColor(light: string, dark: string, t: number): string {
+  const parse = (c: string) => {
+    const m = c.match(/^#?([0-9a-f]{6})$/i);
+    if (!m) throw new Error("Expected #rrggbb");
+    const n = parseInt(m[1], 16);
+    return {
+      r: (n >> 16) & 0xff,
+      g: (n >> 8) & 0xff,
+      b: n & 0xff,
+    };
+  };
+
+  const l = parse(light);
+  const d = parse(dark);
+
+  const r = Math.round(lerp(l.r, d.r, t));
+  const g = Math.round(lerp(l.g, d.g, t));
+  const b = Math.round(lerp(l.b, d.b, t));
+
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b)
+    .toString(16)
+    .slice(1)
+    .toUpperCase()}`;
+}
+Putting it together for a theme
+ts
+export function getTimeBasedTheme(date = new Date()) {
+  const darkness = getDarknessFactor(date); // 0–1
+
+  const background = lerpColor("#FFFFFF", "#000011", darkness);
+  const text = lerpColor("#000000", "#FFFFFF", darkness);
+
+  return {
+    darkness,
+    background,
+    text,
+  };
+}
+You can call getTimeBasedTheme() on load and every hour (or more often) and apply the result to CSS variables:
+
+ts
+function applyTheme() {
+  const theme = getTimeBasedTheme();
+  const root = document.documentElement;
+  root.style.setProperty("--bg-color", theme.background);
+  root.style.setProperty("--text-color", theme.text);
+}
+
+applyTheme();
+setInterval(applyTheme, 60 * 60 * 1000); // update every hour
+This gives you a continuous time-based theme that gets darker from noon to midnight and lighter from midnight to noon, with clear hour-by-hour change.
+
+Do you want this to be strictly stepped per hour (discrete jumps) or smoothly continuous down to minutes?
+
+smoothly continuous down to minutes
+The code I gave already supports smooth changes down to minutes; you only need to call it more frequently and keep using the fractional hour value.
+
+Ensure smooth factor (minutes included)
+This part is the key, it already uses minutes as a fraction of an hour:
+
+ts
+export function getDarknessFactor(date = new Date()): number {
+  const h = date.getHours() + date.getMinutes() / 60; // 0–24 with minutes
+
+  const distFromNoon = Math.abs(h - 12); // 0 at 12:00, 12 at 0:00/24:00
+  const darkness = distFromNoon / 12;    // 0 (lightest) → 1 (darkest)
+
+  return Math.min(1, Math.max(0, darkness));
+}
+As minutes advance, h changes smoothly, so darkness also changes smoothly.
+
+Continuous theme update
+Change the update interval from hourly to e.g. every 30 seconds (or 1s if you want):
+
+ts
+function applyTheme() {
+  const theme = getTimeBasedTheme(); // uses getDarknessFactor(date)
+  const root = document.documentElement;
+  root.style.setProperty("--bg-color", theme.background);
+  root.style.setProperty("--text-color", theme.text);
+}
+
+// run on load
+applyTheme();
+
+// smooth-ish: every 30 seconds
+setInterval(applyTheme, 30 * 1000);
+If you also add a CSS transition on the variables, the visual change will be extra smooth:
+
+css
+:root {
+  transition: background-color 0.5s linear, color 0.5s linear;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+Do you want the curve itself to be strictly triangular like this, or would you prefer a softer (e.g. eased or sinus) dark/light curve over the day?
+
+softer dark/ light curve over the day
+Use a cosine (or sine) wave for the darkness factor instead of a triangle; that will give you a soft curve over 24h.
+
+Sinusoidal darkness over the day
+We want:
+
+Lightest at 12:00 (noon) → darkness = 0
+
+Darkest at 0:00 (midnight) → darkness = 1
+
+Smooth change, continuous in minutes.
+
+You can do this with a shifted cosine:
+
+darkness
+(
+t
+)
+=
+1
+−
+cos
+⁡
+(
+2
+π
+24
+(
+t
+−
+12
+)
+)
+2
+darkness(t)= 
+2
+1−cos( 
+24
+2π
+ (t−12))
+ 
+TypeScript:
+
+ts
+export function getSmoothDarknessFactor(date = new Date()): number {
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+
+  const t = hours + minutes / 60 + seconds / 3600; // 0–24 with minutes+seconds
+
+  // Map 0–24h to smooth cosine-based darkness (0 at noon, 1 at midnight)
+  const angle = (2 * Math.PI * (t - 12)) / 24;
+  const darkness = (1 - Math.cos(angle)) / 2; // 0..1 smooth
+
+  return Math.min(1, Math.max(0, darkness));
+}
+This gives:
+
+t = 12 → angle = 0 → cos = 1 → darkness = 0
+
+t = 0 or 24 → angle = ±π → cos = -1 → darkness = 1
+
+Soft slopes around dawn/dusk, no sharp corners.
+
+Using it in the theme
+Just swap the factor function in your existing theme logic:
+
+ts
+function lerp(a: number, b: number, t: number): number {
+  return a + (b - a) * t;
+}
+
+function lerpColor(light: string, dark: string, t: number): string {
+  const parse = (c: string) => {
+    const m = c.match(/^#?([0-9a-f]{6})$/i);
+    if (!m) throw new Error("Expected #rrggbb");
+    const n = parseInt(m[1], 16);
+    return {
+      r: (n >> 16) & 0xff,
+      g: (n >> 8) & 0xff,
+      b: n & 0xff,
+    };
+  };
+
+  const l = parse(light);
+  const d = parse(dark);
+
+  const r = Math.round(lerp(l.r, d.r, t));
+  const g = Math.round(lerp(l.g, d.g, t));
+  const b = Math.round(lerp(l.b, d.b, t));
+
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b)
+    .toString(16)
+    .slice(1)
+    .toUpperCase()}`;
+}
+
+export function getTimeBasedTheme(date = new Date()) {
+  const darkness = getSmoothDarknessFactor(date); // 0–1, sinusoidal
+
+  const background = lerpColor("#FFFFFF", "#000011", darkness);
+  const text = lerpColor("#000000", "#FFFFFF", darkness);
+
+  return {
+    darkness,
+    background,
+    text,
+  };
+}
+Update loop (more frequent, with CSS easing)
+ts
+function applyTheme() {
+  const theme = getTimeBasedTheme();
+  const root = document.documentElement;
+  root.style.setProperty("--bg-color", theme.background);
+  root.style.setProperty("--text-color", theme.text);
+}
+
+applyTheme();
+setInterval(applyTheme, 5 * 1000); // every 5s, very smooth
+css
+:root {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 1s linear, color 1s linear;
+}
+Do you want to bias this curve so it stays closer to “dark” a bit longer around midnight (flatten the top of the wave), or is symmetric day/night fine?
+
+local storage
+You can persist the curve strength in localStorage so the user’s preference survives reloads.
+
+1. Read initial strength from localStorage
+ts
+const STRENGTH_KEY = "themeCurveStrength";
+
+function loadStrength(): number {
+  if (typeof localStorage === "undefined") return 0.5; // SSR/fallback
+  const stored = localStorage.getItem(STRENGTH_KEY);
+  const value = stored !== null ? parseFloat(stored) : NaN;
+  return Number.isFinite(value) ? Math.min(1, Math.max(0, value)) : 0.5;
+}
+
+function saveStrength(value: number) {
+  if (typeof localStorage === "undefined") return;
+  localStorage.setItem(STRENGTH_KEY, String(value));
+}
+2. Wire it to slider + theme
+ts
+const strengthInput = document.getElementById(
+  "curveStrength"
+) as HTMLInputElement;
+
+let strength = loadStrength();
+strengthInput.value = strength.toString();
+
+strengthInput.addEventListener("input", () => {
+  strength = parseFloat(strengthInput.value);
+  saveStrength(strength);
+  applyTheme();
+});
+
+function applyTheme() {
+  const theme = getTimeBasedTheme(new Date(), strength);
+  const root = document.documentElement;
+  root.style.setProperty("--bg-color", theme.background);
+  root.style.setProperty("--text-color", theme.text);
+}
+
+// on load, apply with stored strength
+applyTheme();
+setInterval(applyTheme, 5 * 1000);
+This pattern is the same as persisting dark/light theme flags, just storing a numeric preference instead of a boolean.
+
+Do you also need a reset-to-default button that clears strength from localStorage?
+
+yes
+You can add a reset button that clears the stored value, restores the default, and reapplies the theme.
+
+1. HTML reset button
+xml
+<button id="resetCurveStrength">Reset curve</button>
+2. Clear localStorage and reset UI
+Assuming you already have STRENGTH_KEY, saveStrength, loadStrength, strength, strengthInput, and applyTheme:
+
+ts
+const DEFAULT_STRENGTH = 0.5;
+const resetButton = document.getElementById(
+  "resetCurveStrength"
+) as HTMLButtonElement;
+
+resetButton.addEventListener("click", () => {
+  // Remove from localStorage
+  if (typeof localStorage !== "undefined") {
+    localStorage.removeItem(STRENGTH_KEY);
+  }
+
+  // Reset in-memory value and slider
+  strength = DEFAULT_STRENGTH;
+  strengthInput.value = DEFAULT_STRENGTH.toString();
+
+  // Reapply theme with default
+  applyTheme();
+});
+Now clicking “Reset curve” forgets the custom preference and returns to the default curve behavior.
+
+Would you like a small TypeScript type wrapper for localStorage keys/values so this config is type-safe across your app?
+
+yes
+Define a typed schema for your keys and build a thin wrapper around localStorage so TypeScript knows the type for each key.
+
+1. Define schema and keys
+ts
+// All values you keep in localStorage
+type LocalStorageSchema = {
+  themeCurveStrength: number;
+  // add more keys later:
+  // themeMode: "light" | "dark" | "auto";
+};
+
+type LocalStorageKey = keyof LocalStorageSchema;
+2. Typed wrapper (number, string, JSON-safe)
+ts
+const storage = {
+  get<K extends LocalStorageKey>(key: K): LocalStorageSchema[K] | null {
+    if (typeof localStorage === "undefined") return null;
+    const raw = localStorage.getItem(key);
+    if (raw === null) return null;
+
+    try {
+      return JSON.parse(raw) as LocalStorageSchema[K];
+    } catch {
+      return null;
+    }
+  },
+
+  set<K extends LocalStorageKey>(
+    key: K,
+    value: LocalStorageSchema[K]
+  ): void {
+    if (typeof localStorage === "undefined") return;
+    localStorage.setItem(key, JSON.stringify(value));
+  },
+
+  remove<K extends LocalStorageKey>(key: K): void {
+    if (typeof localStorage === "undefined") return;
+    localStorage.removeItem(key);
+  },
+};
+Now storage.get("themeCurveStrength") is typed as number | null. 
+
+3. Use it for curve strength
+ts
+const STRENGTH_KEY: LocalStorageKey = "themeCurveStrength";
+const DEFAULT_STRENGTH = 0.5;
+
+function loadStrength(): number {
+  const stored = storage.get("themeCurveStrength");
+  if (typeof stored === "number" && isFinite(stored)) {
+    return Math.min(1, Math.max(0, stored));
+  }
+  return DEFAULT_STRENGTH;
+}
+
+function saveStrength(value: number) {
+  storage.set(STRENGTH_KEY, Math.min(1, Math.max(0, value)));
+}
+Hook up with your slider and reset button exactly as before, but now fully typed.
