@@ -1,48 +1,111 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Box, Typography, Card, CardContent, Grid, Chip, Alert,
-  Button, List, ListItem, ListItemText, Divider,
+  Button, List, ListItem, ListItemText, Divider, Collapse,
 } from '@mui/material';
-import { NotificationsOff, Schedule, CheckCircle } from '@mui/icons-material';
+import { Schedule, CheckCircle, ExpandMore, ExpandLess } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { useSchedulerStore } from '@/store/schedulerStore';
 import { getActiveSchedules } from '@/services/schedulerService';
 import { getSmoothDarknessFactor } from '@/theme/colorInterpolation';
+import { fireScheduleReminder, fireScheduleEndReminder } from '@/services/notificationService';
+import HowToGuide from '@/components/HowToGuide';
 import { useNavigate } from 'react-router-dom';
 import type { ScheduleEntry } from '@/types';
+import { useSettingsStore } from '@/store/settingsStore';
 
+/**
+ * Dashboard page.
+ *
+ * IMPORTANT CLARIFICATION:
+ * This app CANNOT silence emergency alerts automatically. WEA messages are
+ * delivered at modem/radio level and bypass all software. When a schedule is
+ * "active", it means: the app is reminding you to go silence alerts manually
+ * in your phone's Settings. The HowToGuide component shows the exact steps.
+ */
 const Dashboard: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { schedules } = useSchedulerStore();
+  const { settings } = useSettingsStore();
   const [activeSchedules, setActiveSchedules] = useState<ScheduleEntry[]>([]);
   const [darkness, setDarkness] = useState(getSmoothDarknessFactor());
+  const [guideOpen, setGuideOpen] = useState(false);
+
+  // Track previous active IDs to detect transitions and fire notifications
+  const prevActiveIds = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     const tick = () => {
-      setActiveSchedules(getActiveSchedules());
+      const nowActive = getActiveSchedules();
+      setActiveSchedules(nowActive);
       setDarkness(getSmoothDarknessFactor());
+
+      if (!settings.notificationsEnabled) return;
+
+      const nowIds = new Set(nowActive.map((s) => s.id));
+
+      // Schedules that just became active → fire start reminder
+      nowActive.forEach((s) => {
+        if (!prevActiveIds.current.has(s.id)) {
+          fireScheduleReminder(s.name);
+        }
+      });
+
+      // Schedules that just ended → fire end reminder
+      prevActiveIds.current.forEach((id) => {
+        if (!nowIds.has(id)) {
+          const entry = schedules.find((s) => s.id === id);
+          if (entry) fireScheduleEndReminder(entry.name);
+        }
+      });
+
+      prevActiveIds.current = nowIds;
     };
+
     tick();
     const interval = setInterval(tick, 5000);
     return () => clearInterval(interval);
-  }, [schedules]);
+  }, [schedules, settings.notificationsEnabled]);
 
-  const isSilencing = activeSchedules.length > 0;
+  const isReminderActive = activeSchedules.length > 0;
 
   return (
     <Box>
       <Typography variant="h4" gutterBottom fontWeight="bold">{t('dashboard.title')}</Typography>
+
+      {/* ── Honest status banner ─────────────────────────────────────────────
+          Wording is careful: "reminder active" not "silencing active".
+          The app cannot silence alerts — it only reminds you to do it.     */}
       <Alert
-        severity={isSilencing ? 'warning' : 'success'}
-        icon={isSilencing ? <NotificationsOff /> : <CheckCircle />}
-        sx={{ mb: 3 }}
+        severity={isReminderActive ? 'warning' : 'success'}
+        icon={isReminderActive ? <Schedule /> : <CheckCircle />}
+        sx={{ mb: 2 }}
+        action={
+          isReminderActive ? (
+            <Button size="small" color="inherit" onClick={() => setGuideOpen((p) => !p)}
+              endIcon={guideOpen ? <ExpandLess /> : <ExpandMore />}>
+              How to silence
+            </Button>
+          ) : undefined
+        }
       >
-        {isSilencing
-          ? t('dashboard.silencing', { count: activeSchedules.length })
-          : t('dashboard.noActive')}
+        {isReminderActive
+          ? `Reminder active — go to your phone Settings now to silence alerts manually`
+          : 'No active reminder schedules'}
       </Alert>
+
+      {/* ── Step-by-step guide (shown when reminder is active) ─────────────── */}
+      <Collapse in={guideOpen}>
+        <Card sx={{ mb: 2 }}>
+          <CardContent>
+            <HowToGuide highlightActive={isReminderActive} />
+          </CardContent>
+        </Card>
+      </Collapse>
+
       <Grid container spacing={3}>
+        {/* Schedules summary card */}
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
@@ -60,6 +123,8 @@ const Dashboard: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
+
+        {/* Theme darkness indicator */}
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
@@ -73,7 +138,9 @@ const Dashboard: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
-        {isSilencing && (
+
+        {/* Active reminder schedules list */}
+        {isReminderActive && (
           <Grid item xs={12}>
             <Card>
               <CardContent>
@@ -87,11 +154,31 @@ const Dashboard: React.FC = () => {
                           primary={s.name}
                           secondary={`${s.startTime} – ${s.endTime} · ${s.repeatMode}`}
                         />
-                        <Chip label={t('scheduler.active')} color="warning" size="small" />
+                        <Chip label="REMINDER" color="warning" size="small" />
                       </ListItem>
                     </React.Fragment>
                   ))}
                 </List>
+              </CardContent>
+            </Card>
+          </Grid>
+        )}
+
+        {/* Always-visible guide (collapsed by default, for reference) */}
+        {!isReminderActive && (
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Box display="flex" justifyContent="space-between" alignItems="center"
+                  sx={{ cursor: 'pointer' }} onClick={() => setGuideOpen((p) => !p)}>
+                  <Typography variant="h6">📖 How to silence emergency alerts</Typography>
+                  {guideOpen ? <ExpandLess /> : <ExpandMore />}
+                </Box>
+                <Collapse in={guideOpen}>
+                  <Box sx={{ mt: 2 }}>
+                    <HowToGuide highlightActive={false} />
+                  </Box>
+                </Collapse>
               </CardContent>
             </Card>
           </Grid>
