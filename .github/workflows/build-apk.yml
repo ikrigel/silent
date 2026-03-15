@@ -57,8 +57,18 @@ jobs:
 
             Download `app-release.apk` below and install it on your Android device.
 
-            **Installation:**
-            1. Enable "Install from Unknown Sources" in your Android settings
-            2. Open the downloaded APK
-            3. Tap Install
-            4. Open Silent and follow the Robot setup guide
+            **Installation Instructions:**
+            1. Download `app-release.apk` from the Assets section below
+            2. On your Android device, go to Settings → Security → Enable "Install from Unknown Sources"
+            3. Open the downloaded APK file and tap Install
+            4. Open Silent and go to Robot page → Follow the setup guide to enable Accessibility Service
+
+            **Features:**
+            - Schedule emergency alert silencing
+            - Control WEA (Wireless Emergency Alerts) via accessibility automation
+            - Airplane mode scheduling
+            - Manual and recorded UI sequences
+
+            **Requirements:**
+            - Android 8.0 or higher
+            - Enable Accessibility Service for Silent Robot
