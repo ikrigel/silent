@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Tooltip } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Typography, Tooltip, useTheme } from '@mui/material';
 import { Menu as MenuIcon, LightMode, DarkMode, AccessTime } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { useSettingsStore } from '@/store/settingsStore';
@@ -27,6 +27,7 @@ const THEME_CYCLE: Record<ThemeMode, ThemeMode> = {
 export const Header: React.FC<HeaderProps> = ({ onMenuClick, title }) => {
   const { settings, setThemeMode } = useSettingsStore();
   const { t } = useTranslation();
+  const theme = useTheme();
 
   const themeLabels: Record<ThemeMode, string> = {
     light: t('theme.switchToDark'),
@@ -39,13 +40,13 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, title }) => {
   };
 
   return (
-    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+    <AppBar position="fixed" sx={{ zIndex: (muiTheme) => muiTheme.zIndex.drawer + 1 }}>
       <Toolbar>
         <IconButton
           color="inherit"
-          edge="start"
+          edge={theme.direction === 'rtl' ? 'end' : 'start'}
           onClick={onMenuClick}
-          sx={{ mr: 2, display: { sm: 'none' } }}
+          sx={{ [theme.direction === 'rtl' ? 'ml' : 'mr']: 2, display: { sm: 'none' } }}
         >
           <MenuIcon />
         </IconButton>

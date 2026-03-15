@@ -27,8 +27,9 @@ const ContactForm: React.FC = () => {
       reset();
     } catch (err) {
       setStatus('error');
-      setErrorMsg(err instanceof Error ? err.message : 'Failed to send message');
-      writeLog('error', 'Contact form submission failed', { err: String(err) });
+      const msg = err instanceof Error ? err.message : 'Failed to send message';
+      setErrorMsg(msg);
+      writeLog('error', 'Contact form submission failed', { err: msg });
     }
   };
 

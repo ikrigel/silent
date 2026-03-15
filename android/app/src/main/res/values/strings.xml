@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Silent</string>
+    <string name="title_activity_main">Silent</string>
+    <string name="package_name">com.ikrigel.silent</string>
+    <string name="custom_url_scheme">com.ikrigel.silent</string>
+    <string name="accessibility_service_label">Silent Robot</string>
+    <string name="accessibility_service_description">Navigates Android Settings to toggle Wireless Emergency Alert preferences on your behalf.</string>
+</resources>

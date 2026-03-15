@@ -21,15 +21,24 @@ export async function sendEmail(
   data: ContactFormData,
   publicKey: string
 ): Promise<void> {
-  await emailjs.send(
-    SERVICE_ID,
-    TEMPLATE_ID,
-    {
-      from_name: data.name,
-      from_email: data.email,
-      subject: data.subject,
-      message: data.message,
-    },
-    publicKey || PUBLIC_KEY
-  );
+  try {
+    await emailjs.send(
+      SERVICE_ID,
+      TEMPLATE_ID,
+      {
+        from_name: data.name,
+        from_email: data.email,
+        to_name: 'Igal Krigel',
+        reply_to: data.email,
+        subject: data.subject,
+        message: data.message,
+      },
+      publicKey || PUBLIC_KEY
+    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error(JSON.stringify(error));
+  }
 }

@@ -13,7 +13,7 @@ const SettingsPage: React.FC = () => {
   const { t } = useTranslation();
   const {
     settings, setThemeMode, setLogLevel,
-    setNotificationsEnabled, resetSettings,
+    setNotificationsEnabled, setMenuPosition, setMenuPinned, resetSettings,
   } = useSettingsStore();
 
   const requestNotificationPermission = async () => {
@@ -78,6 +78,33 @@ const SettingsPage: React.FC = () => {
                 {t('settings.grantPermission')}
               </Button>
             </Box>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>{t('settings.menu')}</Typography>
+            <FormControl fullWidth sx={{ mb: 2 }}>
+              <InputLabel>{t('settings.menuPosition')}</InputLabel>
+              <Select
+                value={settings.menuPosition ?? 'left'}
+                label={t('settings.menuPosition')}
+                onChange={(e) => setMenuPosition(e.target.value as 'left' | 'right' | 'top' | 'bottom')}
+              >
+                <MenuItem value="left">{t('settings.menuLeft')}</MenuItem>
+                <MenuItem value="right">{t('settings.menuRight')}</MenuItem>
+                <MenuItem value="top">{t('settings.menuTop')}</MenuItem>
+                <MenuItem value="bottom">{t('settings.menuBottom')}</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={settings.menuPinned ?? true}
+                  onChange={(e) => setMenuPinned(e.target.checked)}
+                />
+              }
+              label={t('settings.menuPinned')}
+            />
           </CardContent>
         </Card>
         <Divider />

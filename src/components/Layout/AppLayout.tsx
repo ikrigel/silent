@@ -3,16 +3,19 @@ import { Box, Toolbar, useMediaQuery, useTheme } from '@mui/material';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
+import { useSettingsStore } from '@/store/settingsStore';
 
 const DRAWER_WIDTH = 240;
 
 const PAGE_TITLES: Record<string, string> = {
   '/': 'Dashboard',
   '/scheduler': 'Scheduler',
+  '/robot': 'Robot',
   '/logs': 'Logs',
   '/settings': 'Settings',
   '/about': 'About',
   '/help': 'Help',
+  '/donate': 'Donate',
 };
 
 /**
@@ -25,7 +28,11 @@ export const AppLayout: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { pathname } = useLocation();
+  const { settings } = useSettingsStore();
   const title = PAGE_TITLES[pathname] ?? 'Silent';
+
+  const showSidebarOnDesktop = isMobile ? mobileOpen : settings.menuPinned !== false;
+  const dir = theme.direction;
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', position: 'relative' }}>
@@ -49,11 +56,14 @@ export const AppLayout: React.FC = () => {
         title={`💤 ${title}`}
       />
 
-      <Sidebar
-        open={isMobile ? mobileOpen : true}
-        onClose={() => setMobileOpen(false)}
-        variant={isMobile ? 'temporary' : 'permanent'}
-      />
+      {/* Sidebar (only for left/right positions) */}
+      {(settings.menuPosition === 'left' || settings.menuPosition === 'right' || !settings.menuPosition) && (
+        <Sidebar
+          open={isMobile ? mobileOpen : showSidebarOnDesktop}
+          onClose={() => setMobileOpen(false)}
+          variant={isMobile ? 'temporary' : 'permanent'}
+        />
+      )}
 
       {/* Main content — sits above the parallax layer */}
       <Box
@@ -61,7 +71,8 @@ export const AppLayout: React.FC = () => {
         sx={{
           flexGrow: 1,
           p: { xs: 2, sm: 3 },
-          width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
+          ml: !isMobile && showSidebarOnDesktop && dir === 'ltr' ? `${DRAWER_WIDTH}px` : undefined,
+          mr: !isMobile && showSidebarOnDesktop && dir === 'rtl' ? `${DRAWER_WIDTH}px` : undefined,
           minHeight: '100vh',
           position: 'relative',
           zIndex: 1,

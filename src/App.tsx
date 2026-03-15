@@ -10,6 +10,8 @@ import LogsPage from '@/pages/Logs';
 import SettingsPage from '@/pages/Settings';
 import AboutPage from '@/pages/About';
 import HelpPage from '@/pages/Help';
+import RobotPage from '@/pages/Robot';
+import DonatePage from '@/pages/Donate';
 import '@/i18n';
 
 /**
@@ -45,6 +47,8 @@ const App: React.FC = () => {
             <Route path="settings" element={<SettingsPage />} />
             <Route path="about" element={<AboutPage />} />
             <Route path="help" element={<HelpPage />} />
+            <Route path="robot" element={<RobotPage />} />
+            <Route path="donate" element={<DonatePage />} />
           </Route>
         </Routes>
       </BrowserRouter>

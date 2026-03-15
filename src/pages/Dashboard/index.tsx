@@ -13,6 +13,7 @@ import HowToGuide from '@/components/HowToGuide';
 import { useNavigate } from 'react-router-dom';
 import type { ScheduleEntry } from '@/types';
 import { useSettingsStore } from '@/store/settingsStore';
+import { robotService } from '@/services/robotService';
 
 /**
  * Dashboard page.
@@ -45,18 +46,31 @@ const Dashboard: React.FC = () => {
 
       const nowIds = new Set(nowActive.map((s) => s.id));
 
-      // Schedules that just became active → fire start reminder
+      // Schedules that just became active → fire start reminder + optional robot/airplane
       nowActive.forEach((s) => {
         if (!prevActiveIds.current.has(s.id)) {
           fireScheduleReminder(s.name);
+          if (robotService.isAndroid()) {
+            if (s.useAirplaneMode) {
+              robotService.enableAirplaneMode().catch(() => {});
+            }
+            if (s.robotRecordingId) {
+              robotService.executeRecording(s.robotRecordingId).catch(() => {});
+            }
+          }
         }
       });
 
-      // Schedules that just ended → fire end reminder
+      // Schedules that just ended → fire end reminder + disable airplane if enabled
       prevActiveIds.current.forEach((id) => {
         if (!nowIds.has(id)) {
           const entry = schedules.find((s) => s.id === id);
-          if (entry) fireScheduleEndReminder(entry.name);
+          if (entry) {
+            fireScheduleEndReminder(entry.name);
+            if (entry.useAirplaneMode && robotService.isAndroid()) {
+              robotService.disableAirplaneMode().catch(() => {});
+            }
+          }
         }
       });
 

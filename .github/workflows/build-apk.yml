@@ -1,0 +1,64 @@
+name: Build Android APK
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web app
+        run: npm run build
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Sync Capacitor
+        run: npx cap sync android
+
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
+      - name: Build release APK
+        working-directory: android
+        run: ./gradlew assembleRelease
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: silent-release-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: android/app/build/outputs/apk/release/app-release.apk
+          name: Silent ${{ github.ref_name }}
+          body: |
+            ## Silent ${{ github.ref_name }}
+
+            Download `app-release.apk` below and install it on your Android device.
+
+            **Installation:**
+            1. Enable "Install from Unknown Sources" in your Android settings
+            2. Open the downloaded APK
+            3. Tap Install
+            4. Open Silent and follow the Robot setup guide

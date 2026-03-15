@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dialog, DialogTitle, DialogContent, DialogActions,
   TextField, Button, MenuItem, FormControlLabel, Checkbox,
@@ -6,7 +6,8 @@ import {
 } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import type { ScheduleEntry, RepeatMode, DayOfWeek } from '@/types';
+import type { RobotRecording, ScheduleEntry, RepeatMode, DayOfWeek } from '@/types';
+import { robotService } from '@/services/robotService';
 
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const REPEAT_MODES: RepeatMode[] = ['none', 'daily', 'weekly', 'custom'];
@@ -19,6 +20,8 @@ interface FormValues {
   daysOfWeek: DayOfWeek[];
   startDate: string;
   endDate: string;
+  robotRecordingId: string;
+  useAirplaneMode: boolean;
 }
 
 interface SchedulerFormProps {
@@ -31,6 +34,7 @@ interface SchedulerFormProps {
 /** Dialog form for creating/editing a schedule entry */
 const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, onClose }) => {
   const { t } = useTranslation();
+  const [robotRecordings, setRobotRecordings] = useState<RobotRecording[]>([]);
   const { control, handleSubmit, watch, reset } = useForm<FormValues>({
     defaultValues: {
       name: initial?.name ?? '',
@@ -40,10 +44,18 @@ const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, 
       daysOfWeek: initial?.daysOfWeek ?? [],
       startDate: initial?.startDate ?? '',
       endDate: initial?.endDate ?? '',
+      robotRecordingId: initial?.robotRecordingId ?? '',
+      useAirplaneMode: initial?.useAirplaneMode ?? false,
     },
   });
 
   const repeatMode = watch('repeatMode');
+
+  useEffect(() => {
+    if (open && robotService.isAndroid()) {
+      robotService.getRecordings().then(setRobotRecordings);
+    }
+  }, [open]);
 
   const onValid = (data: FormValues) => {
     const entry: ScheduleEntry = {
@@ -51,6 +63,7 @@ const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, 
       enabled: initial?.enabled ?? true,
       createdAt: initial?.createdAt ?? new Date().toISOString(),
       ...data,
+      robotRecordingId: data.robotRecordingId || undefined,
     };
     onSubmit(entry);
     reset();
@@ -123,6 +136,32 @@ const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, 
                   />
                 </Grid>
               </>
+            )}
+            {robotService.isAndroid() && robotRecordings.length > 0 && (
+              <Grid item xs={12}>
+                <Controller name="robotRecordingId" control={control}
+                  render={({ field }) => (
+                    <TextField {...field} label={t('scheduler.robotRecording')} select fullWidth>
+                      <MenuItem value="">{t('scheduler.noRobotRecording')}</MenuItem>
+                      {robotRecordings.map((r) => (
+                        <MenuItem key={r.id} value={r.id}>{r.name}</MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </Grid>
+            )}
+            {robotService.isAndroid() && (
+              <Grid item xs={12}>
+                <Controller name="useAirplaneMode" control={control}
+                  render={({ field }) => (
+                    <FormControlLabel
+                      control={<Checkbox {...field} checked={field.value} />}
+                      label={t('scheduler.useAirplaneMode')}
+                    />
+                  )}
+                />
+              </Grid>
             )}
           </Grid>
         </Box>
