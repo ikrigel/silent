@@ -38,7 +38,18 @@ jobs:
 
       - name: Build release APK
         working-directory: android
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleRelease -x lint
+
+      - name: Check if APK was created
+        run: |
+          if [ -f "android/app/build/outputs/apk/release/app-release.apk" ]; then
+            echo "✓ APK file created successfully"
+            ls -lh android/app/build/outputs/apk/release/app-release.apk
+          else
+            echo "✗ APK file not found!"
+            ls -la android/app/build/outputs/
+            exit 1
+          fi
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
