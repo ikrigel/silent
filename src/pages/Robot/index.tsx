@@ -69,8 +69,9 @@ const RobotPage: React.FC = () => {
               variant="contained"
               color="success"
               startIcon={<DownloadIcon />}
-              href="/downloads/silent.apk"
-              download
+              href="https://github.com/ikrigel/silent/releases"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               {t('robot.webNotice.downloadApk')}
             </Button>

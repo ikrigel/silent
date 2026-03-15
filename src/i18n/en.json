@@ -66,10 +66,10 @@
     },
     "webNotice": {
       "title": "Android App Required",
-      "desc": "The Robot feature requires the Silent Android app with Accessibility Service. Download the APK and install it on your Android device.",
-      "downloadApk": "Download APK",
+      "desc": "The Robot feature requires the Silent Android app with Accessibility Service. Download the latest APK from GitHub Releases and install it on your Android device.",
+      "downloadApk": "Download from GitHub Releases",
       "installTitle": "Installation Steps",
-      "step1": "Download the APK using the button above",
+      "step1": "Go to GitHub Releases and download the latest app-release.apk",
       "step2": "On your Android device, go to Settings → Security → enable \"Install from Unknown Sources\"",
       "step3": "Open the downloaded APK file and tap Install",
       "step4": "Open Silent and go to Robot → follow the setup guide"

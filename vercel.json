@@ -1,3 +1,6 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+  "rewrites": [
+    { "source": "/downloads/:path*", "destination": "/downloads/:path*" },
+    { "source": "/(.*)", "destination": "/" }
+  ]
 }
