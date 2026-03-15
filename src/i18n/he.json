@@ -149,7 +149,9 @@
       "nameRequired": "שם הכרחי",
       "emailRequired": "אימייל הכרחי",
       "subjectRequired": "נושא הכרחי",
-      "messageRequired": "הודעה הכרחית"
+      "messageRequired": "הודעה הכרחית",
+      "captchaRequired": "אנא השלם את ה-reCAPTCHA",
+      "captchaNote": "אתר זה מוגן על ידי reCAPTCHA ומדיניות הפרטיות ותנאי השירות של Google חלים."
     }
   },
   "theme": {

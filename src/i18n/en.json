@@ -205,7 +205,9 @@
       "nameRequired": "Name is required",
       "emailRequired": "Email is required",
       "subjectRequired": "Subject is required",
-      "messageRequired": "Message is required"
+      "messageRequired": "Message is required",
+      "captchaRequired": "Please complete the reCAPTCHA",
+      "captchaNote": "This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply."
     }
   },
   "theme": {

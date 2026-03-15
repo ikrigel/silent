@@ -1,35 +1,47 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
-  Box, TextField, Button, Alert, CircularProgress, Stack,
+  Box, TextField, Button, Alert, CircularProgress, Stack, Typography,
 } from '@mui/material';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { sendEmail, ContactFormData } from '@/services/emailService';
 import { writeLog } from '@/services/logService';
 
-/** Contact form using EmailJS to send messages to the developer */
+/** Contact form using EmailJS + reCAPTCHA v2 to send messages to the developer */
 const ContactForm: React.FC = () => {
   const { t } = useTranslation();
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   const { control, handleSubmit, reset } = useForm<ContactFormData>({
     defaultValues: { name: '', email: '', subject: '', message: '' },
   });
 
   const onSubmit = async (data: ContactFormData) => {
+    // Get reCAPTCHA token
+    const token = recaptchaRef.current?.getValue();
+    if (!token) {
+      setStatus('error');
+      setErrorMsg(t('help.form.captchaRequired') || 'Please complete the reCAPTCHA');
+      return;
+    }
+
     setStatus('sending');
     try {
       // Public key is hardcoded in emailService — no need to pass from settings
-      await sendEmail(data, '');
+      await sendEmail({ ...data, 'g-recaptcha-response': token }, '');
       setStatus('success');
       writeLog('info', 'Contact form submitted successfully');
       reset();
+      recaptchaRef.current?.reset();
     } catch (err) {
       setStatus('error');
       const msg = err instanceof Error ? err.message : 'Failed to send message';
       setErrorMsg(msg);
       writeLog('error', 'Contact form submission failed', { err: msg });
+      recaptchaRef.current?.reset();
     }
   };
 
@@ -58,6 +70,17 @@ const ContactForm: React.FC = () => {
             <TextField {...field} label={t('help.form.message')} multiline rows={4} fullWidth error={!!fieldState.error} helperText={fieldState.error?.message} />
           )}
         />
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY as string}
+          />
+        </Box>
+        {status === 'error' && !errorMsg.includes('reCAPTCHA') && (
+          <Typography variant="caption" color="text.secondary">
+            {t('help.form.captchaNote') || 'This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.'}
+          </Typography>
+        )}
         <Button
           type="submit"
           variant="contained"
