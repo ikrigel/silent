@@ -10,16 +10,18 @@ test.describe('About', () => {
   });
 
   test('renders page heading', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: /about/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /about/i, level: 4 })).toBeVisible();
   });
 
   test('shows developer name', async ({ page }) => {
-    await expect(page.getByText('Ilan Kri-Gel')).toBeVisible();
+    // Developer name appears in an about card
+    await expect(page.locator('text=Igal Krigel').first()).toBeVisible();
   });
 
   test('shows developer title', async ({ page }) => {
+    // Title appears in subtitle (more specific selector to avoid duplicates)
     await expect(
-      page.getByText(/full-stack developer.*ai integration specialist/i)
+      page.getByRole('heading', { name: /full-stack developer.*ai integration specialist/i, level: 6 }).first()
     ).toBeVisible();
   });
 
@@ -46,7 +48,8 @@ test.describe('About', () => {
   });
 
   test('shows experience section with two roles', async ({ page }) => {
-    await expect(page.getByText('Experience')).toBeVisible();
+    // Use heading level to be specific about which Experience we're testing
+    await expect(page.getByRole('heading', { name: 'Experience', level: 6 })).toBeVisible();
     await expect(page.getByText(/independent developer.*freelance/i)).toBeVisible();
     await expect(page.getByText(/open source contributions/i)).toBeVisible();
   });

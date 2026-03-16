@@ -17,15 +17,15 @@ test.describe('Dashboard', () => {
     await expect(page.getByRole('heading', { name: /dashboard/i })).toBeVisible();
   });
 
-  test('shows "no active silencing" alert when no schedules exist', async ({ page }) => {
+  test('shows "no active reminder" alert when no schedules exist', async ({ page }) => {
     await expect(
-      page.getByText(/no active silencing schedules/i)
+      page.getByText(/no active reminder schedules/i)
     ).toBeVisible();
   });
 
   test('shows schedules count card', async ({ page }) => {
     // Schedules card should show 0 with no data
-    await expect(page.getByText('Schedules')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Schedules', level: 6 })).toBeVisible();
     await expect(page.getByText('0 enabled')).toBeVisible();
   });
 
@@ -66,7 +66,7 @@ test.describe('Dashboard', () => {
     await page.reload();
 
     // Banner should switch to warning variant
-    await expect(page.getByText(/silencing active/i)).toBeVisible();
-    await expect(page.getByText(/ACTIVE/i)).toBeVisible();
+    await expect(page.getByText(/reminder active/i)).toBeVisible();
+    await expect(page.getByText('REMINDER', { exact: true }).first()).toBeVisible();
   });
 });

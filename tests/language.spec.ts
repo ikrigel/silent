@@ -12,7 +12,7 @@ test.describe('Language Switching', () => {
 
   test('EN button is active by default', async ({ page }) => {
     // EN button should be in contained (selected) state
-    await expect(page.getByRole('button', { name: 'EN' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'EN' }).first()).toBeVisible();
   });
 
   test('switching to Hebrew changes navigation labels', async ({ page }) => {

@@ -24,6 +24,7 @@ test.describe('Navigation', () => {
     await expect(page.getByText('Settings')).toBeVisible();
     await expect(page.getByText('About')).toBeVisible();
     await expect(page.getByText('Help')).toBeVisible();
+    await expect(page.getByText('Donate')).toBeVisible();
   });
 
   test('navigates to Scheduler page', async ({ page }) => {
@@ -54,6 +55,12 @@ test.describe('Navigation', () => {
     await page.getByText('Help').first().click();
     await expect(page).toHaveURL('/help');
     await expect(page.getByRole('heading', { name: /help/i })).toBeVisible();
+  });
+
+  test('navigates to Donate page', async ({ page }) => {
+    await page.getByText('Donate').first().click();
+    await expect(page).toHaveURL('/donate');
+    await expect(page.getByRole('heading', { name: /donate|support/i })).toBeVisible();
   });
 
   test('header shows app title with emoji', async ({ page }) => {

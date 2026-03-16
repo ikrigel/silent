@@ -40,7 +40,7 @@ test.describe('Help', () => {
   });
 
   test('shows Contact the Developer section', async ({ page }) => {
-    await expect(page.getByText(/contact the developer/i)).toBeVisible();
+    await expect(page.getByRole('heading', { name: /contact.*developer/i })).toBeVisible();
   });
 
   test('contact form has all required fields', async ({ page }) => {

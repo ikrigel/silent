@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 /**
- * Settings page tests — theme mode, log level, EmailJS key, notifications.
+ * Settings page tests — theme mode, log level, notifications, menu customization.
  */
 
 test.describe('Settings', () => {
@@ -15,11 +15,11 @@ test.describe('Settings', () => {
     await expect(page.getByRole('heading', { name: /settings/i })).toBeVisible();
   });
 
-  test('shows Appearance, Logging, EmailJS, and Notifications sections', async ({ page }) => {
+  test('shows Appearance, Logging, Notifications, and Menu sections', async ({ page }) => {
     await expect(page.getByText('Appearance')).toBeVisible();
     await expect(page.getByText('Logging')).toBeVisible();
-    await expect(page.getByText('EmailJS')).toBeVisible();
-    await expect(page.getByText('Browser Notifications')).toBeVisible();
+    await expect(page.getByText(/browser notifications|notifications/i)).toBeVisible();
+    await expect(page.getByText('Menu Customization').or(page.getByText('Menu')).first()).toBeVisible();
   });
 
   test('theme mode select has correct options', async ({ page }) => {
@@ -51,25 +51,35 @@ test.describe('Settings', () => {
     await page.keyboard.press('Escape');
   });
 
-  test('EmailJS public key field accepts input', async ({ page }) => {
-    const field = page.getByLabel(/emailjs public key/i);
-    await field.fill('test-public-key-123');
-    await expect(field).toHaveValue('test-public-key-123');
+  test('menu position select has correct options', async ({ page }) => {
+    await page.getByLabel(/menu position/i).click();
+    await expect(page.getByRole('option', { name: /left/i })).toBeVisible();
+    await expect(page.getByRole('option', { name: /right/i })).toBeVisible();
+    await expect(page.getByRole('option', { name: /top/i })).toBeVisible();
+    await expect(page.getByRole('option', { name: /bottom/i })).toBeVisible();
+    await page.keyboard.press('Escape');
   });
 
-  test('EmailJS key persists to localStorage', async ({ page }) => {
-    const field = page.getByLabel(/emailjs public key/i);
-    await field.fill('my-test-key');
-    await field.blur();
+  test('menu position change persists to localStorage', async ({ page }) => {
+    await page.getByLabel(/menu position/i).click();
+    await page.getByRole('option', { name: /right/i }).click();
 
-    // Allow Zustand to debounce/persist
+    // Allow Zustand to persist
     await page.waitForTimeout(300);
 
     const stored = await page.evaluate(() => {
       const raw = localStorage.getItem('settings');
       return raw ? JSON.parse(raw) : null;
     });
-    expect(stored?.emailjsPublicKey).toBe('my-test-key');
+    expect(stored?.menuPosition).toBe('right');
+  });
+
+  test('menu pin toggle is visible and functional', async ({ page }) => {
+    const pinToggle = page.getByLabel(/pin.*menu|menu.*pinned/i);
+    await expect(pinToggle).toBeVisible();
+    // Default should be pinned (true)
+    const isChecked = await pinToggle.isChecked();
+    expect(isChecked).toBe(true);
   });
 
   test('Reset button restores defaults', async ({ page }) => {
