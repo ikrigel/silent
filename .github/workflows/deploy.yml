@@ -9,6 +9,11 @@ on:
     branches:
       - master
 
+env:
+  # Opt into Node.js 24 early to future-proof workflows
+  # (will be required starting June 2nd, 2026)
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   # ── Job 1: Run Playwright UI tests ─────────────────────────────────────────
   test:
