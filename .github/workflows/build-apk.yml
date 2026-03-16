@@ -65,6 +65,25 @@ jobs:
           fi
           echo "✓ Capacitor synced successfully"
 
+      - name: Ensure debug keystore exists
+        run: |
+          if [ ! -f "$HOME/.android/debug.keystore" ]; then
+            echo "Creating debug keystore..."
+            mkdir -p "$HOME/.android"
+            keytool -genkey -v \
+              -keystore "$HOME/.android/debug.keystore" \
+              -storepass android \
+              -alias androiddebugkey \
+              -keypass android \
+              -dname "CN=Android Debug,O=Android,C=US" \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000
+            echo "✓ Debug keystore created"
+          else
+            echo "✓ Debug keystore already exists"
+          fi
+
       - name: Make gradlew executable
         run: |
           echo "Making gradlew executable..."
