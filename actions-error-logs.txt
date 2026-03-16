@@ -1,0 +1,196 @@
+Annotations
+1 error and 1 warning
+build-apk
+Process completed with exit code 1.
+build-apk
+Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, actions/setup-java@v4, actions/setup-node@v4, android-actions/setup-android@v3. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
+ci: future-proof workflow for Node.js 24 and improve error diagnostics #13
+All jobs
+Run details
+Triggered via push 1 hour ago
+@ikrigelikrigel
+pushed
+ c197e76
+master
+Status
+Failure
+Total duration
+32m 17s
+Artifacts
+–
+
+
+Annotations
+10 errors, 2 warnings, and 1 notice
+[chromium] › tests/help.spec.ts:88:3 › Help › contact form submits and shows success (mocked EmailJS): tests/help.spec.ts#L0
+  3) [chromium] › tests/help.spec.ts:88:3 › Help › contact form submits and shows success (mocked EmailJS) 
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+    Test timeout of 30000ms exceeded.
+[chromium] › tests/help.spec.ts:88:3 › Help › contact form submits and shows success (mocked EmailJS): tests/help.spec.ts#L99
+  3) [chromium] › tests/help.spec.ts:88:3 › Help › contact form submits and shows success (mocked EmailJS) 
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: /send message/i })
+        - locator resolved to <button tabindex="0" type="submit" class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary css-1fwkc9d-MuiButtonBase-root-MuiButton-root">…</button>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is not stable
+      - retrying click action
+        - waiting for element to be visible, enabled and stable
+      - element was detached from the DOM, retrying
+
+
+       97 |     await page.getByLabel(/message/i).fill('This is an automated test message.');
+       98 |
+    >  99 |     await page.getByRole('button', { name: /send message/i }).click();
+          |                                                               ^
+      100 |
+      101 |     // Success alert should appear
+      102 |     await expect(page.getByText(/message sent/i)).toBeVisible({ timeout: 10000 });
+        at /home/runner/work/silent/silent/tests/help.spec.ts:99:63
+[chromium] › tests/help.spec.ts:88:3 › Help › contact form submits and shows success (mocked EmailJS): tests/help.spec.ts#L0
+  3) [chromium] › tests/help.spec.ts:88:3 › Help › contact form submits and shows success (mocked EmailJS) 
+    Test timeout of 30000ms exceeded.
+[chromium] › tests/help.spec.ts:61:3 › Help › contact form fields accept input: tests/help.spec.ts#L65
+  2) [chromium] › tests/help.spec.ts:61:3 › Help › contact form fields accept input ────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel(/message/i)
+
+
+      63 |     await page.getByLabel(/email address/i).fill('test@example.com');
+      64 |     await page.getByLabel(/subject/i).fill('Test Subject');
+    > 65 |     await page.getByLabel(/message/i).fill('This is a test message from Playwright.');
+         |                                       ^
+      66 |
+      67 |     await expect(page.getByLabel(/your name/i)).toHaveValue('Test User');
+      68 |     await expect(page.getByLabel(/email address/i)).toHaveValue('test@example.com');
+        at /home/runner/work/silent/silent/tests/help.spec.ts:65:39
+[chromium] › tests/help.spec.ts:61:3 › Help › contact form fields accept input: tests/help.spec.ts#L0
+  2) [chromium] › tests/help.spec.ts:61:3 › Help › contact form fields accept input ────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+    Test timeout of 30000ms exceeded.
+[chromium] › tests/help.spec.ts:61:3 › Help › contact form fields accept input: tests/help.spec.ts#L68
+  2) [chromium] › tests/help.spec.ts:61:3 › Help › contact form fields accept input ────────────────
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator: getByLabel(/email address/i)
+    Expected: "test@example.com"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveValue" with timeout 5000ms
+      - waiting for getByLabel(/email address/i)
+
+
+      66 |
+      67 |     await expect(page.getByLabel(/your name/i)).toHaveValue('Test User');
+    > 68 |     await expect(page.getByLabel(/email address/i)).toHaveValue('test@example.com');
+         |                                                     ^
+      69 |     await expect(page.getByLabel(/subject/i)).toHaveValue('Test Subject');
+      70 |   });
+      71 |
+        at /home/runner/work/silent/silent/tests/help.spec.ts:68:53
+[chromium] › tests/help.spec.ts:36:3 › Help › multiple FAQ items can be opened independently: tests/help.spec.ts#L38
+  1) [chromium] › tests/help.spec.ts:36:3 › Help › multiple FAQ items can be opened independently ──
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByText(/how do i silence emergency alerts on android/i)
+        - locator resolved to <p class="MuiTypography-root MuiTypography-body1 css-eflgtu-MuiTypography-root">How do I silence emergency alerts on Android?</p>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is not stable
+      - retrying click action
+        - waiting for element to be visible, enabled and stable
+      - element was detached from the DOM, retrying
+
+
+      36 |   test('multiple FAQ items can be opened independently', async ({ page }) => {
+      37 |     await page.getByText(/how do i silence emergency alerts on iphone/i).click();
+    > 38 |     await page.getByText(/how do i silence emergency alerts on android/i).click();
+         |                                                                           ^
+      39 |     await expect(page.getByText(/safety.*emergency.*wireless emergency alerts/i)).toBeVisible();
+      40 |   });
+      41 |
+        at /home/runner/work/silent/silent/tests/help.spec.ts:38:75
+[chromium] › tests/help.spec.ts:36:3 › Help › multiple FAQ items can be opened independently: tests/help.spec.ts#L0
+  1) [chromium] › tests/help.spec.ts:36:3 › Help › multiple FAQ items can be opened independently ──
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+    Test timeout of 30000ms exceeded.
+[chromium] › tests/help.spec.ts:36:3 › Help › multiple FAQ items can be opened independently: tests/help.spec.ts#L38
+  1) [chromium] › tests/help.spec.ts:36:3 › Help › multiple FAQ items can be opened independently ──
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByText(/how do i silence emergency alerts on android/i)
+        - locator resolved to <p class="MuiTypography-root MuiTypography-body1 css-eflgtu-MuiTypography-root">How do I silence emergency alerts on Android?</p>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is not stable
+        - retrying click action
+        - waiting 20ms
+        - waiting for element to be visible, enabled and stable
+        - element is not stable
+      - retrying click action
+        - waiting 100ms
+        - waiting for element to be visible, enabled and stable
+      - element was detached from the DOM, retrying
+
+
+      36 |   test('multiple FAQ items can be opened independently', async ({ page }) => {
+      37 |     await page.getByText(/how do i silence emergency alerts on iphone/i).click();
+    > 38 |     await page.getByText(/how do i silence emergency alerts on android/i).click();
+         |                                                                           ^
+      39 |     await expect(page.getByText(/safety.*emergency.*wireless emergency alerts/i)).toBeVisible();
+      40 |   });
+      41 |
+        at /home/runner/work/silent/silent/tests/help.spec.ts:38:75
+[chromium] › tests/help.spec.ts:36:3 › Help › multiple FAQ items can be opened independently: tests/help.spec.ts#L0
+  1) [chromium] › tests/help.spec.ts:36:3 › Help › multiple FAQ items can be opened independently ──
+    Test timeout of 30000ms exceeded.
+Playwright Tests
+Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, actions/setup-node@v4, actions/upload-artifact@v4. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+Playwright Tests
+No files were found with the provided path: playwright-report/. No artifacts will be uploaded.
+🎭 Playwright Run Summary
+  90 failed
+    [chromium] › tests/help.spec.ts:36:3 › Help › multiple FAQ items can be opened independently ───
+    [chromium] › tests/help.spec.ts:61:3 › Help › contact form fields accept input ─────────────────
+    [chromium] › tests/help.spec.ts:88:3 › Help › contact form submits and shows success (mocked EmailJS) 
+    [chromium] › tests/language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels 
+    [chromium] › tests/language.spec.ts:31:3 › Language Switching › switching back to English restores LTR 
+    [chromium] › tests/logs.spec.ts:18:3 › Logs › shows empty state with no logs ───────────────────
+    [chromium] › tests/logs.spec.ts:56:3 › Logs › level chips display correctly ────────────────────
+    [chromium] › tests/logs.spec.ts:70:3 › Logs › can select all logs and clear them ───────────────
+    [chromium] › tests/navigation.spec.ts:17:3 › Navigation › sidebar shows all nav items ──────────
+    [chromium] › tests/navigation.spec.ts:48:3 › Navigation › navigates to About page ──────────────
+    [chromium] › tests/navigation.spec.ts:60:3 › Navigation › navigates to Donate page ─────────────
+    [chromium] › tests/navigation.spec.ts:66:3 › Navigation › header shows app title with emoji ────
+    [chromium] › tests/scheduler.spec.ts:23:3 › Scheduler › opens create form on button click ──────
+    [chromium] › tests/settings.spec.ts:18:3 › Settings › shows Appearance, Logging, Notifications, and Menu sections 
+    [chromium] › tests/settings.spec.ts:25:3 › Settings › theme mode select has correct options ────
+    [chromium] › tests/settings.spec.ts:34:3 › Settings › changing theme mode persists to localStorage 
+    [chromium] › tests/settings.spec.ts:45:3 › Settings › log level select has correct options ─────
+    [chromium] › tests/settings.spec.ts:54:3 › Settings › menu position select has correct options ─
+    [chromium] › tests/settings.spec.ts:63:3 › Settings › menu position change persists to localStorage 
+    [chromium] › tests/settings.spec.ts:85:3 › Settings › Reset button restores defaults ───────────
+    [firefox] › tests/help.spec.ts:12:3 › Help › renders page heading ──────────────────────────────
+    [firefox] › tests/help.spec.ts:16:3 › Help › shows FAQ section ─────────────────────────────────
+    [firefox] › tests/help.spec.ts:27:3 › Help › FAQ item expands on click ─────────────────────────
+    [firefox] › tests/help.spec.ts:36:3 › Help › multiple FAQ items can be opened independently ────
+    [firefox] › tests/help.spec.ts:42:3 › Help › shows Contact the Developer section ───────────────
+    [firefox] › tests/help.spec.ts:46:3 › Help › contact form has all required fields ──────────────
+    [firefox] › tests/help.spec.ts:54:3 › Help › contact form shows validation errors on empty submit 
+    [firefox] › tests/help.spec.ts:61:3 › Help › contact form fields accept input ──────────────────
+    [firefox] › tests/help.spec.ts:72:3 › Help › FAQ covers all 7 questions ────────────────────────
+    [firefox] › tests/help.spec.ts:88:3 › Help › contact form submits and shows success (mocked EmailJS) 
+    [firefox] › tests/language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels 
+    [firefox] › tests/language.spec.ts:31:3 › Language Switching › switching ba
