@@ -6,6 +6,11 @@ on:
       - 'v*'
   workflow_dispatch:
 
+env:
+  # Opt into Node.js 24 early to future-proof the workflow
+  # (will be required starting June 2nd, 2026)
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build-apk:
     runs-on: ubuntu-latest
@@ -50,7 +55,9 @@ jobs:
             ls -lh android/app/build/outputs/apk/release/app-release.apk
           else
             echo "✗ APK file not found!"
-            ls -la android/app/build/outputs/
+            echo ""
+            echo "Build outputs directory structure:"
+            find android/app/build/outputs -type f -o -type d 2>/dev/null | head -50
             exit 1
           fi
 
