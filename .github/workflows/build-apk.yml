@@ -19,10 +19,32 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          echo "Installing npm dependencies..."
+          npm ci
+          if [ $? -ne 0 ]; then
+            echo "❌ npm ci failed!"
+            exit 1
+          fi
+          echo "✓ Dependencies installed"
 
       - name: Build web app
-        run: npm run build
+        run: |
+          echo "Building web app..."
+          npm run build
+          if [ $? -ne 0 ]; then
+            echo "❌ Web app build failed!"
+            exit 1
+          fi
+          echo "✓ Web app built successfully"
+
+      - name: Verify Android files
+        run: |
+          echo "Checking for required Android files..."
+          [ -d "android" ] && echo "✓ android/ directory exists" || { echo "❌ android/ directory missing!"; exit 1; }
+          [ -f "android/gradlew" ] && echo "✓ gradlew exists" || { echo "❌ gradlew missing!"; exit 1; }
+          [ -d "android/app" ] && echo "✓ android/app/ exists" || { echo "❌ android/app/ missing!"; exit 1; }
+          [ -f "capacitor.config.ts" ] && echo "✓ capacitor.config.ts exists" || { echo "⚠️  capacitor.config.ts missing"; }
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -34,23 +56,54 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Sync Capacitor
-        run: npx cap sync android
+        run: |
+          echo "Syncing Capacitor..."
+          npx cap sync android
+          if [ $? -ne 0 ]; then
+            echo "❌ Capacitor sync failed!"
+            exit 1
+          fi
+          echo "✓ Capacitor synced successfully"
 
       - name: Make gradlew executable
-        run: chmod +x android/gradlew
+        run: |
+          echo "Making gradlew executable..."
+          chmod +x android/gradlew
+          [ -x android/gradlew ] && echo "✓ gradlew is executable" || { echo "❌ Failed to make gradlew executable!"; exit 1; }
+
+      - name: Display build environment info
+        run: |
+          echo "=== BUILD ENVIRONMENT ==="
+          echo "Java version:"
+          java -version 2>&1
+          echo ""
+          echo "Gradle version:"
+          cd android && ./gradlew --version 2>&1
+          echo ""
+          echo "Current directory:"
+          pwd
+          echo ""
+          echo "Android directory contents:"
+          ls -la android/ | head -20
 
       - name: Build release APK
         working-directory: android
         run: |
           echo "Starting Android APK build..."
-          echo "Java version:"
-          java -version
-          echo ""
-          echo "Gradle version:"
-          ./gradlew --version
-          echo ""
-          echo "Building APK..."
+          echo "Building with: ./gradlew assembleRelease -x lint"
           ./gradlew assembleRelease -x lint --stacktrace --info
+          BUILD_STATUS=$?
+
+          if [ $BUILD_STATUS -ne 0 ]; then
+            echo ""
+            echo "❌ Gradle build failed with exit code: $BUILD_STATUS"
+            echo ""
+            echo "Checking for build output files..."
+            find app/build -type f -name "*.apk" 2>/dev/null || echo "No APK files found"
+            exit $BUILD_STATUS
+          fi
+          echo ""
+          echo "✓ Gradle build completed successfully"
 
       - name: Check if APK was created
         run: |
