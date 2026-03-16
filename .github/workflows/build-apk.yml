@@ -6,11 +6,6 @@ on:
       - 'v*'
   workflow_dispatch:
 
-env:
-  # Opt into Node.js 24 early to future-proof the workflow
-  # (will be required starting June 2nd, 2026)
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   build-apk:
     runs-on: ubuntu-latest
@@ -20,7 +15,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -46,7 +41,16 @@ jobs:
 
       - name: Build release APK
         working-directory: android
-        run: ./gradlew assembleRelease -x lint
+        run: |
+          echo "Starting Android APK build..."
+          echo "Java version:"
+          java -version
+          echo ""
+          echo "Gradle version:"
+          ./gradlew --version
+          echo ""
+          echo "Building APK..."
+          ./gradlew assembleRelease -x lint --stacktrace --info
 
       - name: Check if APK was created
         run: |
@@ -56,8 +60,17 @@ jobs:
           else
             echo "✗ APK file not found!"
             echo ""
-            echo "Build outputs directory structure:"
-            find android/app/build/outputs -type f -o -type d 2>/dev/null | head -50
+            echo "Checking build directory..."
+            if [ -d "android/app/build" ]; then
+              echo "Build directory exists. Contents:"
+              find android/app/build -type f -name "*.apk" 2>/dev/null || echo "No APK files found"
+              echo ""
+              echo "Full build outputs structure:"
+              find android/app/build/outputs -type f -o -type d 2>/dev/null | head -100
+            else
+              echo "Build directory doesn't exist!"
+              ls -la android/app/
+            fi
             exit 1
           fi
 
