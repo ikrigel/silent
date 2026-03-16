@@ -9,6 +9,7 @@ import { useSchedulerStore } from '@/store/schedulerStore';
 import { getActiveSchedules } from '@/services/schedulerService';
 import { getSmoothDarknessFactor } from '@/theme/colorInterpolation';
 import { fireScheduleReminder, fireScheduleEndReminder } from '@/services/notificationService';
+import { logService } from '@/services/logService';
 import HowToGuide from '@/components/HowToGuide';
 import { useNavigate } from 'react-router-dom';
 import type { ScheduleEntry } from '@/types';
@@ -49,13 +50,20 @@ const Dashboard: React.FC = () => {
       // Schedules that just became active → fire start reminder + optional robot/airplane
       nowActive.forEach((s) => {
         if (!prevActiveIds.current.has(s.id)) {
+          logService.info(`Dashboard: Schedule "${s.name}" activated`);
           fireScheduleReminder(s.name);
           if (robotService.isAndroid()) {
             if (s.useAirplaneMode) {
-              robotService.enableAirplaneMode().catch(() => {});
+              robotService.enableAirplaneMode().catch((err: unknown) => {
+                const msg = err instanceof Error ? err.message : String(err);
+                logService.error(`Dashboard: Failed to enable airplane mode: ${msg}`);
+              });
             }
             if (s.robotRecordingId) {
-              robotService.executeRecording(s.robotRecordingId).catch(() => {});
+              robotService.executeRecording(s.robotRecordingId).catch((err: unknown) => {
+                const msg = err instanceof Error ? err.message : String(err);
+                logService.error(`Dashboard: Failed to execute recording ${s.robotRecordingId}: ${msg}`);
+              });
             }
           }
         }
@@ -66,9 +74,13 @@ const Dashboard: React.FC = () => {
         if (!nowIds.has(id)) {
           const entry = schedules.find((s) => s.id === id);
           if (entry) {
+            logService.info(`Dashboard: Schedule "${entry.name}" ended`);
             fireScheduleEndReminder(entry.name);
             if (entry.useAirplaneMode && robotService.isAndroid()) {
-              robotService.disableAirplaneMode().catch(() => {});
+              robotService.disableAirplaneMode().catch((err: unknown) => {
+                const msg = err instanceof Error ? err.message : String(err);
+                logService.error(`Dashboard: Failed to disable airplane mode: ${msg}`);
+              });
             }
           }
         }
