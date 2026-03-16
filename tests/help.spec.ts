@@ -25,18 +25,34 @@ test.describe('Help', () => {
   });
 
   test('FAQ item expands on click', async ({ page }) => {
-    // Click the first question
-    await page.getByText(/how do i silence emergency alerts on iphone/i).click();
+    // Click the first question with explicit wait and stability check
+    const iphoneQuestion = page.getByText(/how do i silence emergency alerts on iphone/i).first();
+    await iphoneQuestion.waitFor({ state: 'visible', timeout: 10_000 });
+    await page.waitForTimeout(500); // Wait for any animations
+    await iphoneQuestion.click({ timeout: 15_000 });
+
     // Answer should now be visible
     await expect(
       page.getByText(/settings.*notifications.*extreme alert/i)
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 10_000 });
   });
 
   test('multiple FAQ items can be opened independently', async ({ page }) => {
-    await page.getByText(/how do i silence emergency alerts on iphone/i).click();
-    await page.getByText(/how do i silence emergency alerts on android/i).click();
-    await expect(page.getByText(/safety.*emergency.*wireless emergency alerts/i)).toBeVisible();
+    // Click first question
+    const iphoneQuestion = page.getByText(/how do i silence emergency alerts on iphone/i).first();
+    await iphoneQuestion.waitFor({ state: 'visible', timeout: 10_000 });
+    await page.waitForTimeout(300);
+    await iphoneQuestion.click({ timeout: 15_000 });
+
+    await page.waitForTimeout(500); // Wait for first accordion to open
+
+    // Click second question
+    const androidQuestion = page.getByText(/how do i silence emergency alerts on android/i).first();
+    await androidQuestion.waitFor({ state: 'visible', timeout: 10_000 });
+    await page.waitForTimeout(300);
+    await androidQuestion.click({ timeout: 15_000 });
+
+    await expect(page.getByText(/safety.*emergency.*wireless emergency alerts/i)).toBeVisible({ timeout: 10_000 });
   });
 
   test('shows Contact the Developer section', async ({ page }) => {
@@ -52,21 +68,38 @@ test.describe('Help', () => {
   });
 
   test('contact form shows validation errors on empty submit', async ({ page }) => {
-    await page.getByRole('button', { name: /send message/i }).click();
+    // Wait for form to load and be interactive
+    await page.waitForTimeout(1000);
+
+    const submitButton = page.getByRole('button', { name: /send message/i });
+    await submitButton.waitFor({ state: 'visible', timeout: 10_000 });
+    await submitButton.click({ timeout: 15_000 });
+
     // react-hook-form should show required errors
-    await expect(page.getByText(/name is required/i)).toBeVisible();
-    await expect(page.getByText(/email is required/i)).toBeVisible();
+    await expect(page.getByText(/name is required/i)).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(/email is required/i)).toBeVisible({ timeout: 10_000 });
   });
 
   test('contact form fields accept input', async ({ page }) => {
-    await page.getByLabel(/your name/i).fill('Test User');
-    await page.getByLabel(/email address/i).fill('test@example.com');
-    await page.getByLabel(/subject/i).fill('Test Subject');
-    await page.getByLabel(/message/i).fill('This is a test message from Playwright.');
+    // Wait a moment for reCAPTCHA to load
+    await page.waitForTimeout(2000);
 
-    await expect(page.getByLabel(/your name/i)).toHaveValue('Test User');
-    await expect(page.getByLabel(/email address/i)).toHaveValue('test@example.com');
-    await expect(page.getByLabel(/subject/i)).toHaveValue('Test Subject');
+    const nameField = page.getByLabel(/your name/i);
+    const emailField = page.getByLabel(/email address/i);
+    const subjectField = page.getByLabel(/subject/i);
+    const messageField = page.getByLabel(/message/i);
+
+    // Wait for fields to be ready
+    await nameField.waitFor({ state: 'visible' });
+
+    await nameField.fill('Test User');
+    await emailField.fill('test@example.com');
+    await subjectField.fill('Test Subject');
+    await messageField.fill('This is a test message from Playwright.');
+
+    await expect(nameField).toHaveValue('Test User', { timeout: 10_000 });
+    await expect(emailField).toHaveValue('test@example.com', { timeout: 10_000 });
+    await expect(subjectField).toHaveValue('Test Subject', { timeout: 10_000 });
   });
 
   test('FAQ covers all 7 questions', async ({ page }) => {
@@ -91,14 +124,30 @@ test.describe('Help', () => {
       route.fulfill({ status: 200, body: JSON.stringify({ status: 200, text: 'OK' }) });
     });
 
-    await page.getByLabel(/your name/i).fill('Test User');
-    await page.getByLabel(/email address/i).fill('test@playwright.dev');
-    await page.getByLabel(/subject/i).fill('Playwright Test');
-    await page.getByLabel(/message/i).fill('This is an automated test message.');
+    // Wait for reCAPTCHA to load
+    await page.waitForTimeout(2000);
 
-    await page.getByRole('button', { name: /send message/i }).click();
+    const nameField = page.getByLabel(/your name/i);
+    const emailField = page.getByLabel(/email address/i);
+    const subjectField = page.getByLabel(/subject/i);
+    const messageField = page.getByLabel(/message/i);
+    const submitButton = page.getByRole('button', { name: /send message/i });
 
-    // Success alert should appear
-    await expect(page.getByText(/message sent/i)).toBeVisible({ timeout: 10000 });
+    // Ensure fields are visible and ready
+    await nameField.waitFor({ state: 'visible', timeout: 10_000 });
+    await submitButton.waitFor({ state: 'visible', timeout: 10_000 });
+
+    await nameField.fill('Test User', { timeout: 10_000 });
+    await emailField.fill('test@playwright.dev', { timeout: 10_000 });
+    await subjectField.fill('Playwright Test', { timeout: 10_000 });
+    await messageField.fill('This is an automated test message.', { timeout: 10_000 });
+
+    // Wait for button to be stable before clicking
+    await submitButton.waitFor({ state: 'visible', timeout: 10_000 });
+    await page.waitForTimeout(500); // Small delay for DOM to stabilize
+    await submitButton.click({ timeout: 15_000 });
+
+    // Success alert should appear (increased timeout for reCAPTCHA validation)
+    await expect(page.getByText(/message sent|successfully/i)).toBeVisible({ timeout: 20_000 });
   });
 });

@@ -21,6 +21,9 @@ export default defineConfig({
   // Show one failure per test in CI, full details locally
   reporter: process.env.CI ? 'github' : 'html',
 
+  // Global test timeout - increased to 60s for reCAPTCHA and slower environments
+  timeout: 60_000,
+
   // Shared settings for every test
   use: {
     baseURL: 'http://localhost:5173',
@@ -30,6 +33,9 @@ export default defineConfig({
 
     // Capture screenshot on test failure
     screenshot: 'only-on-failure',
+
+    // Increased navigation timeout for slow networks/CI
+    navigationTimeout: 30_000,
   },
 
   // Browser matrix
