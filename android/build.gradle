@@ -23,12 +23,6 @@ allprojects {
         google()
         mavenCentral()
     }
-
-    tasks.withType(JavaCompile) {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-        options.release = 17  // Explicitly tell compiler to target Java 17
-    }
 }
 
 task clean(type: Delete) {
