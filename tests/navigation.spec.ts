@@ -15,50 +15,59 @@ test.describe('Navigation', () => {
   });
 
   test('sidebar shows all nav items', async ({ page }) => {
-    const nav = page.getByRole('navigation').or(page.locator('.MuiDrawer-root'));
-    await expect(page.getByRole('link', { name: /dashboard/i }).or(
-      page.getByText('Dashboard').first()
-    )).toBeVisible();
-    await expect(page.getByText('Scheduler')).toBeVisible();
-    await expect(page.getByText('Logs')).toBeVisible();
-    await expect(page.getByText('Settings')).toBeVisible();
-    await expect(page.getByText('About')).toBeVisible();
-    await expect(page.getByText('Help')).toBeVisible();
-    await expect(page.getByText('Donate')).toBeVisible();
+    await expect(page.getByRole('link', { name: /dashboard/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /scheduler/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /logs/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /settings/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /about/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /help/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /donate/i })).toBeVisible();
   });
 
   test('navigates to Scheduler page', async ({ page }) => {
-    await page.getByText('Scheduler').first().click();
+    const schedulerLink = page.getByRole('link', { name: /scheduler/i });
+    await expect(schedulerLink).toBeVisible();
+    await schedulerLink.click();
     await expect(page).toHaveURL('/scheduler');
     await expect(page.getByRole('heading', { name: /scheduler/i })).toBeVisible();
   });
 
   test('navigates to Logs page', async ({ page }) => {
-    await page.getByText('Logs').first().click();
+    const logsLink = page.getByRole('link', { name: /logs/i });
+    await expect(logsLink).toBeVisible();
+    await logsLink.click();
     await expect(page).toHaveURL('/logs');
     await expect(page.getByRole('heading', { name: /logs/i })).toBeVisible();
   });
 
   test('navigates to Settings page', async ({ page }) => {
-    await page.getByText('Settings').first().click();
+    const settingsLink = page.getByRole('link', { name: /settings/i });
+    await expect(settingsLink).toBeVisible();
+    await settingsLink.click();
     await expect(page).toHaveURL('/settings');
     await expect(page.getByRole('heading', { name: /settings/i })).toBeVisible();
   });
 
   test('navigates to About page', async ({ page }) => {
-    await page.getByText('About').first().click();
+    const aboutLink = page.getByRole('link', { name: /about/i });
+    await expect(aboutLink).toBeVisible();
+    await aboutLink.click();
     await expect(page).toHaveURL('/about');
     await expect(page.getByRole('heading', { name: /about/i })).toBeVisible();
   });
 
   test('navigates to Help page', async ({ page }) => {
-    await page.getByText('Help').first().click();
+    const helpLink = page.getByRole('link', { name: /help/i });
+    await expect(helpLink).toBeVisible();
+    await helpLink.click();
     await expect(page).toHaveURL('/help');
     await expect(page.getByRole('heading', { name: /help/i })).toBeVisible();
   });
 
   test('navigates to Donate page', async ({ page }) => {
-    await page.getByText('Donate').first().click();
+    const donateLink = page.getByRole('link', { name: /donate/i });
+    await expect(donateLink).toBeVisible();
+    await donateLink.click();
     await expect(page).toHaveURL('/donate');
     await expect(page.getByRole('heading', { name: /donate|support/i })).toBeVisible();
   });

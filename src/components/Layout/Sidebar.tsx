@@ -64,7 +64,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ open, onClose, variant }) => {
       <List>
         {NAV_ITEMS.map(({ label, path, icon }) => (
           <ListItem key={path} disablePadding>
-            <ListItemButton selected={pathname === path} onClick={() => handleNav(path)}>
+            <ListItemButton
+              selected={pathname === path}
+              onClick={() => handleNav(path)}
+              role="link"
+              aria-label={label}
+            >
               <ListItemIcon>{icon}</ListItemIcon>
               <ListItemText primary={label} />
             </ListItemButton>
