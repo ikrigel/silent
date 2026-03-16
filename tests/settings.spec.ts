@@ -16,10 +16,10 @@ test.describe('Settings', () => {
   });
 
   test('shows Appearance, Logging, Notifications, and Menu sections', async ({ page }) => {
-    await expect(page.getByText('Appearance')).toBeVisible();
-    await expect(page.getByText('Logging')).toBeVisible();
-    await expect(page.getByText(/browser notifications|notifications/i)).toBeVisible();
-    await expect(page.getByText('Menu Customization').or(page.getByText('Menu')).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: /appearance/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /logging/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /notifications/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /menu/i })).toBeVisible();
   });
 
   test('theme mode select has correct options', async ({ page }) => {

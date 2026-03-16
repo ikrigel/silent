@@ -35,6 +35,7 @@ const SettingsPage: React.FC = () => {
                 value={settings.themeMode}
                 label={t('settings.themeMode')}
                 onChange={(e) => setThemeMode(e.target.value as ThemeMode)}
+                inputProps={{ 'aria-label': t('settings.themeMode') }}
               >
                 <MenuItem value="light">{t('settings.light')}</MenuItem>
                 <MenuItem value="dark">{t('settings.dark')}</MenuItem>
@@ -52,6 +53,7 @@ const SettingsPage: React.FC = () => {
                 value={settings.logLevel}
                 label={t('settings.logLevel')}
                 onChange={(e) => setLogLevel(e.target.value as LogLevel)}
+                inputProps={{ 'aria-label': t('settings.logLevel') }}
               >
                 <MenuItem value="none">{t('settings.logNone')}</MenuItem>
                 <MenuItem value="error">{t('settings.logError')}</MenuItem>
@@ -89,6 +91,7 @@ const SettingsPage: React.FC = () => {
                 value={settings.menuPosition ?? 'left'}
                 label={t('settings.menuPosition')}
                 onChange={(e) => setMenuPosition(e.target.value as 'left' | 'right' | 'top' | 'bottom')}
+                inputProps={{ 'aria-label': t('settings.menuPosition') }}
               >
                 <MenuItem value="left">{t('settings.menuLeft')}</MenuItem>
                 <MenuItem value="right">{t('settings.menuRight')}</MenuItem>
