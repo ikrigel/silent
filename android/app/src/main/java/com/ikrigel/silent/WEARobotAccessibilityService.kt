@@ -100,7 +100,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
             "click_any"     -> clickByAnyLabel(step.text.split("|"))
             "toggle_off_any"-> toggleByAnyLabel(step.text.split("|"), targetState = false)
             "toggle_on_any" -> toggleByAnyLabel(step.text.split("|"), targetState = true)
-            "scroll_down"   -> performGlobalAction(GLOBAL_ACTION_ACCESSIBILITY_ALL_WINDOWS)
+            "scroll_down"   -> scrollDown()
         }
     }
 
@@ -170,6 +170,21 @@ class WEARobotAccessibilityService : AccessibilityService() {
             current = current.parent
         }
         return null
+    }
+
+    private fun scrollDown() {
+        val root = rootInActiveWindow ?: run {
+            onStepResult?.invoke(false, "No active window for scrolling")
+            state = RobotState.IDLE
+            return
+        }
+        // Try to scroll the root window or the first scrollable container found
+        if (root.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)) {
+            // Successfully scrolled; next step will be triggered by window event
+        } else {
+            onStepResult?.invoke(false, "Could not scroll")
+            state = RobotState.IDLE
+        }
     }
 
     private fun findToggleAncestor(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
