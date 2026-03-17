@@ -34,6 +34,8 @@ jobs:
       # Build first so the dev server starts cleanly
       - name: Build
         run: npm run build
+        env:
+          NODE_ENV: production
 
       # Run the full test suite; Playwright auto-starts the dev server
       - name: Run Playwright tests
@@ -70,6 +72,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          NODE_ENV: production
 
       # Deploy to Vercel production
       # Required GitHub secrets:
