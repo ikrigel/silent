@@ -33,6 +33,7 @@ export async function sendEmail(
         reply_to: data.email,
         subject: data.subject,
         message: data.message,
+        'g-recaptcha-response': data['g-recaptcha-response'] || '',
       },
       publicKey || PUBLIC_KEY
     );
