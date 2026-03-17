@@ -1,6 +1,6 @@
 import { Capacitor, registerPlugin } from '@capacitor/core';
 import type { RobotRecording, RobotStep } from '../types';
-import { logService } from './logService';
+import { writeLog } from './logService';
 
 // ── Capacitor plugin interface ────────────────────────────────────────────────
 
@@ -31,16 +31,16 @@ export const robotService = {
 
   async isAccessibilityEnabled(): Promise<boolean> {
     if (!WEARobot) {
-      logService.info('robotService: Not Android platform');
+      writeLog('info', 'robotService: Not Android platform');
       return false;
     }
     try {
       const { enabled } = await WEARobot.isAccessibilityEnabled();
-      logService.verbose(`robotService: isAccessibilityEnabled = ${enabled}`);
+      writeLog('verbose',`robotService: isAccessibilityEnabled = ${enabled}`);
       return enabled;
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      logService.error(`robotService: isAccessibilityEnabled failed: ${msg}`);
+      writeLog('error',`robotService: isAccessibilityEnabled failed: ${msg}`);
       throw err;
     }
   },
@@ -53,12 +53,12 @@ export const robotService = {
   async startRecording(): Promise<void> {
     if (!WEARobot) throw new Error('Robot only available on Android');
     try {
-      logService.info('robotService: Starting recording');
+      writeLog('info','robotService: Starting recording');
       await WEARobot.startRecording();
-      logService.info('robotService: Recording started');
+      writeLog('info','robotService: Recording started');
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      logService.error(`robotService: startRecording failed: ${msg}`);
+      writeLog('error',`robotService: startRecording failed: ${msg}`);
       throw err;
     }
   },
@@ -66,13 +66,13 @@ export const robotService = {
   async stopRecording(): Promise<RobotStep[]> {
     if (!WEARobot) throw new Error('Robot only available on Android');
     try {
-      logService.info('robotService: Stopping recording');
+      writeLog('info','robotService: Stopping recording');
       const { steps } = await WEARobot.stopRecording();
-      logService.info(`robotService: Recording stopped, captured ${steps.length} steps`);
+      writeLog('info',`robotService: Recording stopped, captured ${steps.length} steps`);
       return steps;
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      logService.error(`robotService: stopRecording failed: ${msg}`);
+      writeLog('error',`robotService: stopRecording failed: ${msg}`);
       throw err;
     }
   },
@@ -80,13 +80,13 @@ export const robotService = {
   async saveRecording(name: string, steps: RobotStep[], id?: string): Promise<string> {
     if (!WEARobot) throw new Error('Robot only available on Android');
     try {
-      logService.info(`robotService: Saving recording "${name}" with ${steps.length} steps`);
+      writeLog('info',`robotService: Saving recording "${name}" with ${steps.length} steps`);
       const { id: savedId } = await WEARobot.saveRecording({ id, name, steps });
-      logService.info(`robotService: Recording saved with ID: ${savedId}`);
+      writeLog('info',`robotService: Recording saved with ID: ${savedId}`);
       return savedId;
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      logService.error(`robotService: saveRecording failed: ${msg}`);
+      writeLog('error',`robotService: saveRecording failed: ${msg}`);
       throw err;
     }
   },
@@ -111,13 +111,13 @@ export const robotService = {
   async silenceWEA(): Promise<string> {
     if (!WEARobot) throw new Error('Robot only available on Android');
     try {
-      logService.info('robotService: Attempting to silence WEA');
+      writeLog('info','robotService: Attempting to silence WEA');
       const { message } = await WEARobot.silenceWEA();
-      logService.info(`robotService: WEA silenced: ${message}`);
+      writeLog('info',`robotService: WEA silenced: ${message}`);
       return message;
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      logService.error(`robotService: silenceWEA failed: ${msg}`);
+      writeLog('error',`robotService: silenceWEA failed: ${msg}`);
       throw err;
     }
   },
@@ -125,13 +125,13 @@ export const robotService = {
   async unsilenceWEA(): Promise<string> {
     if (!WEARobot) throw new Error('Robot only available on Android');
     try {
-      logService.info('robotService: Attempting to restore WEA');
+      writeLog('info','robotService: Attempting to restore WEA');
       const { message } = await WEARobot.unsilenceWEA();
-      logService.info(`robotService: WEA restored: ${message}`);
+      writeLog('info',`robotService: WEA restored: ${message}`);
       return message;
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      logService.error(`robotService: unsilenceWEA failed: ${msg}`);
+      writeLog('error',`robotService: unsilenceWEA failed: ${msg}`);
       throw err;
     }
   },
@@ -139,13 +139,13 @@ export const robotService = {
   async enableAirplaneMode(): Promise<string> {
     if (!WEARobot) throw new Error('Robot only available on Android');
     try {
-      logService.info('robotService: Attempting to enable Airplane Mode');
+      writeLog('info','robotService: Attempting to enable Airplane Mode');
       const { message } = await WEARobot.enableAirplaneMode();
-      logService.info(`robotService: Airplane Mode enabled: ${message}`);
+      writeLog('info',`robotService: Airplane Mode enabled: ${message}`);
       return message;
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      logService.error(`robotService: enableAirplaneMode failed: ${msg}`);
+      writeLog('error',`robotService: enableAirplaneMode failed: ${msg}`);
       throw err;
     }
   },
@@ -153,13 +153,13 @@ export const robotService = {
   async disableAirplaneMode(): Promise<string> {
     if (!WEARobot) throw new Error('Robot only available on Android');
     try {
-      logService.info('robotService: Attempting to disable Airplane Mode');
+      writeLog('info','robotService: Attempting to disable Airplane Mode');
       const { message } = await WEARobot.disableAirplaneMode();
-      logService.info(`robotService: Airplane Mode disabled: ${message}`);
+      writeLog('info',`robotService: Airplane Mode disabled: ${message}`);
       return message;
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      logService.error(`robotService: disableAirplaneMode failed: ${msg}`);
+      writeLog('error',`robotService: disableAirplaneMode failed: ${msg}`);
       throw err;
     }
   },

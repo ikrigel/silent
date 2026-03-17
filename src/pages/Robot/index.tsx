@@ -9,7 +9,7 @@ import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import { useTranslation } from 'react-i18next';
 import { robotService } from '@/services/robotService';
-import { logService } from '@/services/logService';
+import { writeLog } from '@/services/logService';
 import SetupGuide from './SetupGuide';
 import RecordingControls from './RecordingControls';
 import RecordingList from './RecordingList';
@@ -33,7 +33,7 @@ const RobotPage: React.FC = () => {
   const handleSaved = useCallback(() => setRefreshKey((k) => k + 1), []);
 
   const runAction = async (action: 'silence' | 'unsilence' | 'airplane_on' | 'airplane_off') => {
-    logService.info(`Robot page: User triggered action: ${action}`);
+    writeLog('info',`Robot page: User triggered action: ${action}`);
     setStatus('working');
     setMsg('');
     setError('');
@@ -53,11 +53,11 @@ const RobotPage: React.FC = () => {
           result = await robotService.disableAirplaneMode();
           break;
       }
-      logService.info(`Robot page: Action ${action} succeeded: ${result}`);
+      writeLog('info',`Robot page: Action ${action} succeeded: ${result}`);
       setMsg(result);
     } catch (err: unknown) {
       const errMsg = err instanceof Error ? err.message : String(err);
-      logService.error(`Robot page: Action ${action} failed: ${errMsg}`);
+      writeLog('error',`Robot page: Action ${action} failed: ${errMsg}`);
       setError(errMsg);
     } finally {
       setStatus('idle');
