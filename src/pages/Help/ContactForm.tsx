@@ -15,6 +15,10 @@ const ContactForm: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
+  // Get sitekey from environment or use Google's test key as fallback
+  const RECAPTCHA_SITE_KEY = (import.meta.env.VITE_RECAPTCHA_SITE_KEY as string) ||
+    '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+
   const { control, handleSubmit, reset } = useForm<ContactFormData>({
     defaultValues: { name: '', email: '', subject: '', message: '' },
   });
@@ -73,7 +77,7 @@ const ContactForm: React.FC = () => {
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <ReCAPTCHA
             ref={recaptchaRef}
-            sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY as string}
+            sitekey={RECAPTCHA_SITE_KEY}
           />
         </Box>
         {status === 'error' && !errorMsg.includes('reCAPTCHA') && (
