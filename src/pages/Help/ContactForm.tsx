@@ -15,26 +15,30 @@ const ContactForm: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
-  // Get sitekey from environment or use Google's test key as fallback
-  const RECAPTCHA_SITE_KEY = (import.meta.env.VITE_RECAPTCHA_SITE_KEY as string) ||
-    '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+  // Get reCAPTCHA v2 Invisible site key from environment
+  const RECAPTCHA_SITE_KEY = (import.meta.env.VITE_RECAPTCHA_SITE_KEY as string) || '';
+
+  // Warn if sitekey is not configured
+  if (!RECAPTCHA_SITE_KEY) {
+    writeLog('error', 'reCAPTCHA site key not configured in environment variables');
+  }
 
   const { control, handleSubmit, reset } = useForm<ContactFormData>({
     defaultValues: { name: '', email: '', subject: '', message: '' },
   });
 
   const onSubmit = async (data: ContactFormData) => {
-    // Get reCAPTCHA token
-    const token = recaptchaRef.current?.getValue();
-    if (!token) {
-      setStatus('error');
-      setErrorMsg(t('help.form.captchaRequired') || 'Please complete the reCAPTCHA');
-      return;
-    }
-
     setStatus('sending');
     try {
-      // Public key is hardcoded in emailService — no need to pass from settings
+      // For reCAPTCHA v2 Invisible, execute() returns a token
+      const token = await recaptchaRef.current?.executeAsync();
+      if (!token) {
+        setStatus('error');
+        setErrorMsg(t('help.form.captchaRequired') || 'reCAPTCHA validation failed');
+        return;
+      }
+
+      // Send email with reCAPTCHA token
       await sendEmail({ ...data, 'g-recaptcha-response': token }, '');
       setStatus('success');
       writeLog('info', 'Contact form submitted successfully');
@@ -74,17 +78,15 @@ const ContactForm: React.FC = () => {
             <TextField {...field} label={t('help.form.message')} multiline rows={4} fullWidth error={!!fieldState.error} helperText={fieldState.error?.message} />
           )}
         />
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <ReCAPTCHA
-            ref={recaptchaRef}
-            sitekey={RECAPTCHA_SITE_KEY}
-          />
-        </Box>
-        {status === 'error' && !errorMsg.includes('reCAPTCHA') && (
-          <Typography variant="caption" color="text.secondary">
-            {t('help.form.captchaNote') || 'This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.'}
-          </Typography>
-        )}
+        {/* reCAPTCHA v2 Invisible - renders invisibly during form submission */}
+        <ReCAPTCHA
+          ref={recaptchaRef}
+          sitekey={RECAPTCHA_SITE_KEY}
+          size="invisible"
+        />
+        <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center', display: 'block' }}>
+          {t('help.form.captchaNote') || 'This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.'}
+        </Typography>
         <Button
           type="submit"
           variant="contained"
