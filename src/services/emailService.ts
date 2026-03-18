@@ -3,7 +3,7 @@ import emailjs from '@emailjs/browser';
 // EmailJS configuration — replace with your actual IDs
 const SERVICE_ID = 'service_eghiyme';
 const TEMPLATE_ID = 'template_4v9rsyj';
-const PUBLIC_KEY = '4aMkGokEYDP1_lL5-'; // Default public key
+const PUBLIC_KEY = '0OPkBoDHWYEvKnVDj'; // EmailJS public key
 
 export interface ContactFormData {
   name: string;
