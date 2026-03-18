@@ -16,7 +16,10 @@ test.describe('Language Switching', () => {
   });
 
   test('switching to Hebrew changes navigation labels', async ({ page }) => {
-    await page.getByRole('button', { name: /^עב/i }).click();
+    const heButton = page.getByRole('button', { name: /^עב/i }).first();
+    await expect(heButton).toBeVisible();
+    await heButton.click();
+    await page.waitForTimeout(500);
     // Hebrew nav labels should appear
     await expect(page.getByText('לוח בקרה')).toBeVisible();
     await expect(page.getByText('מתזמן')).toBeVisible();
@@ -29,8 +32,12 @@ test.describe('Language Switching', () => {
   });
 
   test('switching back to English restores LTR', async ({ page }) => {
-    await page.getByRole('button', { name: /^עב/i }).click();
-    await page.getByRole('button', { name: 'EN' }).click();
+    const heButton = page.getByRole('button', { name: /^עב/i }).first();
+    await heButton.click();
+    await page.waitForTimeout(300);
+    const enButton = page.getByRole('button', { name: 'EN' }).first();
+    await enButton.click();
+    await page.waitForTimeout(300);
     const dir = await page.evaluate(() => document.documentElement.dir);
     expect(dir).toBe('ltr');
   });

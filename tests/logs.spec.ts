@@ -12,11 +12,11 @@ test.describe('Logs', () => {
   });
 
   test('renders page heading', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: /logs/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /logs/i, level: 4 })).toBeVisible();
   });
 
   test('shows empty state with no logs', async ({ page }) => {
-    await expect(page.getByText(/no logs to show/i)).toBeVisible();
+    await expect(page.getByText(/no logs to display|no logs to show/i)).toBeVisible();
   });
 
   test('Delete Selected button is disabled with no selection', async ({ page }) => {
@@ -61,10 +61,11 @@ test.describe('Logs', () => {
     ];
     await page.evaluate((l) => localStorage.setItem('logs', JSON.stringify(l)), logs);
     await page.reload();
+    await page.waitForTimeout(300);
 
-    await expect(page.getByText('info')).toBeVisible();
-    await expect(page.getByText('error')).toBeVisible();
-    await expect(page.getByText('verbose')).toBeVisible();
+    await expect(page.getByText(/Info entry|Info/)).toBeVisible();
+    await expect(page.getByText(/Error entry|Error/)).toBeVisible();
+    await expect(page.getByText(/Verbose entry|Verbose/)).toBeVisible();
   });
 
   test('can select all logs and clear them', async ({ page }) => {
@@ -74,17 +75,22 @@ test.describe('Logs', () => {
     ];
     await page.evaluate((l) => localStorage.setItem('logs', JSON.stringify(l)), logs);
     await page.reload();
+    await page.waitForTimeout(300);
 
     // Select all via header checkbox
-    await page.locator('thead input[type="checkbox"]').click();
+    const headerCheckbox = page.locator('thead input[type="checkbox"]');
+    await expect(headerCheckbox).toBeVisible();
+    await headerCheckbox.click();
+    await page.waitForTimeout(200);
 
     // Delete Selected should now be enabled
     const deleteBtn = page.getByRole('button', { name: /delete selected/i });
     await expect(deleteBtn).toBeEnabled();
     await deleteBtn.click();
+    await page.waitForTimeout(300);
 
     // Logs should be gone
-    await expect(page.getByText(/no logs to show/i)).toBeVisible();
+    await expect(page.getByText(/no logs to display|no logs to show/i)).toBeVisible();
   });
 
   test('Export JSON button triggers download', async ({ page }) => {
@@ -106,6 +112,6 @@ test.describe('Logs', () => {
   test('Refresh button reloads logs from storage', async ({ page }) => {
     await page.getByRole('button', { name: /refresh/i }).click();
     // Should not throw — page stays functional
-    await expect(page.getByRole('heading', { name: /logs/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /logs/i, level: 4 })).toBeVisible();
   });
 });

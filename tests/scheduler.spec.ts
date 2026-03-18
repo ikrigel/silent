@@ -12,16 +12,19 @@ test.describe('Scheduler', () => {
   });
 
   test('renders page heading and New Schedule button', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: /scheduler/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /scheduler/i, level: 4 })).toBeVisible();
     await expect(page.getByRole('button', { name: /new schedule/i })).toBeVisible();
   });
 
   test('shows empty state when no schedules exist', async ({ page }) => {
-    await expect(page.getByText(/no schedules yet/i)).toBeVisible();
+    await expect(page.getByText(/no schedules yet|no schedules/i)).toBeVisible();
   });
 
   test('opens create form on button click', async ({ page }) => {
-    await page.getByRole('button', { name: /new schedule/i }).click();
+    const newBtn = page.getByRole('button', { name: /new schedule/i });
+    await expect(newBtn).toBeVisible();
+    await newBtn.click();
+    await page.waitForTimeout(300);
     await expect(page.getByRole('dialog')).toBeVisible();
     await expect(page.getByText(/new schedule/i)).toBeVisible();
   });

@@ -29,7 +29,7 @@ test.describe('Navigation', () => {
     await expect(schedulerLink).toBeVisible();
     await schedulerLink.click();
     await expect(page).toHaveURL('/scheduler');
-    await expect(page.getByRole('heading', { name: /scheduler/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /scheduler/i, level: 4 })).toBeVisible();
   });
 
   test('navigates to Logs page', async ({ page }) => {
@@ -37,7 +37,7 @@ test.describe('Navigation', () => {
     await expect(logsLink).toBeVisible();
     await logsLink.click();
     await expect(page).toHaveURL('/logs');
-    await expect(page.getByRole('heading', { name: /logs/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /logs/i, level: 4 })).toBeVisible();
   });
 
   test('navigates to Settings page', async ({ page }) => {
@@ -45,7 +45,7 @@ test.describe('Navigation', () => {
     await expect(settingsLink).toBeVisible();
     await settingsLink.click();
     await expect(page).toHaveURL('/settings');
-    await expect(page.getByRole('heading', { name: /settings/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /settings/i, level: 4 })).toBeVisible();
   });
 
   test('navigates to About page', async ({ page }) => {
@@ -53,7 +53,7 @@ test.describe('Navigation', () => {
     await expect(aboutLink).toBeVisible();
     await aboutLink.click();
     await expect(page).toHaveURL('/about');
-    await expect(page.getByRole('heading', { name: /about/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /about/i, level: 4 })).toBeVisible();
   });
 
   test('navigates to Help page', async ({ page }) => {
@@ -61,7 +61,7 @@ test.describe('Navigation', () => {
     await expect(helpLink).toBeVisible();
     await helpLink.click();
     await expect(page).toHaveURL('/help');
-    await expect(page.getByRole('heading', { name: /help/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /help/i, level: 4 })).toBeVisible();
   });
 
   test('navigates to Donate page', async ({ page }) => {
@@ -69,11 +69,11 @@ test.describe('Navigation', () => {
     await expect(donateLink).toBeVisible();
     await donateLink.click();
     await expect(page).toHaveURL('/donate');
-    await expect(page.getByRole('heading', { name: /donate|support/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /donate|support/i, level: 4 })).toBeVisible();
   });
 
   test('header shows app title with emoji', async ({ page }) => {
-    await expect(page.getByText(/💤/)).toBeVisible();
+    await expect(page.getByText(/💤.*Dashboard/)).toBeVisible();
   });
 
   test('theme toggle button is visible in header', async ({ page }) => {

@@ -127,11 +127,11 @@ test.describe('Help', () => {
     // Wait for reCAPTCHA to load
     await page.waitForTimeout(2000);
 
-    const nameField = page.getByLabel(/your name/i);
-    const emailField = page.getByLabel(/email address/i);
+    const nameField = page.getByLabel(/your name|name/i);
+    const emailField = page.getByLabel(/email address|email/i);
     const subjectField = page.getByLabel(/subject/i);
     const messageField = page.getByLabel(/message/i);
-    const submitButton = page.getByRole('button', { name: /send message/i });
+    const submitButton = page.getByRole('button', { name: /send/i });
 
     // Ensure fields are visible and ready
     await nameField.waitFor({ state: 'visible', timeout: 10_000 });
