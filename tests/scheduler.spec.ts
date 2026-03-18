@@ -26,7 +26,8 @@ test.describe('Scheduler', () => {
     await newBtn.click();
     await page.waitForTimeout(300);
     await expect(page.getByRole('dialog')).toBeVisible();
-    await expect(page.getByText(/new schedule/i)).toBeVisible();
+    // Check for dialog title specifically
+    await expect(page.getByRole('heading', { name: /new schedule/i })).toBeVisible();
   });
 
   test('creates a new daily schedule', async ({ page }) => {
