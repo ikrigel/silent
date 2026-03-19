@@ -16,7 +16,9 @@ test.describe('Logs', () => {
   });
 
   test('shows empty state with no logs', async ({ page }) => {
-    await expect(page.getByText(/no logs to display|no logs to show/i)).toBeVisible();
+    // Scope to alert role to avoid matching multiple elements
+    const emptyAlert = page.getByRole('alert').getByText(/no logs to display|no logs to show/i);
+    await expect(emptyAlert).toBeVisible();
   });
 
   test('Delete Selected button is disabled with no selection', async ({ page }) => {
@@ -90,7 +92,9 @@ test.describe('Logs', () => {
     await page.waitForTimeout(300);
 
     // Logs should be gone
-    await expect(page.getByText(/no logs to display|no logs to show/i)).toBeVisible();
+    // Scope to alert role to avoid matching multiple elements
+    const emptyAlert = page.getByRole('alert').getByText(/no logs to display|no logs to show/i);
+    await expect(emptyAlert).toBeVisible();
   });
 
   test('Export JSON button triggers download', async ({ page }) => {

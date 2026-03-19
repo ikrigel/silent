@@ -20,9 +20,20 @@ test.describe('Language Switching', () => {
     await expect(heButton).toBeVisible();
     await heButton.click();
     await page.waitForTimeout(500);
-    // Hebrew nav labels should appear
-    await expect(page.getByText('לוח בקרה')).toBeVisible();
-    await expect(page.getByText('מתזמן')).toBeVisible();
+    // Hebrew nav labels should appear — on mobile, open menu first, then check
+    const drawer = page.locator('[class*="MuiDrawer"]');
+
+    // Check if drawer is visible; on mobile it might be hidden initially
+    const drawerVisible = await drawer.isVisible().catch(() => false);
+    if (!drawerVisible) {
+      // Mobile menu button needed — open it
+      const menuBtn = page.getByRole('banner').getByRole('button').first();
+      await menuBtn.click();
+      await page.waitForTimeout(300);
+    }
+
+    await expect(drawer.getByText('לוח בקרה').first()).toBeVisible({ timeout: 5000 });
+    await expect(drawer.getByText('מתזמן').first()).toBeVisible({ timeout: 5000 });
   });
 
   test('switching to Hebrew sets RTL direction', async ({ page }) => {

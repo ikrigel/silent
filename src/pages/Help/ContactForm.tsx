@@ -29,12 +29,18 @@ const ContactForm: React.FC = () => {
 
   const onSubmit = async (data: ContactFormData) => {
     setStatus('sending');
+    setErrorMsg('');
     try {
-      // For reCAPTCHA v2 Invisible, execute() returns a token
-      const token = await recaptchaRef.current?.executeAsync();
-      if (!token) {
+      // Execute reCAPTCHA v2 Invisible to get token
+      if (!recaptchaRef.current) {
+        throw new Error('reCAPTCHA not initialized');
+      }
+
+      const token = await recaptchaRef.current.executeAsync();
+      if (!token || token.length === 0) {
         setStatus('error');
         setErrorMsg(t('help.form.captchaRequired') || 'reCAPTCHA validation failed');
+        writeLog('error', 'reCAPTCHA token not generated');
         return;
       }
 
@@ -43,13 +49,15 @@ const ContactForm: React.FC = () => {
       setStatus('success');
       writeLog('info', 'Contact form submitted successfully');
       reset();
-      recaptchaRef.current?.reset();
+      recaptchaRef.current.reset();
     } catch (err) {
       setStatus('error');
       const msg = err instanceof Error ? err.message : 'Failed to send message';
       setErrorMsg(msg);
       writeLog('error', 'Contact form submission failed', { err: msg });
-      recaptchaRef.current?.reset();
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset();
+      }
     }
   };
 
