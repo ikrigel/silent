@@ -29,7 +29,8 @@ test.describe('Help', () => {
     const iphoneQuestion = page.getByText(/how do i silence emergency alerts on iphone/i).first();
     await iphoneQuestion.waitFor({ state: 'visible', timeout: 10_000 });
     await page.waitForTimeout(500); // Wait for any animations
-    await iphoneQuestion.scrollIntoViewIfNeeded();
+    // Try to scroll but don't fail if it times out
+    await iphoneQuestion.scrollIntoViewIfNeeded({ timeout: 5_000 }).catch(() => {});
     await iphoneQuestion.click({ timeout: 15_000 });
 
     // Answer should now be visible
@@ -43,7 +44,8 @@ test.describe('Help', () => {
     const iphoneQuestion = page.getByText(/how do i silence emergency alerts on iphone/i).first();
     await iphoneQuestion.waitFor({ state: 'visible', timeout: 10_000 });
     await page.waitForTimeout(300);
-    await iphoneQuestion.scrollIntoViewIfNeeded();
+    // Try to scroll but don't fail if it times out
+    await iphoneQuestion.scrollIntoViewIfNeeded({ timeout: 5_000 }).catch(() => {});
     await iphoneQuestion.click({ timeout: 15_000 });
 
     await page.waitForTimeout(500); // Wait for first accordion to open
@@ -52,7 +54,8 @@ test.describe('Help', () => {
     const androidQuestion = page.getByText(/how do i silence emergency alerts on android/i).first();
     await androidQuestion.waitFor({ state: 'visible', timeout: 10_000 });
     await page.waitForTimeout(300);
-    await androidQuestion.scrollIntoViewIfNeeded();
+    // Try to scroll but don't fail if it times out
+    await androidQuestion.scrollIntoViewIfNeeded({ timeout: 5_000 }).catch(() => {});
     await androidQuestion.click({ timeout: 15_000 });
 
     await expect(page.getByText(/safety.*emergency.*wireless emergency alerts/i)).toBeVisible({ timeout: 10_000 });
@@ -92,16 +95,17 @@ test.describe('Help', () => {
     const subjectField = page.getByLabel(/subject/i);
     const messageField = page.getByLabel(/message/i);
 
-    // Wait for fields to be ready and scroll into view
+    // Wait for fields to be ready
     await nameField.waitFor({ state: 'visible' });
-    await nameField.scrollIntoViewIfNeeded();
+    // Try scroll but don't fail if timeout
+    await nameField.scrollIntoViewIfNeeded({ timeout: 3_000 }).catch(() => {});
 
     await nameField.fill('Test User');
-    await emailField.scrollIntoViewIfNeeded();
+    await emailField.scrollIntoViewIfNeeded({ timeout: 3_000 }).catch(() => {});
     await emailField.fill('test@example.com');
-    await subjectField.scrollIntoViewIfNeeded();
+    await subjectField.scrollIntoViewIfNeeded({ timeout: 3_000 }).catch(() => {});
     await subjectField.fill('Test Subject');
-    await messageField.scrollIntoViewIfNeeded();
+    await messageField.scrollIntoViewIfNeeded({ timeout: 3_000 }).catch(() => {});
     await messageField.fill('This is a test message from Playwright.');
 
     await expect(nameField).toHaveValue('Test User', { timeout: 10_000 });

@@ -16,7 +16,7 @@ async function ensureMenuVisible(page: Page) {
 
   if (isMenuButtonVisible) {
     // Mobile layout — open the menu
-    await menuButton.scrollIntoViewIfNeeded();
+    await menuButton.scrollIntoViewIfNeeded().catch(() => {});
     await menuButton.click();
     await page.waitForTimeout(300);
   }
@@ -47,7 +47,7 @@ test.describe('Navigation', () => {
     await ensureMenuVisible(page);
     const schedulerLink = page.getByRole('link', { name: /scheduler/i });
     await expect(schedulerLink).toBeVisible();
-    await schedulerLink.scrollIntoViewIfNeeded();
+    await schedulerLink.scrollIntoViewIfNeeded().catch(() => {});
     await schedulerLink.click();
     await expect(page).toHaveURL('/scheduler');
     await expect(page.getByRole('heading', { name: /scheduler/i, level: 4 })).toBeVisible();
