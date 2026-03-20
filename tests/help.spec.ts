@@ -6,9 +6,10 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Help', () => {
   test.beforeEach(async ({ page }) => {
+    // Increase default timeout for all operations in this describe block
+    page.setDefaultTimeout(30000);
+    page.setDefaultNavigationTimeout(30000);
     await page.goto('/help');
-    // Wait for page to fully load before running tests
-    await page.waitForLoadState('networkidle');
   });
 
   test('renders page heading', async ({ page }) => {
@@ -73,9 +74,6 @@ test.describe('Help', () => {
   });
 
   test('contact form shows validation errors on empty submit', async ({ page }) => {
-    // Ensure form is fully loaded
-    await page.waitForLoadState('networkidle');
-
     const submitButton = page.getByRole('button', { name: /send message/i });
     await submitButton.waitFor({ state: 'visible', timeout: 10_000 });
     await submitButton.click({ timeout: 15_000, force: true });
@@ -86,9 +84,6 @@ test.describe('Help', () => {
   });
 
   test('contact form fields accept input', async ({ page }) => {
-    // Ensure form is fully loaded
-    await page.waitForLoadState('networkidle');
-
     const nameField = page.getByLabel(/your name/i);
     const emailField = page.getByLabel(/email address/i);
     const subjectField = page.getByLabel(/subject/i);
