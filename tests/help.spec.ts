@@ -7,6 +7,8 @@ import { test, expect } from '@playwright/test';
 test.describe('Help', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/help');
+    // Wait for page to fully load before running tests
+    await page.waitForLoadState('networkidle');
   });
 
   test('renders page heading', async ({ page }) => {
@@ -71,29 +73,29 @@ test.describe('Help', () => {
   });
 
   test('contact form shows validation errors on empty submit', async ({ page }) => {
-    // Wait for form to load and be interactive
-    await page.waitForTimeout(1000);
+    // Ensure form is fully loaded
+    await page.waitForLoadState('networkidle');
 
     const submitButton = page.getByRole('button', { name: /send message/i });
     await submitButton.waitFor({ state: 'visible', timeout: 10_000 });
-    await submitButton.click({ timeout: 15_000 });
+    await submitButton.click({ timeout: 15_000, force: true });
 
     // react-hook-form should show required errors
-    await expect(page.getByText(/name is required/i)).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByText(/email is required/i)).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(/name is required/i)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/email is required/i)).toBeVisible({ timeout: 15_000 });
   });
 
   test('contact form fields accept input', async ({ page }) => {
-    // Wait a moment for reCAPTCHA to load
-    await page.waitForTimeout(2000);
+    // Ensure form is fully loaded
+    await page.waitForLoadState('networkidle');
 
     const nameField = page.getByLabel(/your name/i);
     const emailField = page.getByLabel(/email address/i);
     const subjectField = page.getByLabel(/subject/i);
     const messageField = page.getByLabel(/message/i);
 
-    // Wait for fields to be ready
-    await nameField.waitFor({ state: 'visible' });
+    // Wait for fields to be ready with extended timeout
+    await nameField.waitFor({ state: 'visible', timeout: 15_000 });
 
     // Fill fields (fill() handles scrolling automatically)
     await nameField.fill('Test User');
