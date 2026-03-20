@@ -40,6 +40,8 @@ jobs:
       # Run the full test suite; Playwright auto-starts the dev server
       - name: Run Playwright tests
         run: npm test
+        env:
+          VITE_RECAPTCHA_SITE_KEY: 6LcAOY0sAAAAABqFjpb-9KK5jOb905i7ar7iHVoJ
 
       # Upload HTML report as an artifact — visible in GitHub Actions UI
       - name: Upload test report

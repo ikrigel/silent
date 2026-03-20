@@ -31,17 +31,16 @@ const ContactForm: React.FC = () => {
     setStatus('sending');
     setErrorMsg('');
     try {
-      // Execute reCAPTCHA v2 Invisible to get token
-      if (!recaptchaRef.current) {
-        throw new Error('reCAPTCHA not initialized');
-      }
-
-      const token = await recaptchaRef.current.executeAsync();
-      if (!token || token.length === 0) {
-        setStatus('error');
-        setErrorMsg(t('help.form.captchaRequired') || 'reCAPTCHA validation failed');
-        writeLog('error', 'reCAPTCHA token not generated');
-        return;
+      // Execute reCAPTCHA v2 Invisible to get token (skip if sitekey is not configured)
+      let token = '';
+      if (RECAPTCHA_SITE_KEY && recaptchaRef.current) {
+        token = await recaptchaRef.current.executeAsync();
+        if (!token || token.length === 0) {
+          setStatus('error');
+          setErrorMsg(t('help.form.captchaRequired') || 'reCAPTCHA validation failed');
+          writeLog('error', 'reCAPTCHA token not generated');
+          return;
+        }
       }
 
       // Send email with reCAPTCHA token
@@ -49,13 +48,17 @@ const ContactForm: React.FC = () => {
       setStatus('success');
       writeLog('info', 'Contact form submitted successfully');
       reset();
-      recaptchaRef.current.reset();
+      // Reset captcha if it exists (only rendered when sitekey is configured)
+      if (RECAPTCHA_SITE_KEY && recaptchaRef.current) {
+        recaptchaRef.current.reset();
+      }
     } catch (err) {
       setStatus('error');
       const msg = err instanceof Error ? err.message : 'Failed to send message';
       setErrorMsg(msg);
       writeLog('error', 'Contact form submission failed', { err: msg });
-      if (recaptchaRef.current) {
+      // Reset captcha if it exists (only rendered when sitekey is configured)
+      if (RECAPTCHA_SITE_KEY && recaptchaRef.current) {
         recaptchaRef.current.reset();
       }
     }
@@ -86,12 +89,14 @@ const ContactForm: React.FC = () => {
             <TextField {...field} label={t('help.form.message')} multiline rows={4} fullWidth error={!!fieldState.error} helperText={fieldState.error?.message} />
           )}
         />
-        {/* reCAPTCHA v2 Invisible - renders invisibly during form submission */}
-        <ReCAPTCHA
-          ref={recaptchaRef}
-          sitekey={RECAPTCHA_SITE_KEY}
-          size="invisible"
-        />
+        {/* reCAPTCHA v2 Invisible - only render if sitekey is configured */}
+        {RECAPTCHA_SITE_KEY && (
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={RECAPTCHA_SITE_KEY}
+            size="invisible"
+          />
+        )}
         <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center', display: 'block' }}>
           {t('help.form.captchaNote') || 'This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.'}
         </Typography>
