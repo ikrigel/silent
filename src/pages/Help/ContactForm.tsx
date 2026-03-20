@@ -32,7 +32,7 @@ const ContactForm: React.FC = () => {
     setErrorMsg('');
     try {
       // Execute reCAPTCHA v2 Invisible to get token (skip if sitekey is not configured)
-      let token = '';
+      let token: string | null = '';
       if (RECAPTCHA_SITE_KEY && recaptchaRef.current) {
         token = await recaptchaRef.current.executeAsync();
         if (!token || token.length === 0) {
