@@ -69,4 +69,32 @@ test.describe('Dashboard', () => {
     await expect(page.getByText(/reminder active/i)).toBeVisible();
     await expect(page.getByText('REMINDER', { exact: true }).first()).toBeVisible();
   });
+
+  test('schedule with restoreOnEnd field saves without error', async ({ page }) => {
+    // Verify that new ScheduleEntry fields (restoreOnEnd, unsilenceWEAOnEnd) don't cause issues
+    const schedule = {
+      id: 'test-restore',
+      name: 'Test Restore State',
+      enabled: true,
+      startTime: '22:00',
+      endTime: '07:00',
+      repeatMode: 'daily',
+      daysOfWeek: [],
+      createdAt: new Date().toISOString(),
+      useAirplaneMode: false,
+      restoreOnEnd: true,
+      unsilenceWEAOnEnd: false,
+    };
+
+    await page.evaluate((s) => {
+      localStorage.setItem('schedules', JSON.stringify([s]));
+    }, schedule);
+
+    await page.reload();
+
+    // Schedules should load without crashing
+    await expect(page.getByRole('heading', { name: /dashboard/i })).toBeVisible();
+    // Active schedules list should be empty (time window doesn't match current time)
+    await expect(page.getByText(/no active reminder schedules/i)).toBeVisible();
+  });
 });

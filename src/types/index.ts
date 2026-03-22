@@ -13,6 +13,14 @@ export interface RobotRecording {
   isBuiltIn?: boolean;
 }
 
+/** In-memory snapshot of device state captured when a schedule starts */
+export interface DeviceStateSnapshot {
+  scheduleId: string;
+  airplaneModeWasActive: boolean; // was airplane mode ON before schedule started?
+  weaWasSilenced: boolean;        // was WEA silenced before schedule started?
+  capturedAt: string;             // ISO timestamp for debugging
+}
+
 // ─── Scheduler Types ────────────────────────────────────────────────
 export type RepeatMode = 'none' | 'daily' | 'weekly' | 'custom';
 export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6;
@@ -30,6 +38,8 @@ export interface ScheduleEntry {
   createdAt: string;
   robotRecordingId?: string;
   useAirplaneMode?: boolean;
+  restoreOnEnd?: boolean;        // restore airplane mode & WEA to pre-schedule state (default: true)
+  unsilenceWEAOnEnd?: boolean;   // explicitly call unsilenceWEA when schedule ends
 }
 
 export type LogLevel = 'verbose' | 'info' | 'error' | 'none';

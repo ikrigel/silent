@@ -22,6 +22,8 @@ interface FormValues {
   endDate: string;
   robotRecordingId: string;
   useAirplaneMode: boolean;
+  restoreOnEnd: boolean;
+  unsilenceWEAOnEnd: boolean;
 }
 
 interface SchedulerFormProps {
@@ -46,10 +48,14 @@ const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, 
       endDate: initial?.endDate ?? '',
       robotRecordingId: initial?.robotRecordingId ?? '',
       useAirplaneMode: initial?.useAirplaneMode ?? false,
+      restoreOnEnd: initial?.restoreOnEnd !== false,
+      unsilenceWEAOnEnd: initial?.unsilenceWEAOnEnd ?? false,
     },
   });
 
   const repeatMode = watch('repeatMode');
+  const useAirplaneMode = watch('useAirplaneMode');
+  const robotRecordingId = watch('robotRecordingId');
 
   useEffect(() => {
     if (open && robotService.isAndroid()) {
@@ -158,6 +164,30 @@ const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, 
                     <FormControlLabel
                       control={<Checkbox {...field} checked={field.value} />}
                       label={t('scheduler.useAirplaneMode')}
+                    />
+                  )}
+                />
+              </Grid>
+            )}
+            {robotService.isAndroid() && robotRecordingId && (
+              <Grid item xs={12}>
+                <Controller name="unsilenceWEAOnEnd" control={control}
+                  render={({ field }) => (
+                    <FormControlLabel
+                      control={<Checkbox {...field} checked={field.value} />}
+                      label={t('scheduler.unsilenceWEAOnEnd')}
+                    />
+                  )}
+                />
+              </Grid>
+            )}
+            {robotService.isAndroid() && (useAirplaneMode || robotRecordingId) && (
+              <Grid item xs={12}>
+                <Controller name="restoreOnEnd" control={control}
+                  render={({ field }) => (
+                    <FormControlLabel
+                      control={<Checkbox {...field} checked={field.value} />}
+                      label={t('scheduler.restoreOnEnd')}
                     />
                   )}
                 />

@@ -13,6 +13,7 @@ interface WEARobotPlugin {
   getRecordings(): Promise<{ recordings: RobotRecording[] }>;
   deleteRecording(opts: { id: string }): Promise<void>;
   executeRecording(opts: { id: string }): Promise<{ message: string }>;
+  getAirplaneModeState?(): Promise<{ enabled: boolean }>;
   silenceWEA(): Promise<{ message: string }>;
   unsilenceWEA(): Promise<{ message: string }>;
   enableAirplaneMode(): Promise<{ message: string }>;
@@ -104,8 +105,16 @@ export const robotService = {
 
   async executeRecording(id: string): Promise<string> {
     if (!WEARobot) throw new Error('Robot only available on Android');
-    const { message } = await WEARobot.executeRecording({ id });
-    return message;
+    try {
+      writeLog('info', `robotService: Executing recording ${id}`);
+      const { message } = await WEARobot.executeRecording({ id });
+      writeLog('info', `robotService: Recording executed successfully: ${message}`);
+      return message;
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      writeLog('error', `robotService: executeRecording failed for ${id}: ${msg}`);
+      throw err;
+    }
   },
 
   async silenceWEA(): Promise<string> {
@@ -161,6 +170,22 @@ export const robotService = {
       const msg = err instanceof Error ? err.message : String(err);
       writeLog('error',`robotService: disableAirplaneMode failed: ${msg}`);
       throw err;
+    }
+  },
+
+  async getAirplaneModeState(): Promise<boolean> {
+    if (!WEARobot) return false;
+    try {
+      if (WEARobot.getAirplaneModeState) {
+        const { enabled } = await WEARobot.getAirplaneModeState();
+        writeLog('verbose', `robotService: Airplane Mode state = ${enabled}`);
+        return enabled;
+      }
+      return false;
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      writeLog('error', `robotService: getAirplaneModeState failed: ${msg}`);
+      return false;
     }
   },
 };

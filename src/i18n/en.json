@@ -73,7 +73,11 @@
       "step2": "On your Android device, go to Settings → Security → enable \"Install from Unknown Sources\"",
       "step3": "Open the downloaded APK file and tap Install",
       "step4": "Open Silent and go to Robot → follow the setup guide"
-    }
+    },
+    "exportLogs": "Export Failure Report",
+    "diagnostics": "Robot Diagnostics",
+    "lastAction": "Last Action",
+    "noFailures": "No failures recorded"
   },
   "common": {
     "save": "Save",
@@ -105,7 +109,9 @@
     },
     "robotRecording": "Robot Recording (optional)",
     "noRobotRecording": "None",
-    "useAirplaneMode": "Use Airplane Mode (Android robot only)"
+    "useAirplaneMode": "Use Airplane Mode (Android robot only)",
+    "unsilenceWEAOnEnd": "Re-enable WEA alerts when schedule ends",
+    "restoreOnEnd": "Restore previous state on end (recommended)"
   },
   "logs": {
     "title": "Logs",

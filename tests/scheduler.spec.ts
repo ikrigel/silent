@@ -111,4 +111,52 @@ test.describe('Scheduler', () => {
     await expect(page.getByText('Mon')).toBeVisible();
     await expect(page.getByText('Fri')).toBeVisible();
   });
+
+  test('shows "Restore previous state on end" checkbox when airplane mode is checked', async ({ page }) => {
+    await page.goto('/scheduler');
+    await page.getByRole('button', { name: /new schedule/i }).click();
+
+    // Fill basic fields
+    await page.getByLabel(/schedule name/i).fill('Airplane Test');
+    await page.getByLabel(/start time/i).fill('22:00');
+    await page.getByLabel(/end time/i).fill('07:00');
+
+    // On web, airplane mode checkbox may not appear (Android-only)
+    // This test verifies that if it does exist, the restore checkbox appears
+    const airplaneCheckbox = page.getByLabel(/use airplane mode/i);
+    const isVisible = await airplaneCheckbox.isVisible().catch(() => false);
+
+    if (isVisible) {
+      await airplaneCheckbox.check();
+      // "Restore previous state" checkbox should now be visible
+      await expect(page.getByLabel(/restore.*previous state/i)).toBeVisible();
+    }
+  });
+
+  test('schedule with new restoration fields saves correctly', async ({ page }) => {
+    const scheduleWithRestore = {
+      id: 'restore-test',
+      name: 'Restore Test Schedule',
+      enabled: true,
+      startTime: '22:00',
+      endTime: '07:00',
+      repeatMode: 'daily',
+      daysOfWeek: [],
+      createdAt: new Date().toISOString(),
+      useAirplaneMode: false,
+      restoreOnEnd: true,
+      unsilenceWEAOnEnd: false,
+    };
+
+    await page.evaluate((s) => {
+      localStorage.setItem('schedules', JSON.stringify([s]));
+    }, scheduleWithRestore);
+
+    await page.reload();
+
+    // Schedule should load without error
+    await expect(page.getByText('Restore Test Schedule')).toBeVisible();
+    // Verify it's in the list
+    await expect(page.getByText('22:00 – 07:00')).toBeVisible();
+  });
 });

@@ -6,6 +6,7 @@ import {
 import { Schedule, CheckCircle, ExpandMore, ExpandLess } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { useSchedulerStore } from '@/store/schedulerStore';
+import { useRobotStateStore } from '@/store/robotStateStore';
 import { getActiveSchedules } from '@/services/schedulerService';
 import { getSmoothDarknessFactor } from '@/theme/colorInterpolation';
 import { fireScheduleReminder, fireScheduleEndReminder } from '@/services/notificationService';
@@ -30,6 +31,7 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { schedules } = useSchedulerStore();
   const { settings } = useSettingsStore();
+  const { captureSnapshot, getSnapshot, clearSnapshot } = useRobotStateStore();
   const [activeSchedules, setActiveSchedules] = useState<ScheduleEntry[]>([]);
   const [darkness, setDarkness] = useState(getSmoothDarknessFactor());
   const [guideOpen, setGuideOpen] = useState(false);
@@ -38,25 +40,37 @@ const Dashboard: React.FC = () => {
   const prevActiveIds = useRef<Set<string>>(new Set());
 
   useEffect(() => {
-    const tick = () => {
+    const tick = async () => {
       const nowActive = getActiveSchedules();
       setActiveSchedules(nowActive);
       setDarkness(getSmoothDarknessFactor());
 
-      if (!settings.notificationsEnabled) return;
-
       const nowIds = new Set(nowActive.map((s) => s.id));
 
       // Schedules that just became active → fire start reminder + optional robot/airplane
+      // NOTE: Robot actions fire REGARDLESS of notificationsEnabled (critical fix)
       nowActive.forEach((s) => {
         if (!prevActiveIds.current.has(s.id)) {
           writeLog('info',`Dashboard: Schedule "${s.name}" activated`);
-          fireScheduleReminder(s.name);
+          if (settings.notificationsEnabled) {
+            fireScheduleReminder(s.name);
+          }
           if (robotService.isAndroid()) {
             if (s.useAirplaneMode) {
-              robotService.enableAirplaneMode().catch((err: unknown) => {
-                const msg = err instanceof Error ? err.message : String(err);
-                writeLog('error',`Dashboard: Failed to enable airplane mode: ${msg}`);
+              robotService.getAirplaneModeState().then((wasActive) => {
+                captureSnapshot(s.id, wasActive, false);
+                if (!wasActive) {
+                  robotService.enableAirplaneMode().catch((err: unknown) => {
+                    const msg = err instanceof Error ? err.message : String(err);
+                    writeLog('error',`Dashboard: Failed to enable airplane mode: ${msg}`);
+                  });
+                }
+              }).catch(() => {
+                captureSnapshot(s.id, false, false);
+                robotService.enableAirplaneMode().catch((err: unknown) => {
+                  const msg = err instanceof Error ? err.message : String(err);
+                  writeLog('error',`Dashboard: Failed to enable airplane mode: ${msg}`);
+                });
               });
             }
             if (s.robotRecordingId) {
@@ -69,18 +83,38 @@ const Dashboard: React.FC = () => {
         }
       });
 
-      // Schedules that just ended → fire end reminder + disable airplane if enabled
+      // Schedules that just ended → restore state + fire end reminder
+      // NOTE: Restore logic decoupled from notifications (critical fix)
       prevActiveIds.current.forEach((id) => {
         if (!nowIds.has(id)) {
           const entry = schedules.find((s) => s.id === id);
           if (entry) {
             writeLog('info',`Dashboard: Schedule "${entry.name}" ended`);
-            fireScheduleEndReminder(entry.name);
-            if (entry.useAirplaneMode && robotService.isAndroid()) {
-              robotService.disableAirplaneMode().catch((err: unknown) => {
+
+            // Restore device state if requested (default: true)
+            const shouldRestore = entry.restoreOnEnd !== false;
+            const snapshot = getSnapshot(id);
+
+            if (entry.useAirplaneMode && robotService.isAndroid() && shouldRestore) {
+              if (!snapshot?.airplaneModeWasActive) {
+                robotService.disableAirplaneMode().catch((err: unknown) => {
+                  const msg = err instanceof Error ? err.message : String(err);
+                  writeLog('error',`Dashboard: Failed to disable airplane mode on end: ${msg}`);
+                });
+              }
+              clearSnapshot(id);
+            }
+
+            if (entry.unsilenceWEAOnEnd && robotService.isAndroid() && shouldRestore) {
+              robotService.unsilenceWEA().catch((err: unknown) => {
                 const msg = err instanceof Error ? err.message : String(err);
-                writeLog('error',`Dashboard: Failed to disable airplane mode: ${msg}`);
+                writeLog('error',`Dashboard: Failed to unsilence WEA on schedule end: ${msg}`);
               });
+            }
+
+            // Notifications still fire regardless
+            if (settings.notificationsEnabled) {
+              fireScheduleEndReminder(entry.name);
             }
           }
         }
@@ -92,7 +126,7 @@ const Dashboard: React.FC = () => {
     tick();
     const interval = setInterval(tick, 5000);
     return () => clearInterval(interval);
-  }, [schedules, settings.notificationsEnabled]);
+  }, [schedules, settings.notificationsEnabled, captureSnapshot, getSnapshot, clearSnapshot]);
 
   const isReminderActive = activeSchedules.length > 0;
 
