@@ -1,0 +1,3153 @@
+
+> silent@1.0.0 test
+> playwright test
+
+
+Running 284 tests using 8 workers
+
+[1A[2K[1/284] [chromium] › tests\about.spec.ts:50:3 › About › shows experience section with two roles
+[1A[2K[2/284] [chromium] › tests\about.spec.ts:28:3 › About › shows location
+[1A[2K[3/284] [chromium] › tests\about.spec.ts:21:3 › About › shows developer title
+[1A[2K[4/284] [chromium] › tests\about.spec.ts:38:3 › About › LinkedIn link points to correct URL
+[1A[2K[5/284] [chromium] › tests\about.spec.ts:12:3 › About › renders page heading
+[1A[2K[6/284] [chromium] › tests\about.spec.ts:32:3 › About › GitHub link points to correct URL
+[1A[2K[7/284] [chromium] › tests\about.spec.ts:16:3 › About › shows developer name
+[1A[2K[8/284] [chromium] › tests\about.spec.ts:44:3 › About › Portfolio link points to correct URL
+[1A[2K[9/284] [chromium] › tests\about.spec.ts:57:3 › About › shows skill chips for primary skills
+[1A[2K[10/284] [chromium] › tests\about.spec.ts:63:3 › About › shows About Silent app info card
+[1A[2K[11/284] [chromium] › tests\about.spec.ts:67:3 › About › shows disclaimer card
+[1A[2K[12/284] [chromium] › tests\dashboard.spec.ts:16:3 › Dashboard › renders page heading
+[1A[2K[13/284] [chromium] › tests\dashboard.spec.ts:20:3 › Dashboard › shows "no active reminder" alert when no schedules exist
+[1A[2K[14/284] [chromium] › tests\dashboard.spec.ts:32:3 › Dashboard › shows theme darkness percentage card
+[1A[2K[15/284] [chromium] › tests\dashboard.spec.ts:26:3 › Dashboard › shows schedules count card
+[1A[2K[16/284] [chromium] › tests\dashboard.spec.ts:38:3 › Dashboard › "Manage Schedules" button navigates to scheduler
+[1A[2K[17/284] [chromium] › tests\dashboard.spec.ts:43:3 › Dashboard › shows active warning when a schedule is currently active
+[1A[2K[18/284] [chromium] › tests\help.spec.ts:12:3 › Help › renders page heading
+[1A[2K[19/284] [chromium] › tests\help.spec.ts:16:3 › Help › shows FAQ section
+[1A[2K[20/284] [chromium] › tests\help.spec.ts:20:3 › Help › FAQ items are collapsed by default
+[1A[2K[21/284] [chromium] › tests\help.spec.ts:27:3 › Help › FAQ item expands on click
+[1A[2K[22/284] [chromium] › tests\help.spec.ts:41:3 › Help › multiple FAQ items can be opened independently
+[1A[2K[23/284] [chromium] › tests\help.spec.ts:61:3 › Help › shows Contact the Developer section
+[1A[2K[24/284] [chromium] › tests\help.spec.ts:65:3 › Help › contact form has all required fields
+[1A[2K[25/284] [chromium] › tests\help.spec.ts:73:3 › Help › contact form shows validation errors on empty submit
+[1A[2K[26/284] [chromium] › tests\help.spec.ts:86:3 › Help › contact form fields accept input
+[1A[2K[27/284] [chromium] › tests\help.spec.ts:112:3 › Help › FAQ covers all 7 questions
+[1A[2K[28/284] [chromium] › tests\help.spec.ts:128:3 › Help › contact form submits and shows success (mocked EmailJS)
+[1A[2K[29/284] [chromium] › tests\language.spec.ts:13:3 › Language Switching › EN button is active by default
+[1A[2K[30/284] [chromium] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels
+[1A[2K[31/284] [chromium] › tests\language.spec.ts:29:3 › Language Switching › switching to Hebrew sets RTL direction
+[1A[2K[32/284] [chromium] › tests\language.spec.ts:35:3 › Language Switching › switching back to English restores LTR
+[1A[2K[33/284] [chromium] › tests\language.spec.ts:46:3 › Language Switching › language preference persists across reload
+[1A[2K[34/284] [chromium] › tests\logs.spec.ts:14:3 › Logs › renders page heading
+[1A[2K[35/284] [chromium] › tests\logs.spec.ts:18:3 › Logs › shows empty state with no logs
+[1A[2K[36/284] [chromium] › tests\logs.spec.ts:24:3 › Logs › Delete Selected button is disabled with no selection
+[1A[2K[37/284] [chromium] › tests\logs.spec.ts:30:3 › Logs › Clear All button is disabled with no logs
+[1A[2K[38/284] [chromium] › tests\logs.spec.ts:36:3 › Logs › shows log entries when logs exist in localStorage
+[1A[2K[39/284] [chromium] › tests\logs.spec.ts:58:3 › Logs › level chips display correctly
+[1A[2K[40/284] [chromium] › tests\logs.spec.ts:73:3 › Logs › can select all logs and clear them
+[1A[2K[41/284] [chromium] › tests\logs.spec.ts:100:3 › Logs › Export JSON button triggers download
+[1A[2K[42/284] [chromium] › tests\logs.spec.ts:116:3 › Logs › Refresh button reloads logs from storage
+[1A[2K[43/284] [chromium] › tests\navigation.spec.ts:26:3 › Navigation › app loads with correct title
+[1A[2K[44/284] [chromium] › tests\navigation.spec.ts:30:3 › Navigation › sidebar shows all nav items
+[1A[2K[45/284] [chromium] › tests\navigation.spec.ts:41:3 › Navigation › navigates to Scheduler page
+[1A[2K[46/284] [chromium] › tests\navigation.spec.ts:51:3 › Navigation › navigates to Logs page
+[1A[2K[47/284] [chromium] › tests\navigation.spec.ts:61:3 › Navigation › navigates to Settings page
+[1A[2K[48/284] [chromium] › tests\navigation.spec.ts:71:3 › Navigation › navigates to About page
+[1A[2K[49/284] [chromium] › tests\navigation.spec.ts:81:3 › Navigation › navigates to Help page
+[1A[2K[50/284] [chromium] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels (retry #1)
+[1A[2K  1) [chromium] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('navigation').getByText('לוח בקרה')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('navigation').getByText('לוח בקרה')[22m
+
+
+      23 |     // Hebrew nav labels should appear — scope to drawer/navigation to avoid matching header
+      24 |     const nav = page.getByRole('navigation');
+    > 25 |     await expect(nav.getByText('לוח בקרה')).toBeVisible();
+         |                                             ^
+      26 |     await expect(nav.getByText('מתזמן')).toBeVisible();
+      27 |   });
+      28 |
+        at c:\silent\tests\language.spec.ts:25:45
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\language-Language-Switchin-474e0-w-changes-navigation-labels-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\language-Language-Switchin-474e0-w-changes-navigation-labels-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('navigation').getByText('לוח בקרה')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('navigation').getByText('לוח בקרה')[22m
+
+
+      23 |     // Hebrew nav labels should appear — scope to drawer/navigation to avoid matching header
+      24 |     const nav = page.getByRole('navigation');
+    > 25 |     await expect(nav.getByText('לוח בקרה')).toBeVisible();
+         |                                             ^
+      26 |     await expect(nav.getByText('מתזמן')).toBeVisible();
+      27 |   });
+      28 |
+        at c:\silent\tests\language.spec.ts:25:45
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\language-Language-Switchin-474e0-w-changes-navigation-labels-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\language-Language-Switchin-474e0-w-changes-navigation-labels-chromium-retry1\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\language-Language-Switchin-474e0-w-changes-navigation-labels-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\language-Language-Switchin-474e0-w-changes-navigation-labels-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[1A[2K[51/284] [chromium] › tests\help.spec.ts:128:3 › Help › contact form submits and shows success (mocked EmailJS) (retry #1)
+[1A[2K[52/284] [chromium] › tests\navigation.spec.ts:91:3 › Navigation › navigates to Donate page
+[1A[2K  2) [chromium] › tests\help.spec.ts:128:3 › Help › contact form submits and shows success (mocked EmailJS) 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText(/message sent|successfully/i)
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 20000ms[22m
+    [2m  - waiting for getByText(/message sent|successfully/i)[22m
+
+
+      161 |
+      162 |     // Success alert should appear (increased timeout for reCAPTCHA validation)
+    > 163 |     await expect(page.getByText(/message sent|successfully/i)).toBeVisible({ timeout: 20_000 });
+          |                                                                ^
+      164 |   });
+      165 | });
+      166 |
+        at c:\silent\tests\help.spec.ts:163:64
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\help-Help-contact-form-sub-d6d8a-ows-success-mocked-EmailJS--chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\help-Help-contact-form-sub-d6d8a-ows-success-mocked-EmailJS--chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText(/message sent|successfully/i)
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 20000ms[22m
+    [2m  - waiting for getByText(/message sent|successfully/i)[22m
+
+
+      161 |
+      162 |     // Success alert should appear (increased timeout for reCAPTCHA validation)
+    > 163 |     await expect(page.getByText(/message sent|successfully/i)).toBeVisible({ timeout: 20_000 });
+          |                                                                ^
+      164 |   });
+      165 | });
+      166 |
+        at c:\silent\tests\help.spec.ts:163:64
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\help-Help-contact-form-sub-d6d8a-ows-success-mocked-EmailJS--chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\help-Help-contact-form-sub-d6d8a-ows-success-mocked-EmailJS--chromium-retry1\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\help-Help-contact-form-sub-d6d8a-ows-success-mocked-EmailJS--chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\help-Help-contact-form-sub-d6d8a-ows-success-mocked-EmailJS--chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[1A[2K[53/284] [chromium] › tests\navigation.spec.ts:101:3 › Navigation › header shows app title with emoji
+[1A[2K[54/284] [chromium] › tests\navigation.spec.ts:107:3 › Navigation › theme toggle button is visible in header
+[1A[2K[55/284] [chromium] › tests\navigation.spec.ts:113:3 › Navigation › clicking theme toggle changes icon
+[1A[2K[56/284] [chromium] › tests\scheduler.spec.ts:14:3 › Scheduler › renders page heading and New Schedule button
+[1A[2K[57/284] [chromium] › tests\scheduler.spec.ts:19:3 › Scheduler › shows empty state when no schedules exist
+[1A[2K[58/284] [chromium] › tests\scheduler.spec.ts:23:3 › Scheduler › opens create form on button click
+[1A[2K[59/284] [chromium] › tests\scheduler.spec.ts:33:3 › Scheduler › creates a new daily schedule
+[1A[2K[60/284] [chromium] › tests\scheduler.spec.ts:53:3 › Scheduler › can toggle a schedule on/off
+[1A[2K[61/284] [chromium] › tests\scheduler.spec.ts:74:3 › Scheduler › can delete a schedule
+[1A[2K[62/284] [chromium] › tests\scheduler.spec.ts:98:3 › Scheduler › form closes on Cancel
+[1A[2K[63/284] [chromium] › tests\scheduler.spec.ts:105:3 › Scheduler › weekly mode shows day-of-week checkboxes
+[1A[2K[64/284] [chromium] › tests\settings.spec.ts:14:3 › Settings › renders page heading
+[1A[2K[65/284] [chromium] › tests\settings.spec.ts:18:3 › Settings › shows Appearance, Logging, Notifications, and Menu sections
+[1A[2K[66/284] [chromium] › tests\navigation.spec.ts:30:3 › Navigation › sidebar shows all nav items (retry #1)
+[1A[2K[67/284] [chromium] › tests\settings.spec.ts:25:3 › Settings › theme mode select has correct options
+[1A[2K[68/284] [chromium] › tests\navigation.spec.ts:41:3 › Navigation › navigates to Scheduler page (retry #1)
+[1A[2K[69/284] [chromium] › tests\navigation.spec.ts:51:3 › Navigation › navigates to Logs page (retry #1)
+[1A[2K[70/284] [chromium] › tests\navigation.spec.ts:61:3 › Navigation › navigates to Settings page (retry #1)
+[1A[2K[71/284] [chromium] › tests\settings.spec.ts:34:3 › Settings › changing theme mode persists to localStorage
+[1A[2K[72/284] [chromium] › tests\settings.spec.ts:45:3 › Settings › log level select has correct options
+[1A[2K[73/284] [chromium] › tests\settings.spec.ts:54:3 › Settings › menu position select has correct options
+[1A[2K[74/284] [chromium] › tests\navigation.spec.ts:71:3 › Navigation › navigates to About page (retry #1)
+[1A[2K[75/284] [chromium] › tests\navigation.spec.ts:81:3 › Navigation › navigates to Help page (retry #1)
+[1A[2K[76/284] [chromium] › tests\settings.spec.ts:63:3 › Settings › menu position change persists to localStorage
+[1A[2K[77/284] [chromium] › tests\settings.spec.ts:77:3 › Settings › menu pin toggle is visible and functional
+[1A[2K[78/284] [chromium] › tests\navigation.spec.ts:91:3 › Navigation › navigates to Donate page (retry #1)
+[1A[2K[79/284] [chromium] › tests\settings.spec.ts:85:3 › Settings › Reset button restores defaults
+[1A[2K[80/284] [chromium] › tests\settings.spec.ts:101:3 › Settings › notifications toggle is visible
+[1A[2K[81/284] [firefox] › tests\about.spec.ts:12:3 › About › renders page heading
+[1A[2K[82/284] [firefox] › tests\about.spec.ts:16:3 › About › shows developer name
+[1A[2K[83/284] [firefox] › tests\about.spec.ts:21:3 › About › shows developer title
+[1A[2K[84/284] [firefox] › tests\about.spec.ts:28:3 › About › shows location
+[1A[2K[85/284] [firefox] › tests\about.spec.ts:32:3 › About › GitHub link points to correct URL
+[1A[2K[86/284] [firefox] › tests\about.spec.ts:38:3 › About › LinkedIn link points to correct URL
+[1A[2K[87/284] [firefox] › tests\about.spec.ts:44:3 › About › Portfolio link points to correct URL
+[1A[2K[88/284] [firefox] › tests\about.spec.ts:50:3 › About › shows experience section with two roles
+[1A[2K  3) [chromium] › tests\navigation.spec.ts:30:3 › Navigation › sidebar shows all nav items ─────────
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: /menu/i }).first()[22m
+    [2m    - locator resolved to <button tabindex="0" type="button" title="Pin menu" class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root">…</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    110 × waiting for element to be visible, enabled and stable[22m
+    [2m        - element is visible, enabled and stable[22m
+    [2m        - scrolling into view if needed[22m
+    [2m        - done scrolling[22m
+    [2m        - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m      - retrying click action[22m
+    [2m        - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+
+
+      13 |   if (isMenuButtonVisible) {
+      14 |     // Mobile layout — open the menu
+    > 15 |     await menuButton.click();
+         |                      ^
+      16 |     await page.waitForTimeout(300);
+      17 |   }
+      18 | }
+        at ensureMenuVisible (c:\silent\tests\navigation.spec.ts:15:22)
+        at c:\silent\tests\navigation.spec.ts:31:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-sidebar-shows-all-nav-items-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\navigation-Navigation-sidebar-shows-all-nav-items-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: /menu/i }).first()[22m
+    [2m    - locator resolved to <button tabindex="0" type="button" title="Pin menu" class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root">…</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    108 × waiting for element to be visible, enabled and stable[22m
+    [2m        - element is visible, enabled and stable[22m
+    [2m        - scrolling into view if needed[22m
+    [2m        - done scrolling[22m
+    [2m        - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m      - retrying click action[22m
+    [2m        - waiting 500ms[22m
+
+
+      13 |   if (isMenuButtonVisible) {
+      14 |     // Mobile layout — open the menu
+    > 15 |     await menuButton.click();
+         |                      ^
+      16 |     await page.waitForTimeout(300);
+      17 |   }
+      18 | }
+        at ensureMenuVisible (c:\silent\tests\navigation.spec.ts:15:22)
+        at c:\silent\tests\navigation.spec.ts:31:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-sidebar-shows-all-nav-items-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\navigation-Navigation-sidebar-shows-all-nav-items-chromium-retry1\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-sidebar-shows-all-nav-items-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\navigation-Navigation-sidebar-shows-all-nav-items-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[1A[2K  4) [chromium] › tests\navigation.spec.ts:51:3 › Navigation › navigates to Logs page ──────────────
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: /menu/i }).first()[22m
+    [2m    - locator resolved to <button tabindex="0" type="button" title="Pin menu" class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root">…</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    111 × waiting for element to be visible, enabled and stable[22m
+    [2m        - element is visible, enabled and stable[22m
+    [2m        - scrolling into view if needed[22m
+    [2m        - done scrolling[22m
+    [2m        - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m      - retrying click action[22m
+    [2m        - waiting 500ms[22m
+
+
+      13 |   if (isMenuButtonVisible) {
+      14 |     // Mobile layout — open the menu
+    > 15 |     await menuButton.click();
+         |                      ^
+      16 |     await page.waitForTimeout(300);
+      17 |   }
+      18 | }
+        at ensureMenuVisible (c:\silent\tests\navigation.spec.ts:15:22)
+        at c:\silent\tests\navigation.spec.ts:52:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-navigates-to-Logs-page-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\navigation-Navigation-navigates-to-Logs-page-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: /menu/i }).first()[22m
+    [2m    - locator resolved to <button tabindex="0" type="button" title="Pin menu" class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root">…</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    110 × waiting for element to be visible, enabled and stable[22m
+    [2m        - element is visible, enabled and stable[22m
+    [2m        - scrolling into view if needed[22m
+    [2m        - done scrolling[22m
+    [2m        - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m      - retrying click action[22m
+    [2m        - waiting 500ms[22m
+
+
+      13 |   if (isMenuButtonVisible) {
+      14 |     // Mobile layout — open the menu
+    > 15 |     await menuButton.click();
+         |                      ^
+      16 |     await page.waitForTimeout(300);
+      17 |   }
+      18 | }
+        at ensureMenuVisible (c:\silent\tests\navigation.spec.ts:15:22)
+        at c:\silent\tests\navigation.spec.ts:52:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-navigates-to-Logs-page-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\navigation-Navigation-navigates-to-Logs-page-chromium-retry1\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-navigates-to-Logs-page-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\navigation-Navigation-navigates-to-Logs-page-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[1A[2K[89/284] [firefox] › tests\about.spec.ts:67:3 › About › shows disclaimer card
+[1A[2K[90/284] [firefox] › tests\about.spec.ts:57:3 › About › shows skill chips for primary skills
+[1A[2K[91/284] [firefox] › tests\about.spec.ts:63:3 › About › shows About Silent app info card
+[1A[2K[92/284] [firefox] › tests\dashboard.spec.ts:16:3 › Dashboard › renders page heading
+[1A[2K[93/284] [firefox] › tests\dashboard.spec.ts:20:3 › Dashboard › shows "no active reminder" alert when no schedules exist
+[1A[2K[94/284] [firefox] › tests\dashboard.spec.ts:26:3 › Dashboard › shows schedules count card
+[1A[2K  5) [chromium] › tests\navigation.spec.ts:61:3 › Navigation › navigates to Settings page ──────────
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: /menu/i }).first()[22m
+    [2m    - locator resolved to <button tabindex="0" type="button" title="Pin menu" class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root">…</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    111 × waiting for element to be visible, enabled and stable[22m
+    [2m        - element is visible, enabled and stable[22m
+    [2m        - scrolling into view if needed[22m
+    [2m        - done scrolling[22m
+    [2m        - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m      - retrying click action[22m
+    [2m        - waiting 500ms[22m
+
+
+      13 |   if (isMenuButtonVisible) {
+      14 |     // Mobile layout — open the menu
+    > 15 |     await menuButton.click();
+         |                      ^
+      16 |     await page.waitForTimeout(300);
+      17 |   }
+      18 | }
+        at ensureMenuVisible (c:\silent\tests\navigation.spec.ts:15:22)
+        at c:\silent\tests\navigation.spec.ts:62:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-navigates-to-Settings-page-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\navigation-Navigation-navigates-to-Settings-page-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: /menu/i }).first()[22m
+    [2m    - locator resolved to <button tabindex="0" type="button" title="Pin menu" class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root">…</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    106 × waiting for element to be visible, enabled and stable[22m
+    [2m        - element is visible, enabled and stable[22m
+    [2m        - scrolling into view if needed[22m
+    [2m        - done scrolling[22m
+    [2m        - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m      - retrying click action[22m
+    [2m        - waiting 500ms[22m
+
+
+      13 |   if (isMenuButtonVisible) {
+      14 |     // Mobile layout — open the menu
+    > 15 |     await menuButton.click();
+         |                      ^
+      16 |     await page.waitForTimeout(300);
+      17 |   }
+      18 | }
+        at ensureMenuVisible (c:\silent\tests\navigation.spec.ts:15:22)
+        at c:\silent\tests\navigation.spec.ts:62:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-navigates-to-Settings-page-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\navigation-Navigation-navigates-to-Settings-page-chromium-retry1\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-navigates-to-Settings-page-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\navigation-Navigation-navigates-to-Settings-page-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[1A[2K[95/284] [firefox] › tests\dashboard.spec.ts:32:3 › Dashboard › shows theme darkness percentage card
+[1A[2K[96/284] [firefox] › tests\dashboard.spec.ts:38:3 › Dashboard › "Manage Schedules" button navigates to scheduler
+[1A[2K  6) [chromium] › tests\navigation.spec.ts:41:3 › Navigation › navigates to Scheduler page ─────────
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: /menu/i }).first()[22m
+    [2m    - locator resolved to <button tabindex="0" type="button" title="Pin menu" class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root">…</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    109 × waiting for element to be visible, enabled and stable[22m
+    [2m        - element is visible, enabled and stable[22m
+    [2m        - scrolling into view if needed[22m
+    [2m        - done scrolling[22m
+    [2m        - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m      - retrying click action[22m
+    [2m        - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+
+
+      13 |   if (isMenuButtonVisible) {
+      14 |     // Mobile layout — open the menu
+    > 15 |     await menuButton.click();
+         |                      ^
+      16 |     await page.waitForTimeout(300);
+      17 |   }
+      18 | }
+        at ensureMenuVisible (c:\silent\tests\navigation.spec.ts:15:22)
+        at c:\silent\tests\navigation.spec.ts:42:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-navigates-to-Scheduler-page-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\navigation-Navigation-navigates-to-Scheduler-page-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: /menu/i }).first()[22m
+    [2m    - locator resolved to <button tabindex="0" type="button" title="Pin menu" class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root">…</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    108 × waiting for element to be visible, enabled and stable[22m
+    [2m        - element is visible, enabled and stable[22m
+    [2m        - scrolling into view if needed[22m
+    [2m        - done scrolling[22m
+    [2m        - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m      - retrying click action[22m
+    [2m        - waiting 500ms[22m
+
+
+      13 |   if (isMenuButtonVisible) {
+      14 |     // Mobile layout — open the menu
+    > 15 |     await menuButton.click();
+         |                      ^
+      16 |     await page.waitForTimeout(300);
+      17 |   }
+      18 | }
+        at ensureMenuVisible (c:\silent\tests\navigation.spec.ts:15:22)
+        at c:\silent\tests\navigation.spec.ts:42:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-navigates-to-Scheduler-page-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\navigation-Navigation-navigates-to-Scheduler-page-chromium-retry1\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-navigates-to-Scheduler-page-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\navigation-Navigation-navigates-to-Scheduler-page-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[1A[2K  7) [chromium] › tests\navigation.spec.ts:91:3 › Navigation › navigates to Donate page ────────────
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: /menu/i }).first()[22m
+    [2m    - locator resolved to <button tabindex="0" type="button" title="Pin menu" class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root">…</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    95 × waiting for element to be visible, enabled and stable[22m
+    [2m       - element is visible, enabled and stable[22m
+    [2m       - scrolling into view if needed[22m
+    [2m       - done scrolling[22m
+    [2m       - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m     - retrying click action[22m
+    [2m       - waiting 500ms[22m
+    [2m    16 × waiting for element to be visible, enabled and stable[22m
+    [2m       - element is visible, enabled and stable[22m
+    [2m       - scrolling into view if needed[22m
+    [2m       - done scrolling[22m
+    [2m       - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m     - retrying click action[22m
+    [2m       - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+
+
+      13 |   if (isMenuButtonVisible) {
+      14 |     // Mobile layout — open the menu
+    > 15 |     await menuButton.click();
+         |                      ^
+      16 |     await page.waitForTimeout(300);
+      17 |   }
+      18 | }
+        at ensureMenuVisible (c:\silent\tests\navigation.spec.ts:15:22)
+        at c:\silent\tests\navigation.spec.ts:92:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-navigates-to-Donate-page-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\navigation-Navigation-navigates-to-Donate-page-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: /menu/i }).first()[22m
+    [2m    - locator resolved to <button tabindex="0" type="button" title="Pin menu" class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root">…</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    110 × waiting for element to be visible, enabled and stable[22m
+    [2m        - element is visible, enabled and stable[22m
+    [2m        - scrolling into view if needed[22m
+    [2m        - done scrolling[22m
+    [2m        - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m      - retrying click action[22m
+    [2m        - waiting 500ms[22m
+
+
+      13 |   if (isMenuButtonVisible) {
+      14 |     // Mobile layout — open the menu
+    > 15 |     await menuButton.click();
+         |                      ^
+      16 |     await page.waitForTimeout(300);
+      17 |   }
+      18 | }
+        at ensureMenuVisible (c:\silent\tests\navigation.spec.ts:15:22)
+        at c:\silent\tests\navigation.spec.ts:92:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-navigates-to-Donate-page-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\navigation-Navigation-navigates-to-Donate-page-chromium-retry1\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-navigates-to-Donate-page-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\navigation-Navigation-navigates-to-Donate-page-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[1A[2K[97/284] [firefox] › tests\help.spec.ts:16:3 › Help › shows FAQ section
+[1A[2K[98/284] [firefox] › tests\help.spec.ts:20:3 › Help › FAQ items are collapsed by default
+[1A[2K[99/284] [firefox] › tests\dashboard.spec.ts:43:3 › Dashboard › shows active warning when a schedule is currently active
+[1A[2K[100/284] [firefox] › tests\help.spec.ts:12:3 › Help › renders page heading
+[1A[2K[101/284] [firefox] › tests\help.spec.ts:27:3 › Help › FAQ item expands on click
+[1A[2K[102/284] [firefox] › tests\help.spec.ts:41:3 › Help › multiple FAQ items can be opened independently
+[1A[2K[103/284] [firefox] › tests\help.spec.ts:61:3 › Help › shows Contact the Developer section
+[1A[2K[104/284] [firefox] › tests\help.spec.ts:65:3 › Help › contact form has all required fields
+[1A[2K[105/284] [firefox] › tests\help.spec.ts:73:3 › Help › contact form shows validation errors on empty submit
+[1A[2K[106/284] [firefox] › tests\help.spec.ts:86:3 › Help › contact form fields accept input
+[1A[2K[107/284] [firefox] › tests\help.spec.ts:112:3 › Help › FAQ covers all 7 questions
+[1A[2K[108/284] [firefox] › tests\help.spec.ts:128:3 › Help › contact form submits and shows success (mocked EmailJS)
+[1A[2K[109/284] [firefox] › tests\language.spec.ts:13:3 › Language Switching › EN button is active by default
+[1A[2K  8) [chromium] › tests\navigation.spec.ts:71:3 › Navigation › navigates to About page ─────────────
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: /menu/i }).first()[22m
+    [2m    - locator resolved to <button tabindex="0" type="button" title="Pin menu" class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root">…</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    109 × waiting for element to be visible, enabled and stable[22m
+    [2m        - element is visible, enabled and stable[22m
+    [2m        - scrolling into view if needed[22m
+    [2m        - done scrolling[22m
+    [2m        - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m      - retrying click action[22m
+    [2m        - waiting 500ms[22m
+
+
+      13 |   if (isMenuButtonVisible) {
+      14 |     // Mobile layout — open the menu
+    > 15 |     await menuButton.click();
+         |                      ^
+      16 |     await page.waitForTimeout(300);
+      17 |   }
+      18 | }
+        at ensureMenuVisible (c:\silent\tests\navigation.spec.ts:15:22)
+        at c:\silent\tests\navigation.spec.ts:72:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-navigates-to-About-page-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\navigation-Navigation-navigates-to-About-page-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: /menu/i }).first()[22m
+    [2m    - locator resolved to <button tabindex="0" type="button" title="Pin menu" class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root">…</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    109 × waiting for element to be visible, enabled and stable[22m
+    [2m        - element is visible, enabled and stable[22m
+    [2m        - scrolling into view if needed[22m
+    [2m        - done scrolling[22m
+    [2m        - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m      - retrying click action[22m
+    [2m        - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+
+
+      13 |   if (isMenuButtonVisible) {
+      14 |     // Mobile layout — open the menu
+    > 15 |     await menuButton.click();
+         |                      ^
+      16 |     await page.waitForTimeout(300);
+      17 |   }
+      18 | }
+        at ensureMenuVisible (c:\silent\tests\navigation.spec.ts:15:22)
+        at c:\silent\tests\navigation.spec.ts:72:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-navigates-to-About-page-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\navigation-Navigation-navigates-to-About-page-chromium-retry1\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-navigates-to-About-page-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\navigation-Navigation-navigates-to-About-page-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[1A[2K  9) [chromium] › tests\navigation.spec.ts:81:3 › Navigation › navigates to Help page ──────────────
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: /menu/i }).first()[22m
+    [2m    - locator resolved to <button tabindex="0" type="button" title="Pin menu" class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root">…</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    112 × waiting for element to be visible, enabled and stable[22m
+    [2m        - element is visible, enabled and stable[22m
+    [2m        - scrolling into view if needed[22m
+    [2m        - done scrolling[22m
+    [2m        - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-1gtwmfl-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m      - retrying click action[22m
+    [2m        - waiting 500ms[22m
+
+
+      13 |   if (isMenuButtonVisible) {
+      14 |     // Mobile layout — open the menu
+    > 15 |     await menuButton.click();
+         |                      ^
+      16 |     await page.waitForTimeout(300);
+      17 |   }
+      18 | }
+        at ensureMenuVisible (c:\silent\tests\navigation.spec.ts:15:22)
+        at c:\silent\tests\navigation.spec.ts:82:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-navigates-to-Help-page-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\navigation-Navigation-navigates-to-Help-page-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: /menu/i }).first()[22m
+    [2m    - locator resolved to <button tabindex="0" type="button" title="Pin menu" class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root">…</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    109 × waiting for element to be visible, enabled and stable[22m
+    [2m        - element is visible, enabled and stable[22m
+    [2m        - scrolling into view if needed[22m
+    [2m        - done scrolling[22m
+    [2m        - <div class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root">💤 Dashboard</div> from <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-9zm43w-MuiPaper-root-MuiAppBar-root">…</header> subtree intercepts pointer events[22m
+    [2m      - retrying click action[22m
+    [2m        - waiting 500ms[22m
+
+
+      13 |   if (isMenuButtonVisible) {
+      14 |     // Mobile layout — open the menu
+    > 15 |     await menuButton.click();
+         |                      ^
+      16 |     await page.waitForTimeout(300);
+      17 |   }
+      18 | }
+        at ensureMenuVisible (c:\silent\tests\navigation.spec.ts:15:22)
+        at c:\silent\tests\navigation.spec.ts:82:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-navigates-to-Help-page-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\navigation-Navigation-navigates-to-Help-page-chromium-retry1\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\navigation-Navigation-navigates-to-Help-page-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\navigation-Navigation-navigates-to-Help-page-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[1A[2K[110/284] [firefox] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels
+[1A[2K[111/284] [firefox] › tests\language.spec.ts:29:3 › Language Switching › switching to Hebrew sets RTL direction
+[1A[2K[112/284] [firefox] › tests\language.spec.ts:35:3 › Language Switching › switching back to English restores LTR
+[1A[2K[113/284] [firefox] › tests\language.spec.ts:46:3 › Language Switching › language preference persists across reload
+[1A[2K[114/284] [firefox] › tests\logs.spec.ts:14:3 › Logs › renders page heading
+[1A[2K[115/284] [firefox] › tests\logs.spec.ts:18:3 › Logs › shows empty state with no logs
+[1A[2K[116/284] [firefox] › tests\logs.spec.ts:24:3 › Logs › Delete Selected button is disabled with no selection
+[1A[2K[117/284] [firefox] › tests\logs.spec.ts:30:3 › Logs › Clear All button is disabled with no logs
+[1A[2K[118/284] [firefox] › tests\logs.spec.ts:36:3 › Logs › shows log entries when logs exist in localStorage
+[1A[2K[119/284] [firefox] › tests\logs.spec.ts:58:3 › Logs › level chips display correctly
+[1A[2K[120/284] [firefox] › tests\logs.spec.ts:73:3 › Logs › can select all logs and clear them
+[1A[2K[121/284] [firefox] › tests\logs.spec.ts:100:3 › Logs › Export JSON button triggers download
+[1A[2K[122/284] [firefox] › tests\logs.spec.ts:116:3 › Logs › Refresh button reloads logs from storage
+[1A[2K[123/284] [firefox] › tests\help.spec.ts:128:3 › Help › contact form submits and shows success (mocked EmailJS) (retry #1)
+[1A[2K  10) [firefox] › tests\help.spec.ts:128:3 › Help › contact form submits and shows success (mocked EmailJS) 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText(/message sent|successfully/i)
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 20000ms[22m
+    [2m  - waiting for getByText(/message sent|successfully/i)[22m
+
+
+      161 |
+      162 |     // Success alert should appear (increased timeout for reCAPTCHA validation)
+    > 163 |     await expect(page.getByText(/message sent|successfully/i)).toBeVisible({ timeout: 20_000 });
+          |                                                                ^
+      164 |   });
+      165 | });
+      166 |
+        at c:\silent\tests\help.spec.ts:163:64
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\help-Help-contact-form-sub-d6d8a-ows-success-mocked-EmailJS--firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\help-Help-contact-form-sub-d6d8a-ows-success-mocked-EmailJS--firefox\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[124/284] [firefox] › tests\navigation.spec.ts:26:3 › Navigation › app loads with correct title
+[1A[2K[125/284] [firefox] › tests\navigation.spec.ts:26:3 › Navigation › app loads with correct title (retry #1)
+[1A[2K  11) [firefox] › tests\navigation.spec.ts:26:3 › Navigation › app loads with correct title ────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[126/284] [firefox] › tests\navigation.spec.ts:30:3 › Navigation › sidebar shows all nav items
+[1A[2K[127/284] [firefox] › tests\navigation.spec.ts:30:3 › Navigation › sidebar shows all nav items (retry #1)
+[1A[2K  12) [firefox] › tests\navigation.spec.ts:30:3 › Navigation › sidebar shows all nav items ─────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[128/284] [firefox] › tests\navigation.spec.ts:41:3 › Navigation › navigates to Scheduler page
+[1A[2K[129/284] [firefox] › tests\navigation.spec.ts:41:3 › Navigation › navigates to Scheduler page (retry #1)
+[1A[2K  13) [firefox] › tests\navigation.spec.ts:41:3 › Navigation › navigates to Scheduler page ─────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[130/284] [firefox] › tests\navigation.spec.ts:51:3 › Navigation › navigates to Logs page
+[1A[2K[131/284] [firefox] › tests\navigation.spec.ts:51:3 › Navigation › navigates to Logs page (retry #1)
+[1A[2K  14) [firefox] › tests\navigation.spec.ts:51:3 › Navigation › navigates to Logs page ──────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[132/284] [firefox] › tests\navigation.spec.ts:61:3 › Navigation › navigates to Settings page
+[1A[2K[133/284] [firefox] › tests\navigation.spec.ts:61:3 › Navigation › navigates to Settings page (retry #1)
+[1A[2K  15) [firefox] › tests\navigation.spec.ts:61:3 › Navigation › navigates to Settings page ──────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[134/284] [firefox] › tests\navigation.spec.ts:71:3 › Navigation › navigates to About page
+[1A[2K[135/284] [firefox] › tests\navigation.spec.ts:71:3 › Navigation › navigates to About page (retry #1)
+[1A[2K  16) [firefox] › tests\navigation.spec.ts:71:3 › Navigation › navigates to About page ─────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[136/284] [firefox] › tests\navigation.spec.ts:81:3 › Navigation › navigates to Help page
+[1A[2K[137/284] [firefox] › tests\navigation.spec.ts:81:3 › Navigation › navigates to Help page (retry #1)
+[1A[2K  17) [firefox] › tests\navigation.spec.ts:81:3 › Navigation › navigates to Help page ──────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[138/284] [firefox] › tests\navigation.spec.ts:91:3 › Navigation › navigates to Donate page
+[1A[2K[139/284] [firefox] › tests\navigation.spec.ts:91:3 › Navigation › navigates to Donate page (retry #1)
+[1A[2K  18) [firefox] › tests\navigation.spec.ts:91:3 › Navigation › navigates to Donate page ────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[140/284] [firefox] › tests\navigation.spec.ts:101:3 › Navigation › header shows app title with emoji
+[1A[2K[141/284] [firefox] › tests\navigation.spec.ts:101:3 › Navigation › header shows app title with emoji (retry #1)
+[1A[2K  19) [firefox] › tests\navigation.spec.ts:101:3 › Navigation › header shows app title with emoji ──
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[142/284] [firefox] › tests\navigation.spec.ts:107:3 › Navigation › theme toggle button is visible in header
+[1A[2K[143/284] [firefox] › tests\navigation.spec.ts:107:3 › Navigation › theme toggle button is visible in header (retry #1)
+[1A[2K  20) [firefox] › tests\navigation.spec.ts:107:3 › Navigation › theme toggle button is visible in header 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[144/284] [firefox] › tests\navigation.spec.ts:113:3 › Navigation › clicking theme toggle changes icon
+[1A[2K[145/284] [firefox] › tests\navigation.spec.ts:113:3 › Navigation › clicking theme toggle changes icon (retry #1)
+[1A[2K  21) [firefox] › tests\navigation.spec.ts:113:3 › Navigation › clicking theme toggle changes icon ─
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[146/284] [firefox] › tests\scheduler.spec.ts:14:3 › Scheduler › renders page heading and New Schedule button
+[1A[2K[147/284] [firefox] › tests\scheduler.spec.ts:14:3 › Scheduler › renders page heading and New Schedule button (retry #1)
+[1A[2K  22) [firefox] › tests\scheduler.spec.ts:14:3 › Scheduler › renders page heading and New Schedule button 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[148/284] [firefox] › tests\scheduler.spec.ts:19:3 › Scheduler › shows empty state when no schedules exist
+[1A[2K[149/284] [firefox] › tests\scheduler.spec.ts:19:3 › Scheduler › shows empty state when no schedules exist (retry #1)
+[1A[2K  23) [firefox] › tests\scheduler.spec.ts:19:3 › Scheduler › shows empty state when no schedules exist 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[150/284] [firefox] › tests\scheduler.spec.ts:23:3 › Scheduler › opens create form on button click
+[1A[2K[151/284] [firefox] › tests\scheduler.spec.ts:23:3 › Scheduler › opens create form on button click (retry #1)
+[1A[2K  24) [firefox] › tests\scheduler.spec.ts:23:3 › Scheduler › opens create form on button click ─────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[152/284] [firefox] › tests\scheduler.spec.ts:33:3 › Scheduler › creates a new daily schedule
+[1A[2K[153/284] [firefox] › tests\scheduler.spec.ts:33:3 › Scheduler › creates a new daily schedule (retry #1)
+[1A[2K  25) [firefox] › tests\scheduler.spec.ts:33:3 › Scheduler › creates a new daily schedule ──────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[154/284] [firefox] › tests\scheduler.spec.ts:53:3 › Scheduler › can toggle a schedule on/off
+[1A[2K[155/284] [firefox] › tests\scheduler.spec.ts:53:3 › Scheduler › can toggle a schedule on/off (retry #1)
+[1A[2K  26) [firefox] › tests\scheduler.spec.ts:53:3 › Scheduler › can toggle a schedule on/off ──────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[156/284] [firefox] › tests\scheduler.spec.ts:74:3 › Scheduler › can delete a schedule
+[1A[2K[157/284] [firefox] › tests\scheduler.spec.ts:74:3 › Scheduler › can delete a schedule (retry #1)
+[1A[2K  27) [firefox] › tests\scheduler.spec.ts:74:3 › Scheduler › can delete a schedule ─────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[158/284] [firefox] › tests\scheduler.spec.ts:98:3 › Scheduler › form closes on Cancel
+[1A[2K[159/284] [firefox] › tests\scheduler.spec.ts:98:3 › Scheduler › form closes on Cancel (retry #1)
+[1A[2K  28) [firefox] › tests\scheduler.spec.ts:98:3 › Scheduler › form closes on Cancel ─────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[160/284] [firefox] › tests\scheduler.spec.ts:105:3 › Scheduler › weekly mode shows day-of-week checkboxes
+[1A[2K[161/284] [firefox] › tests\scheduler.spec.ts:105:3 › Scheduler › weekly mode shows day-of-week checkboxes (retry #1)
+[1A[2K  29) [firefox] › tests\scheduler.spec.ts:105:3 › Scheduler › weekly mode shows day-of-week checkboxes 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[162/284] [firefox] › tests\settings.spec.ts:14:3 › Settings › renders page heading
+[1A[2K[163/284] [firefox] › tests\settings.spec.ts:14:3 › Settings › renders page heading (retry #1)
+[1A[2K  30) [firefox] › tests\settings.spec.ts:14:3 › Settings › renders page heading ────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[164/284] [firefox] › tests\settings.spec.ts:18:3 › Settings › shows Appearance, Logging, Notifications, and Menu sections
+[1A[2K[165/284] [firefox] › tests\settings.spec.ts:18:3 › Settings › shows Appearance, Logging, Notifications, and Menu sections (retry #1)
+[1A[2K  31) [firefox] › tests\settings.spec.ts:18:3 › Settings › shows Appearance, Logging, Notifications, and Menu sections 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[166/284] [firefox] › tests\settings.spec.ts:25:3 › Settings › theme mode select has correct options
+[1A[2K[167/284] [firefox] › tests\settings.spec.ts:25:3 › Settings › theme mode select has correct options (retry #1)
+[1A[2K  32) [firefox] › tests\settings.spec.ts:25:3 › Settings › theme mode select has correct options ───
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[168/284] [firefox] › tests\settings.spec.ts:34:3 › Settings › changing theme mode persists to localStorage
+[1A[2K[169/284] [firefox] › tests\settings.spec.ts:34:3 › Settings › changing theme mode persists to localStorage (retry #1)
+[1A[2K  33) [firefox] › tests\settings.spec.ts:34:3 › Settings › changing theme mode persists to localStorage 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[170/284] [firefox] › tests\settings.spec.ts:45:3 › Settings › log level select has correct options
+[1A[2K[171/284] [firefox] › tests\settings.spec.ts:45:3 › Settings › log level select has correct options (retry #1)
+[1A[2K  34) [firefox] › tests\settings.spec.ts:45:3 › Settings › log level select has correct options ────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[172/284] [firefox] › tests\settings.spec.ts:54:3 › Settings › menu position select has correct options
+[1A[2K[173/284] [firefox] › tests\settings.spec.ts:54:3 › Settings › menu position select has correct options (retry #1)
+[1A[2K  35) [firefox] › tests\settings.spec.ts:54:3 › Settings › menu position select has correct options 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[174/284] [firefox] › tests\settings.spec.ts:63:3 › Settings › menu position change persists to localStorage
+[1A[2K[175/284] [firefox] › tests\settings.spec.ts:63:3 › Settings › menu position change persists to localStorage (retry #1)
+[1A[2K  36) [firefox] › tests\settings.spec.ts:63:3 › Settings › menu position change persists to localStorage 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[176/284] [firefox] › tests\settings.spec.ts:77:3 › Settings › menu pin toggle is visible and functional
+[1A[2K[177/284] [firefox] › tests\settings.spec.ts:77:3 › Settings › menu pin toggle is visible and functional (retry #1)
+[1A[2K  37) [firefox] › tests\settings.spec.ts:77:3 › Settings › menu pin toggle is visible and functional 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[178/284] [firefox] › tests\settings.spec.ts:85:3 › Settings › Reset button restores defaults
+[1A[2K[179/284] [firefox] › tests\settings.spec.ts:85:3 › Settings › Reset button restores defaults (retry #1)
+[1A[2K  38) [firefox] › tests\settings.spec.ts:85:3 › Settings › Reset button restores defaults ──────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[180/284] [firefox] › tests\settings.spec.ts:101:3 › Settings › notifications toggle is visible
+[1A[2K[181/284] [firefox] › tests\settings.spec.ts:101:3 › Settings › notifications toggle is visible (retry #1)
+[1A[2K  39) [firefox] › tests\settings.spec.ts:101:3 › Settings › notifications toggle is visible ────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[182/284] [webkit] › tests\about.spec.ts:12:3 › About › renders page heading
+[1A[2K[183/284] [webkit] › tests\about.spec.ts:12:3 › About › renders page heading (retry #1)
+[1A[2K  40) [webkit] › tests\about.spec.ts:12:3 › About › renders page heading ───────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[184/284] [webkit] › tests\about.spec.ts:16:3 › About › shows developer name
+[1A[2K[185/284] [webkit] › tests\about.spec.ts:16:3 › About › shows developer name (retry #1)
+[1A[2K  41) [webkit] › tests\about.spec.ts:16:3 › About › shows developer name ───────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[186/284] [webkit] › tests\about.spec.ts:21:3 › About › shows developer title
+[1A[2K[187/284] [webkit] › tests\about.spec.ts:21:3 › About › shows developer title (retry #1)
+[1A[2K  42) [webkit] › tests\about.spec.ts:21:3 › About › shows developer title ──────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[188/284] [webkit] › tests\about.spec.ts:28:3 › About › shows location
+[1A[2K[189/284] [webkit] › tests\about.spec.ts:28:3 › About › shows location (retry #1)
+[1A[2K  43) [webkit] › tests\about.spec.ts:28:3 › About › shows location ─────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[190/284] [webkit] › tests\about.spec.ts:32:3 › About › GitHub link points to correct URL
+[1A[2K[191/284] [webkit] › tests\about.spec.ts:32:3 › About › GitHub link points to correct URL (retry #1)
+[1A[2K  44) [webkit] › tests\about.spec.ts:32:3 › About › GitHub link points to correct URL ──────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[192/284] [webkit] › tests\about.spec.ts:38:3 › About › LinkedIn link points to correct URL
+[1A[2K[193/284] [webkit] › tests\about.spec.ts:38:3 › About › LinkedIn link points to correct URL (retry #1)
+[1A[2K  45) [webkit] › tests\about.spec.ts:38:3 › About › LinkedIn link points to correct URL ────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[194/284] [webkit] › tests\about.spec.ts:44:3 › About › Portfolio link points to correct URL
+[1A[2K[195/284] [webkit] › tests\about.spec.ts:44:3 › About › Portfolio link points to correct URL (retry #1)
+[1A[2K  46) [webkit] › tests\about.spec.ts:44:3 › About › Portfolio link points to correct URL ───────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[196/284] [webkit] › tests\about.spec.ts:50:3 › About › shows experience section with two roles
+[1A[2K[197/284] [webkit] › tests\about.spec.ts:50:3 › About › shows experience section with two roles (retry #1)
+[1A[2K  47) [webkit] › tests\about.spec.ts:50:3 › About › shows experience section with two roles ────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[198/284] [webkit] › tests\about.spec.ts:57:3 › About › shows skill chips for primary skills
+[1A[2K[199/284] [webkit] › tests\about.spec.ts:57:3 › About › shows skill chips for primary skills (retry #1)
+[1A[2K  48) [webkit] › tests\about.spec.ts:57:3 › About › shows skill chips for primary skills ───────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[200/284] [webkit] › tests\about.spec.ts:63:3 › About › shows About Silent app info card
+[1A[2K[201/284] [webkit] › tests\about.spec.ts:63:3 › About › shows About Silent app info card (retry #1)
+[1A[2K  49) [webkit] › tests\about.spec.ts:63:3 › About › shows About Silent app info card ───────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[202/284] [webkit] › tests\about.spec.ts:67:3 › About › shows disclaimer card
+[1A[2K[203/284] [webkit] › tests\about.spec.ts:67:3 › About › shows disclaimer card (retry #1)
+[1A[2K  50) [webkit] › tests\about.spec.ts:67:3 › About › shows disclaimer card ──────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[204/284] [webkit] › tests\dashboard.spec.ts:16:3 › Dashboard › renders page heading
+[1A[2K[205/284] [webkit] › tests\dashboard.spec.ts:16:3 › Dashboard › renders page heading (retry #1)
+[1A[2K  51) [webkit] › tests\dashboard.spec.ts:16:3 › Dashboard › renders page heading ───────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[206/284] [webkit] › tests\dashboard.spec.ts:20:3 › Dashboard › shows "no active reminder" alert when no schedules exist
+[1A[2K[207/284] [webkit] › tests\dashboard.spec.ts:20:3 › Dashboard › shows "no active reminder" alert when no schedules exist (retry #1)
+[1A[2K  52) [webkit] › tests\dashboard.spec.ts:20:3 › Dashboard › shows "no active reminder" alert when no schedules exist 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[208/284] [webkit] › tests\dashboard.spec.ts:26:3 › Dashboard › shows schedules count card
+[1A[2K[209/284] [webkit] › tests\dashboard.spec.ts:26:3 › Dashboard › shows schedules count card (retry #1)
+[1A[2K  53) [webkit] › tests\dashboard.spec.ts:26:3 › Dashboard › shows schedules count card ─────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[210/284] [webkit] › tests\dashboard.spec.ts:32:3 › Dashboard › shows theme darkness percentage card
+[1A[2K[211/284] [webkit] › tests\dashboard.spec.ts:32:3 › Dashboard › shows theme darkness percentage card (retry #1)
+[1A[2K  54) [webkit] › tests\dashboard.spec.ts:32:3 › Dashboard › shows theme darkness percentage card ───
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[212/284] [webkit] › tests\dashboard.spec.ts:38:3 › Dashboard › "Manage Schedules" button navigates to scheduler
+[1A[2K[213/284] [webkit] › tests\dashboard.spec.ts:38:3 › Dashboard › "Manage Schedules" button navigates to scheduler (retry #1)
+[1A[2K  55) [webkit] › tests\dashboard.spec.ts:38:3 › Dashboard › "Manage Schedules" button navigates to scheduler 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[214/284] [webkit] › tests\dashboard.spec.ts:43:3 › Dashboard › shows active warning when a schedule is currently active
+[1A[2K[215/284] [webkit] › tests\dashboard.spec.ts:43:3 › Dashboard › shows active warning when a schedule is currently active (retry #1)
+[1A[2K  56) [webkit] › tests\dashboard.spec.ts:43:3 › Dashboard › shows active warning when a schedule is currently active 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[216/284] [webkit] › tests\help.spec.ts:12:3 › Help › renders page heading
+[1A[2K[217/284] [webkit] › tests\help.spec.ts:12:3 › Help › renders page heading (retry #1)
+[1A[2K  57) [webkit] › tests\help.spec.ts:12:3 › Help › renders page heading ─────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[218/284] [webkit] › tests\help.spec.ts:16:3 › Help › shows FAQ section
+[1A[2K[219/284] [webkit] › tests\help.spec.ts:16:3 › Help › shows FAQ section (retry #1)
+[1A[2K  58) [webkit] › tests\help.spec.ts:16:3 › Help › shows FAQ section ────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[220/284] [webkit] › tests\help.spec.ts:20:3 › Help › FAQ items are collapsed by default
+[1A[2K[221/284] [webkit] › tests\help.spec.ts:20:3 › Help › FAQ items are collapsed by default (retry #1)
+[1A[2K  59) [webkit] › tests\help.spec.ts:20:3 › Help › FAQ items are collapsed by default ───────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[222/284] [webkit] › tests\help.spec.ts:27:3 › Help › FAQ item expands on click
+[1A[2K[223/284] [webkit] › tests\help.spec.ts:27:3 › Help › FAQ item expands on click (retry #1)
+[1A[2K  60) [webkit] › tests\help.spec.ts:27:3 › Help › FAQ item expands on click ────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[224/284] [webkit] › tests\help.spec.ts:41:3 › Help › multiple FAQ items can be opened independently
+[1A[2K[225/284] [webkit] › tests\help.spec.ts:41:3 › Help › multiple FAQ items can be opened independently (retry #1)
+[1A[2K  61) [webkit] › tests\help.spec.ts:41:3 › Help › multiple FAQ items can be opened independently ───
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[226/284] [webkit] › tests\help.spec.ts:61:3 › Help › shows Contact the Developer section
+[1A[2K[227/284] [webkit] › tests\help.spec.ts:61:3 › Help › shows Contact the Developer section (retry #1)
+[1A[2K  62) [webkit] › tests\help.spec.ts:61:3 › Help › shows Contact the Developer section ──────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[228/284] [webkit] › tests\help.spec.ts:65:3 › Help › contact form has all required fields
+[1A[2K[229/284] [webkit] › tests\help.spec.ts:65:3 › Help › contact form has all required fields (retry #1)
+[1A[2K  63) [webkit] › tests\help.spec.ts:65:3 › Help › contact form has all required fields ─────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[230/284] [webkit] › tests\help.spec.ts:73:3 › Help › contact form shows validation errors on empty submit
+[1A[2K[231/284] [webkit] › tests\help.spec.ts:73:3 › Help › contact form shows validation errors on empty submit (retry #1)
+[1A[2K  64) [webkit] › tests\help.spec.ts:73:3 › Help › contact form shows validation errors on empty submit 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[232/284] [webkit] › tests\help.spec.ts:86:3 › Help › contact form fields accept input
+[1A[2K[233/284] [webkit] › tests\help.spec.ts:86:3 › Help › contact form fields accept input (retry #1)
+[1A[2K  65) [webkit] › tests\help.spec.ts:86:3 › Help › contact form fields accept input ─────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[234/284] [webkit] › tests\help.spec.ts:112:3 › Help › FAQ covers all 7 questions
+[1A[2K[235/284] [webkit] › tests\help.spec.ts:112:3 › Help › FAQ covers all 7 questions (retry #1)
+[1A[2K  66) [webkit] › tests\help.spec.ts:112:3 › Help › FAQ covers all 7 questions ──────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[236/284] [webkit] › tests\help.spec.ts:128:3 › Help › contact form submits and shows success (mocked EmailJS)
+[1A[2K[237/284] [webkit] › tests\help.spec.ts:128:3 › Help › contact form submits and shows success (mocked EmailJS) (retry #1)
+[1A[2K  67) [webkit] › tests\help.spec.ts:128:3 › Help › contact form submits and shows success (mocked EmailJS) 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[238/284] [webkit] › tests\language.spec.ts:13:3 › Language Switching › EN button is active by default
+[1A[2K[239/284] [webkit] › tests\language.spec.ts:13:3 › Language Switching › EN button is active by default (retry #1)
+[1A[2K  68) [webkit] › tests\language.spec.ts:13:3 › Language Switching › EN button is active by default ─
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[240/284] [webkit] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels
+[1A[2K[241/284] [webkit] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels (retry #1)
+[1A[2K  69) [webkit] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[242/284] [webkit] › tests\language.spec.ts:29:3 › Language Switching › switching to Hebrew sets RTL direction
+[1A[2K[243/284] [webkit] › tests\language.spec.ts:29:3 › Language Switching › switching to Hebrew sets RTL direction (retry #1)
+[1A[2K  70) [webkit] › tests\language.spec.ts:29:3 › Language Switching › switching to Hebrew sets RTL direction 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[244/284] [webkit] › tests\language.spec.ts:35:3 › Language Switching › switching back to English restores LTR
+[1A[2K[245/284] [webkit] › tests\language.spec.ts:35:3 › Language Switching › switching back to English restores LTR (retry #1)
+[1A[2K  71) [webkit] › tests\language.spec.ts:35:3 › Language Switching › switching back to English restores LTR 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[246/284] [webkit] › tests\language.spec.ts:46:3 › Language Switching › language preference persists across reload
+[1A[2K[247/284] [webkit] › tests\language.spec.ts:46:3 › Language Switching › language preference persists across reload (retry #1)
+[1A[2K  72) [webkit] › tests\language.spec.ts:46:3 › Language Switching › language preference persists across reload 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[248/284] [webkit] › tests\logs.spec.ts:14:3 › Logs › renders page heading
+[1A[2K[249/284] [webkit] › tests\logs.spec.ts:14:3 › Logs › renders page heading (retry #1)
+[1A[2K  73) [webkit] › tests\logs.spec.ts:14:3 › Logs › renders page heading ─────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[250/284] [webkit] › tests\logs.spec.ts:18:3 › Logs › shows empty state with no logs
+[1A[2K[251/284] [webkit] › tests\logs.spec.ts:18:3 › Logs › shows empty state with no logs (retry #1)
+[1A[2K  74) [webkit] › tests\logs.spec.ts:18:3 › Logs › shows empty state with no logs ───────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[252/284] [webkit] › tests\logs.spec.ts:24:3 › Logs › Delete Selected button is disabled with no selection
+[1A[2K[253/284] [webkit] › tests\logs.spec.ts:24:3 › Logs › Delete Selected button is disabled with no selection (retry #1)
+[1A[2K  75) [webkit] › tests\logs.spec.ts:24:3 › Logs › Delete Selected button is disabled with no selection 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[254/284] [webkit] › tests\logs.spec.ts:30:3 › Logs › Clear All button is disabled with no logs
+[1A[2K[255/284] [webkit] › tests\logs.spec.ts:30:3 › Logs › Clear All button is disabled with no logs (retry #1)
+[1A[2K  76) [webkit] › tests\logs.spec.ts:30:3 › Logs › Clear All button is disabled with no logs ────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[256/284] [webkit] › tests\logs.spec.ts:36:3 › Logs › shows log entries when logs exist in localStorage
+[1A[2K[257/284] [webkit] › tests\logs.spec.ts:36:3 › Logs › shows log entries when logs exist in localStorage (retry #1)
+[1A[2K  77) [webkit] › tests\logs.spec.ts:36:3 › Logs › shows log entries when logs exist in localStorage 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[258/284] [webkit] › tests\logs.spec.ts:58:3 › Logs › level chips display correctly
+[1A[2K[259/284] [webkit] › tests\logs.spec.ts:58:3 › Logs › level chips display correctly (retry #1)
+[1A[2K  78) [webkit] › tests\logs.spec.ts:58:3 › Logs › level chips display correctly ────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[260/284] [webkit] › tests\logs.spec.ts:73:3 › Logs › can select all logs and clear them
+[1A[2K[261/284] [webkit] › tests\logs.spec.ts:73:3 › Logs › can select all logs and clear them (retry #1)
+[1A[2K  79) [webkit] › tests\logs.spec.ts:73:3 › Logs › can select all logs and clear them ───────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[262/284] [webkit] › tests\logs.spec.ts:100:3 › Logs › Export JSON button triggers download
+[1A[2K[263/284] [webkit] › tests\logs.spec.ts:100:3 › Logs › Export JSON button triggers download (retry #1)
+[1A[2K  80) [webkit] › tests\logs.spec.ts:100:3 › Logs › Export JSON button triggers download ────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[264/284] [webkit] › tests\logs.spec.ts:116:3 › Logs › Refresh button reloads logs from storage
+[1A[2K[265/284] [webkit] › tests\logs.spec.ts:116:3 › Logs › Refresh button reloads logs from storage (retry #1)
+[1A[2K  81) [webkit] › tests\logs.spec.ts:116:3 › Logs › Refresh button reloads logs from storage ────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[266/284] [webkit] › tests\navigation.spec.ts:26:3 › Navigation › app loads with correct title
+[1A[2K[267/284] [webkit] › tests\navigation.spec.ts:26:3 › Navigation › app loads with correct title (retry #1)
+[1A[2K  82) [webkit] › tests\navigation.spec.ts:26:3 › Navigation › app loads with correct title ─────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[268/284] [webkit] › tests\navigation.spec.ts:30:3 › Navigation › sidebar shows all nav items
+[1A[2K[269/284] [webkit] › tests\navigation.spec.ts:30:3 › Navigation › sidebar shows all nav items (retry #1)
+[1A[2K  83) [webkit] › tests\navigation.spec.ts:30:3 › Navigation › sidebar shows all nav items ──────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[270/284] [webkit] › tests\navigation.spec.ts:41:3 › Navigation › navigates to Scheduler page
+[1A[2K[271/284] [webkit] › tests\navigation.spec.ts:41:3 › Navigation › navigates to Scheduler page (retry #1)
+[1A[2K  84) [webkit] › tests\navigation.spec.ts:41:3 › Navigation › navigates to Scheduler page ──────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[272/284] [webkit] › tests\navigation.spec.ts:51:3 › Navigation › navigates to Logs page
+[1A[2K[273/284] [webkit] › tests\navigation.spec.ts:51:3 › Navigation › navigates to Logs page (retry #1)
+[1A[2K  85) [webkit] › tests\navigation.spec.ts:51:3 › Navigation › navigates to Logs page ───────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[274/284] [webkit] › tests\navigation.spec.ts:61:3 › Navigation › navigates to Settings page
+[1A[2K[275/284] [webkit] › tests\navigation.spec.ts:61:3 › Navigation › navigates to Settings page (retry #1)
+[1A[2K  86) [webkit] › tests\navigation.spec.ts:61:3 › Navigation › navigates to Settings page ───────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[276/284] [webkit] › tests\navigation.spec.ts:71:3 › Navigation › navigates to About page
+[1A[2K[277/284] [webkit] › tests\navigation.spec.ts:71:3 › Navigation › navigates to About page (retry #1)
+[1A[2K  87) [webkit] › tests\navigation.spec.ts:71:3 › Navigation › navigates to About page ──────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[278/284] [webkit] › tests\navigation.spec.ts:81:3 › Navigation › navigates to Help page
+[1A[2K[279/284] [webkit] › tests\navigation.spec.ts:81:3 › Navigation › navigates to Help page (retry #1)
+[1A[2K  88) [webkit] › tests\navigation.spec.ts:81:3 › Navigation › navigates to Help page ───────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[280/284] [webkit] › tests\navigation.spec.ts:91:3 › Navigation › navigates to Donate page
+[1A[2K[281/284] [webkit] › tests\navigation.spec.ts:91:3 › Navigation › navigates to Donate page (retry #1)
+[1A[2K  89) [webkit] › tests\navigation.spec.ts:91:3 › Navigation › navigates to Donate page ─────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[282/284] [webkit] › tests\navigation.spec.ts:101:3 › Navigation › header shows app title with emoji
+[1A[2K[283/284] [webkit] › tests\navigation.spec.ts:101:3 › Navigation › header shows app title with emoji (retry #1)
+[1A[2K  90) [webkit] › tests\navigation.spec.ts:101:3 › Navigation › header shows app title with emoji ───
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[284/284] [webkit] › tests\navigation.spec.ts:107:3 › Navigation › theme toggle button is visible in header
+[1A[2K[285/284] (retries) [webkit] › tests\navigation.spec.ts:107:3 › Navigation › theme toggle button is visible in header (retry #1)
+[1A[2K  91) [webkit] › tests\navigation.spec.ts:107:3 › Navigation › theme toggle button is visible in header 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[286/284] (retries) [webkit] › tests\navigation.spec.ts:113:3 › Navigation › clicking theme toggle changes icon
+[1A[2K[287/284] (retries) [webkit] › tests\navigation.spec.ts:113:3 › Navigation › clicking theme toggle changes icon (retry #1)
+[1A[2K  92) [webkit] › tests\navigation.spec.ts:113:3 › Navigation › clicking theme toggle changes icon ──
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[288/284] (retries) [webkit] › tests\scheduler.spec.ts:14:3 › Scheduler › renders page heading and New Schedule button
+[1A[2K[289/284] (retries) [webkit] › tests\scheduler.spec.ts:14:3 › Scheduler › renders page heading and New Schedule button (retry #1)
+[1A[2K  93) [webkit] › tests\scheduler.spec.ts:14:3 › Scheduler › renders page heading and New Schedule button 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[290/284] (retries) [webkit] › tests\scheduler.spec.ts:19:3 › Scheduler › shows empty state when no schedules exist
+[1A[2K[291/284] (retries) [webkit] › tests\scheduler.spec.ts:19:3 › Scheduler › shows empty state when no schedules exist (retry #1)
+[1A[2K  94) [webkit] › tests\scheduler.spec.ts:19:3 › Scheduler › shows empty state when no schedules exist 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[292/284] (retries) [webkit] › tests\scheduler.spec.ts:33:3 › Scheduler › creates a new daily schedule
+[1A[2K[293/284] (retries) [webkit] › tests\scheduler.spec.ts:33:3 › Scheduler › creates a new daily schedule (retry #1)
+[1A[2K  95) [webkit] › tests\scheduler.spec.ts:33:3 › Scheduler › creates a new daily schedule ───────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[294/284] (retries) [webkit] › tests\scheduler.spec.ts:53:3 › Scheduler › can toggle a schedule on/off
+[1A[2K[295/284] (retries) [webkit] › tests\scheduler.spec.ts:53:3 › Scheduler › can toggle a schedule on/off (retry #1)
+[1A[2K  96) [webkit] › tests\scheduler.spec.ts:53:3 › Scheduler › can toggle a schedule on/off ───────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[296/284] (retries) [webkit] › tests\scheduler.spec.ts:74:3 › Scheduler › can delete a schedule
+[1A[2K[297/284] (retries) [webkit] › tests\scheduler.spec.ts:74:3 › Scheduler › can delete a schedule (retry #1)
+[1A[2K  97) [webkit] › tests\scheduler.spec.ts:74:3 › Scheduler › can delete a schedule ──────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[298/284] (retries) [webkit] › tests\scheduler.spec.ts:98:3 › Scheduler › form closes on Cancel
+[1A[2K[299/284] (retries) [webkit] › tests\scheduler.spec.ts:98:3 › Scheduler › form closes on Cancel (retry #1)
+[1A[2K  98) [webkit] › tests\scheduler.spec.ts:98:3 › Scheduler › form closes on Cancel ──────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[300/284] (retries) [webkit] › tests\scheduler.spec.ts:105:3 › Scheduler › weekly mode shows day-of-week checkboxes
+[1A[2K[301/284] (retries) [webkit] › tests\scheduler.spec.ts:105:3 › Scheduler › weekly mode shows day-of-week checkboxes (retry #1)
+[1A[2K  99) [webkit] › tests\scheduler.spec.ts:105:3 › Scheduler › weekly mode shows day-of-week checkboxes 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[302/284] (retries) [webkit] › tests\settings.spec.ts:14:3 › Settings › renders page heading
+[1A[2K[303/284] (retries) [webkit] › tests\settings.spec.ts:14:3 › Settings › renders page heading (retry #1)
+[1A[2K  100) [webkit] › tests\settings.spec.ts:14:3 › Settings › renders page heading ────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[304/284] (retries) [webkit] › tests\settings.spec.ts:18:3 › Settings › shows Appearance, Logging, Notifications, and Menu sections
+[1A[2K[305/284] (retries) [webkit] › tests\settings.spec.ts:18:3 › Settings › shows Appearance, Logging, Notifications, and Menu sections (retry #1)
+[1A[2K  101) [webkit] › tests\settings.spec.ts:18:3 › Settings › shows Appearance, Logging, Notifications, and Menu sections 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[306/284] (retries) [webkit] › tests\settings.spec.ts:25:3 › Settings › theme mode select has correct options
+[1A[2K[307/284] (retries) [webkit] › tests\settings.spec.ts:25:3 › Settings › theme mode select has correct options (retry #1)
+[1A[2K  102) [webkit] › tests\settings.spec.ts:25:3 › Settings › theme mode select has correct options ───
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[308/284] (retries) [webkit] › tests\settings.spec.ts:34:3 › Settings › changing theme mode persists to localStorage
+[1A[2K[309/284] (retries) [webkit] › tests\settings.spec.ts:34:3 › Settings › changing theme mode persists to localStorage (retry #1)
+[1A[2K  103) [webkit] › tests\settings.spec.ts:34:3 › Settings › changing theme mode persists to localStorage 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[310/284] (retries) [webkit] › tests\settings.spec.ts:45:3 › Settings › log level select has correct options
+[1A[2K[311/284] (retries) [webkit] › tests\settings.spec.ts:45:3 › Settings › log level select has correct options (retry #1)
+[1A[2K  104) [webkit] › tests\settings.spec.ts:45:3 › Settings › log level select has correct options ────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[312/284] (retries) [webkit] › tests\settings.spec.ts:54:3 › Settings › menu position select has correct options
+[1A[2K[313/284] (retries) [webkit] › tests\settings.spec.ts:54:3 › Settings › menu position select has correct options (retry #1)
+[1A[2K  105) [webkit] › tests\settings.spec.ts:54:3 › Settings › menu position select has correct options 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[314/284] (retries) [webkit] › tests\settings.spec.ts:63:3 › Settings › menu position change persists to localStorage
+[1A[2K[315/284] (retries) [webkit] › tests\settings.spec.ts:63:3 › Settings › menu position change persists to localStorage (retry #1)
+[1A[2K  106) [webkit] › tests\settings.spec.ts:63:3 › Settings › menu position change persists to localStorage 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[316/284] (retries) [webkit] › tests\settings.spec.ts:77:3 › Settings › menu pin toggle is visible and functional
+[1A[2K[317/284] (retries) [webkit] › tests\settings.spec.ts:77:3 › Settings › menu pin toggle is visible and functional (retry #1)
+[1A[2K  107) [webkit] › tests\settings.spec.ts:77:3 › Settings › menu pin toggle is visible and functional 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[318/284] (retries) [webkit] › tests\settings.spec.ts:85:3 › Settings › Reset button restores defaults
+[1A[2K[319/284] (retries) [webkit] › tests\settings.spec.ts:85:3 › Settings › Reset button restores defaults (retry #1)
+[1A[2K  108) [webkit] › tests\settings.spec.ts:85:3 › Settings › Reset button restores defaults ──────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[320/284] (retries) [webkit] › tests\settings.spec.ts:101:3 › Settings › notifications toggle is visible
+[1A[2K[321/284] (retries) [webkit] › tests\settings.spec.ts:101:3 › Settings › notifications toggle is visible (retry #1)
+[1A[2K  109) [webkit] › tests\settings.spec.ts:101:3 › Settings › notifications toggle is visible ────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[322/284] (retries) [mobile-chrome] › tests\about.spec.ts:12:3 › About › renders page heading
+[1A[2K[323/284] (retries) [mobile-chrome] › tests\about.spec.ts:12:3 › About › renders page heading (retry #1)
+[1A[2K  110) [mobile-chrome] › tests\about.spec.ts:12:3 › About › renders page heading ───────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[324/284] (retries) [mobile-chrome] › tests\about.spec.ts:16:3 › About › shows developer name
+[1A[2K[325/284] (retries) [mobile-chrome] › tests\about.spec.ts:16:3 › About › shows developer name (retry #1)
+[1A[2K  111) [mobile-chrome] › tests\about.spec.ts:16:3 › About › shows developer name ───────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[326/284] (retries) [mobile-chrome] › tests\about.spec.ts:21:3 › About › shows developer title
+[1A[2K[327/284] (retries) [mobile-chrome] › tests\about.spec.ts:21:3 › About › shows developer title (retry #1)
+[1A[2K  112) [mobile-chrome] › tests\about.spec.ts:21:3 › About › shows developer title ──────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[328/284] (retries) [mobile-chrome] › tests\about.spec.ts:28:3 › About › shows location
+[1A[2K[329/284] (retries) [mobile-chrome] › tests\about.spec.ts:28:3 › About › shows location (retry #1)
+[1A[2K  113) [mobile-chrome] › tests\about.spec.ts:28:3 › About › shows location ─────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[330/284] (retries) [mobile-chrome] › tests\about.spec.ts:32:3 › About › GitHub link points to correct URL
+[1A[2K[331/284] (retries) [mobile-chrome] › tests\about.spec.ts:32:3 › About › GitHub link points to correct URL (retry #1)
+[1A[2K  114) [mobile-chrome] › tests\about.spec.ts:32:3 › About › GitHub link points to correct URL ──────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[332/284] (retries) [mobile-chrome] › tests\about.spec.ts:38:3 › About › LinkedIn link points to correct URL
+[1A[2K[333/284] (retries) [mobile-chrome] › tests\about.spec.ts:38:3 › About › LinkedIn link points to correct URL (retry #1)
+[1A[2K  115) [mobile-chrome] › tests\about.spec.ts:38:3 › About › LinkedIn link points to correct URL ────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[334/284] (retries) [mobile-chrome] › tests\about.spec.ts:44:3 › About › Portfolio link points to correct URL
+[1A[2K[335/284] (retries) [mobile-chrome] › tests\about.spec.ts:44:3 › About › Portfolio link points to correct URL (retry #1)
+[1A[2K  116) [mobile-chrome] › tests\about.spec.ts:44:3 › About › Portfolio link points to correct URL ───
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[336/284] (retries) [mobile-chrome] › tests\about.spec.ts:50:3 › About › shows experience section with two roles
+[1A[2K[337/284] (retries) [mobile-chrome] › tests\about.spec.ts:50:3 › About › shows experience section with two roles (retry #1)
+[1A[2K  117) [mobile-chrome] › tests\about.spec.ts:50:3 › About › shows experience section with two roles 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[338/284] (retries) [mobile-chrome] › tests\about.spec.ts:57:3 › About › shows skill chips for primary skills
+[1A[2K[339/284] (retries) [mobile-chrome] › tests\about.spec.ts:57:3 › About › shows skill chips for primary skills (retry #1)
+[1A[2K  118) [mobile-chrome] › tests\about.spec.ts:57:3 › About › shows skill chips for primary skills ───
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[340/284] (retries) [mobile-chrome] › tests\about.spec.ts:63:3 › About › shows About Silent app info card
+[1A[2K[341/284] (retries) [mobile-chrome] › tests\about.spec.ts:63:3 › About › shows About Silent app info card (retry #1)
+[1A[2K  119) [mobile-chrome] › tests\about.spec.ts:63:3 › About › shows About Silent app info card ───────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[342/284] (retries) [mobile-chrome] › tests\about.spec.ts:67:3 › About › shows disclaimer card
+[1A[2K[343/284] (retries) [mobile-chrome] › tests\about.spec.ts:67:3 › About › shows disclaimer card (retry #1)
+[1A[2K  120) [mobile-chrome] › tests\about.spec.ts:67:3 › About › shows disclaimer card ──────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[344/284] (retries) [mobile-chrome] › tests\dashboard.spec.ts:16:3 › Dashboard › renders page heading
+[1A[2K[345/284] (retries) [mobile-chrome] › tests\dashboard.spec.ts:16:3 › Dashboard › renders page heading (retry #1)
+[1A[2K  121) [mobile-chrome] › tests\dashboard.spec.ts:16:3 › Dashboard › renders page heading ───────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[346/284] (retries) [mobile-chrome] › tests\dashboard.spec.ts:20:3 › Dashboard › shows "no active reminder" alert when no schedules exist
+[1A[2K[347/284] (retries) [mobile-chrome] › tests\dashboard.spec.ts:20:3 › Dashboard › shows "no active reminder" alert when no schedules exist (retry #1)
+[1A[2K  122) [mobile-chrome] › tests\dashboard.spec.ts:20:3 › Dashboard › shows "no active reminder" alert when no schedules exist 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[348/284] (retries) [mobile-chrome] › tests\dashboard.spec.ts:26:3 › Dashboard › shows schedules count card
+[1A[2K[349/284] (retries) [mobile-chrome] › tests\dashboard.spec.ts:26:3 › Dashboard › shows schedules count card (retry #1)
+[1A[2K  123) [mobile-chrome] › tests\dashboard.spec.ts:26:3 › Dashboard › shows schedules count card ─────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[350/284] (retries) [mobile-chrome] › tests\dashboard.spec.ts:32:3 › Dashboard › shows theme darkness percentage card
+[1A[2K[351/284] (retries) [mobile-chrome] › tests\dashboard.spec.ts:32:3 › Dashboard › shows theme darkness percentage card (retry #1)
+[1A[2K  124) [mobile-chrome] › tests\dashboard.spec.ts:32:3 › Dashboard › shows theme darkness percentage card 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[352/284] (retries) [mobile-chrome] › tests\dashboard.spec.ts:38:3 › Dashboard › "Manage Schedules" button navigates to scheduler
+[1A[2K[353/284] (retries) [mobile-chrome] › tests\dashboard.spec.ts:38:3 › Dashboard › "Manage Schedules" button navigates to scheduler (retry #1)
+[1A[2K  125) [mobile-chrome] › tests\dashboard.spec.ts:38:3 › Dashboard › "Manage Schedules" button navigates to scheduler 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[354/284] (retries) [mobile-chrome] › tests\dashboard.spec.ts:43:3 › Dashboard › shows active warning when a schedule is currently active
+[1A[2K[355/284] (retries) [mobile-chrome] › tests\dashboard.spec.ts:43:3 › Dashboard › shows active warning when a schedule is currently active (retry #1)
+[1A[2K  126) [mobile-chrome] › tests\dashboard.spec.ts:43:3 › Dashboard › shows active warning when a schedule is currently active 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[356/284] (retries) [mobile-chrome] › tests\help.spec.ts:12:3 › Help › renders page heading
+[1A[2K[357/284] (retries) [mobile-chrome] › tests\help.spec.ts:12:3 › Help › renders page heading (retry #1)
+[1A[2K  127) [mobile-chrome] › tests\help.spec.ts:12:3 › Help › renders page heading ─────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[358/284] (retries) [mobile-chrome] › tests\help.spec.ts:16:3 › Help › shows FAQ section
+[1A[2K[359/284] (retries) [mobile-chrome] › tests\help.spec.ts:16:3 › Help › shows FAQ section (retry #1)
+[1A[2K  128) [mobile-chrome] › tests\help.spec.ts:16:3 › Help › shows FAQ section ────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[360/284] (retries) [mobile-chrome] › tests\help.spec.ts:20:3 › Help › FAQ items are collapsed by default
+[1A[2K[361/284] (retries) [mobile-chrome] › tests\help.spec.ts:20:3 › Help › FAQ items are collapsed by default (retry #1)
+[1A[2K  129) [mobile-chrome] › tests\help.spec.ts:20:3 › Help › FAQ items are collapsed by default ───────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[362/284] (retries) [mobile-chrome] › tests\help.spec.ts:27:3 › Help › FAQ item expands on click
+[1A[2K[363/284] (retries) [mobile-chrome] › tests\help.spec.ts:27:3 › Help › FAQ item expands on click (retry #1)
+[1A[2K  130) [mobile-chrome] › tests\help.spec.ts:27:3 › Help › FAQ item expands on click ────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[364/284] (retries) [mobile-chrome] › tests\help.spec.ts:41:3 › Help › multiple FAQ items can be opened independently
+[1A[2K[365/284] (retries) [mobile-chrome] › tests\help.spec.ts:41:3 › Help › multiple FAQ items can be opened independently (retry #1)
+[1A[2K  131) [mobile-chrome] › tests\help.spec.ts:41:3 › Help › multiple FAQ items can be opened independently 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[366/284] (retries) [mobile-chrome] › tests\help.spec.ts:61:3 › Help › shows Contact the Developer section
+[1A[2K[367/284] (retries) [mobile-chrome] › tests\help.spec.ts:61:3 › Help › shows Contact the Developer section (retry #1)
+[1A[2K  132) [mobile-chrome] › tests\help.spec.ts:61:3 › Help › shows Contact the Developer section ──────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[368/284] (retries) [mobile-chrome] › tests\help.spec.ts:65:3 › Help › contact form has all required fields
+[1A[2K[369/284] (retries) [mobile-chrome] › tests\help.spec.ts:65:3 › Help › contact form has all required fields (retry #1)
+[1A[2K  133) [mobile-chrome] › tests\help.spec.ts:65:3 › Help › contact form has all required fields ─────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[370/284] (retries) [mobile-chrome] › tests\help.spec.ts:73:3 › Help › contact form shows validation errors on empty submit
+[1A[2K[371/284] (retries) [mobile-chrome] › tests\help.spec.ts:73:3 › Help › contact form shows validation errors on empty submit (retry #1)
+[1A[2K  134) [mobile-chrome] › tests\help.spec.ts:73:3 › Help › contact form shows validation errors on empty submit 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[372/284] (retries) [mobile-chrome] › tests\help.spec.ts:86:3 › Help › contact form fields accept input
+[1A[2K[373/284] (retries) [mobile-chrome] › tests\help.spec.ts:86:3 › Help › contact form fields accept input (retry #1)
+[1A[2K  135) [mobile-chrome] › tests\help.spec.ts:86:3 › Help › contact form fields accept input ─────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[374/284] (retries) [mobile-chrome] › tests\help.spec.ts:112:3 › Help › FAQ covers all 7 questions
+[1A[2K[375/284] (retries) [mobile-chrome] › tests\help.spec.ts:112:3 › Help › FAQ covers all 7 questions (retry #1)
+[1A[2K  136) [mobile-chrome] › tests\help.spec.ts:112:3 › Help › FAQ covers all 7 questions ──────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[376/284] (retries) [mobile-chrome] › tests\help.spec.ts:128:3 › Help › contact form submits and shows success (mocked EmailJS)
+[1A[2K[377/284] (retries) [mobile-chrome] › tests\help.spec.ts:128:3 › Help › contact form submits and shows success (mocked EmailJS) (retry #1)
+[1A[2K  137) [mobile-chrome] › tests\help.spec.ts:128:3 › Help › contact form submits and shows success (mocked EmailJS) 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[378/284] (retries) [mobile-chrome] › tests\language.spec.ts:13:3 › Language Switching › EN button is active by default
+[1A[2K[379/284] (retries) [mobile-chrome] › tests\language.spec.ts:13:3 › Language Switching › EN button is active by default (retry #1)
+[1A[2K  138) [mobile-chrome] › tests\language.spec.ts:13:3 › Language Switching › EN button is active by default 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[380/284] (retries) [mobile-chrome] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels
+[1A[2K[381/284] (retries) [mobile-chrome] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels (retry #1)
+[1A[2K  139) [mobile-chrome] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[382/284] (retries) [mobile-chrome] › tests\language.spec.ts:29:3 › Language Switching › switching to Hebrew sets RTL direction
+[1A[2K[383/284] (retries) [mobile-chrome] › tests\language.spec.ts:29:3 › Language Switching › switching to Hebrew sets RTL direction (retry #1)
+[1A[2K  140) [mobile-chrome] › tests\language.spec.ts:29:3 › Language Switching › switching to Hebrew sets RTL direction 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[384/284] (retries) [mobile-chrome] › tests\language.spec.ts:35:3 › Language Switching › switching back to English restores LTR
+[1A[2K[385/284] (retries) [mobile-chrome] › tests\language.spec.ts:35:3 › Language Switching › switching back to English restores LTR (retry #1)
+[1A[2K  141) [mobile-chrome] › tests\language.spec.ts:35:3 › Language Switching › switching back to English restores LTR 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[386/284] (retries) [mobile-chrome] › tests\language.spec.ts:46:3 › Language Switching › language preference persists across reload
+[1A[2K[387/284] (retries) [mobile-chrome] › tests\language.spec.ts:46:3 › Language Switching › language preference persists across reload (retry #1)
+[1A[2K  142) [mobile-chrome] › tests\language.spec.ts:46:3 › Language Switching › language preference persists across reload 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[388/284] (retries) [mobile-chrome] › tests\logs.spec.ts:14:3 › Logs › renders page heading
+[1A[2K[389/284] (retries) [mobile-chrome] › tests\logs.spec.ts:14:3 › Logs › renders page heading (retry #1)
+[1A[2K  143) [mobile-chrome] › tests\logs.spec.ts:14:3 › Logs › renders page heading ─────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[390/284] (retries) [mobile-chrome] › tests\logs.spec.ts:18:3 › Logs › shows empty state with no logs
+[1A[2K[391/284] (retries) [mobile-chrome] › tests\logs.spec.ts:18:3 › Logs › shows empty state with no logs (retry #1)
+[1A[2K  144) [mobile-chrome] › tests\logs.spec.ts:18:3 › Logs › shows empty state with no logs ───────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[392/284] (retries) [mobile-chrome] › tests\logs.spec.ts:24:3 › Logs › Delete Selected button is disabled with no selection
+[1A[2K[393/284] (retries) [mobile-chrome] › tests\logs.spec.ts:24:3 › Logs › Delete Selected button is disabled with no selection (retry #1)
+[1A[2K  145) [mobile-chrome] › tests\logs.spec.ts:24:3 › Logs › Delete Selected button is disabled with no selection 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[394/284] (retries) [mobile-chrome] › tests\logs.spec.ts:30:3 › Logs › Clear All button is disabled with no logs
+[1A[2K[395/284] (retries) [mobile-chrome] › tests\logs.spec.ts:30:3 › Logs › Clear All button is disabled with no logs (retry #1)
+[1A[2K  146) [mobile-chrome] › tests\logs.spec.ts:30:3 › Logs › Clear All button is disabled with no logs 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[396/284] (retries) [mobile-chrome] › tests\logs.spec.ts:36:3 › Logs › shows log entries when logs exist in localStorage
+[1A[2K[397/284] (retries) [mobile-chrome] › tests\logs.spec.ts:36:3 › Logs › shows log entries when logs exist in localStorage (retry #1)
+[1A[2K  147) [mobile-chrome] › tests\logs.spec.ts:36:3 › Logs › shows log entries when logs exist in localStorage 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[398/284] (retries) [mobile-chrome] › tests\logs.spec.ts:58:3 › Logs › level chips display correctly
+[1A[2K[399/284] (retries) [mobile-chrome] › tests\logs.spec.ts:58:3 › Logs › level chips display correctly (retry #1)
+[1A[2K  148) [mobile-chrome] › tests\logs.spec.ts:58:3 › Logs › level chips display correctly ────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[400/284] (retries) [mobile-chrome] › tests\logs.spec.ts:73:3 › Logs › can select all logs and clear them
+[1A[2K[401/284] (retries) [mobile-chrome] › tests\logs.spec.ts:73:3 › Logs › can select all logs and clear them (retry #1)
+[1A[2K  149) [mobile-chrome] › tests\logs.spec.ts:73:3 › Logs › can select all logs and clear them ───────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[402/284] (retries) [mobile-chrome] › tests\logs.spec.ts:100:3 › Logs › Export JSON button triggers download
+[1A[2K[403/284] (retries) [mobile-chrome] › tests\logs.spec.ts:100:3 › Logs › Export JSON button triggers download (retry #1)
+[1A[2K  150) [mobile-chrome] › tests\logs.spec.ts:100:3 › Logs › Export JSON button triggers download ────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[404/284] (retries) [mobile-chrome] › tests\logs.spec.ts:116:3 › Logs › Refresh button reloads logs from storage
+[1A[2K[405/284] (retries) [mobile-chrome] › tests\logs.spec.ts:116:3 › Logs › Refresh button reloads logs from storage (retry #1)
+[1A[2K  151) [mobile-chrome] › tests\logs.spec.ts:116:3 › Logs › Refresh button reloads logs from storage 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[406/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:26:3 › Navigation › app loads with correct title
+[1A[2K[407/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:26:3 › Navigation › app loads with correct title (retry #1)
+[1A[2K  152) [mobile-chrome] › tests\navigation.spec.ts:26:3 › Navigation › app loads with correct title ─
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[408/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:30:3 › Navigation › sidebar shows all nav items
+[1A[2K[409/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:30:3 › Navigation › sidebar shows all nav items (retry #1)
+[1A[2K  153) [mobile-chrome] › tests\navigation.spec.ts:30:3 › Navigation › sidebar shows all nav items ──
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[410/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:41:3 › Navigation › navigates to Scheduler page
+[1A[2K[411/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:41:3 › Navigation › navigates to Scheduler page (retry #1)
+[1A[2K  154) [mobile-chrome] › tests\navigation.spec.ts:41:3 › Navigation › navigates to Scheduler page ──
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[412/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:51:3 › Navigation › navigates to Logs page
+[1A[2K[413/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:51:3 › Navigation › navigates to Logs page (retry #1)
+[1A[2K  155) [mobile-chrome] › tests\navigation.spec.ts:51:3 › Navigation › navigates to Logs page ───────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[414/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:61:3 › Navigation › navigates to Settings page
+[1A[2K[415/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:61:3 › Navigation › navigates to Settings page (retry #1)
+[1A[2K  156) [mobile-chrome] › tests\navigation.spec.ts:61:3 › Navigation › navigates to Settings page ───
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[416/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:71:3 › Navigation › navigates to About page
+[1A[2K[417/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:71:3 › Navigation › navigates to About page (retry #1)
+[1A[2K  157) [mobile-chrome] › tests\navigation.spec.ts:71:3 › Navigation › navigates to About page ──────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[418/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:81:3 › Navigation › navigates to Help page
+[1A[2K[419/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:81:3 › Navigation › navigates to Help page (retry #1)
+[1A[2K  158) [mobile-chrome] › tests\navigation.spec.ts:81:3 › Navigation › navigates to Help page ───────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[420/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:91:3 › Navigation › navigates to Donate page
+[1A[2K[421/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:91:3 › Navigation › navigates to Donate page (retry #1)
+[1A[2K  159) [mobile-chrome] › tests\navigation.spec.ts:91:3 › Navigation › navigates to Donate page ─────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[422/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:101:3 › Navigation › header shows app title with emoji
+[1A[2K[423/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:101:3 › Navigation › header shows app title with emoji (retry #1)
+[1A[2K  160) [mobile-chrome] › tests\navigation.spec.ts:101:3 › Navigation › header shows app title with emoji 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[424/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:107:3 › Navigation › theme toggle button is visible in header
+[1A[2K[425/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:107:3 › Navigation › theme toggle button is visible in header (retry #1)
+[1A[2K  161) [mobile-chrome] › tests\navigation.spec.ts:107:3 › Navigation › theme toggle button is visible in header 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[426/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:113:3 › Navigation › clicking theme toggle changes icon
+[1A[2K[427/284] (retries) [mobile-chrome] › tests\navigation.spec.ts:113:3 › Navigation › clicking theme toggle changes icon (retry #1)
+[1A[2K  162) [mobile-chrome] › tests\navigation.spec.ts:113:3 › Navigation › clicking theme toggle changes icon 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[428/284] (retries) [mobile-chrome] › tests\scheduler.spec.ts:14:3 › Scheduler › renders page heading and New Schedule button
+[1A[2K[429/284] (retries) [mobile-chrome] › tests\scheduler.spec.ts:14:3 › Scheduler › renders page heading and New Schedule button (retry #1)
+[1A[2K  163) [mobile-chrome] › tests\scheduler.spec.ts:14:3 › Scheduler › renders page heading and New Schedule button 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[430/284] (retries) [mobile-chrome] › tests\scheduler.spec.ts:19:3 › Scheduler › shows empty state when no schedules exist
+[1A[2K[431/284] (retries) [mobile-chrome] › tests\scheduler.spec.ts:19:3 › Scheduler › shows empty state when no schedules exist (retry #1)
+[1A[2K  164) [mobile-chrome] › tests\scheduler.spec.ts:19:3 › Scheduler › shows empty state when no schedules exist 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[432/284] (retries) [mobile-chrome] › tests\scheduler.spec.ts:23:3 › Scheduler › opens create form on button click
+[1A[2K[433/284] (retries) [mobile-chrome] › tests\scheduler.spec.ts:23:3 › Scheduler › opens create form on button click (retry #1)
+[1A[2K  165) [mobile-chrome] › tests\scheduler.spec.ts:23:3 › Scheduler › opens create form on button click 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[434/284] (retries) [mobile-chrome] › tests\scheduler.spec.ts:33:3 › Scheduler › creates a new daily schedule
+[1A[2K[435/284] (retries) [mobile-chrome] › tests\scheduler.spec.ts:33:3 › Scheduler › creates a new daily schedule (retry #1)
+[1A[2K  166) [mobile-chrome] › tests\scheduler.spec.ts:33:3 › Scheduler › creates a new daily schedule ───
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[436/284] (retries) [mobile-chrome] › tests\scheduler.spec.ts:53:3 › Scheduler › can toggle a schedule on/off
+[1A[2K[437/284] (retries) [mobile-chrome] › tests\scheduler.spec.ts:53:3 › Scheduler › can toggle a schedule on/off (retry #1)
+[1A[2K  167) [mobile-chrome] › tests\scheduler.spec.ts:53:3 › Scheduler › can toggle a schedule on/off ───
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[438/284] (retries) [mobile-chrome] › tests\scheduler.spec.ts:74:3 › Scheduler › can delete a schedule
+[1A[2K[439/284] (retries) [mobile-chrome] › tests\scheduler.spec.ts:74:3 › Scheduler › can delete a schedule (retry #1)
+[1A[2K  168) [mobile-chrome] › tests\scheduler.spec.ts:74:3 › Scheduler › can delete a schedule ──────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[440/284] (retries) [mobile-chrome] › tests\scheduler.spec.ts:98:3 › Scheduler › form closes on Cancel
+[1A[2K[441/284] (retries) [mobile-chrome] › tests\scheduler.spec.ts:98:3 › Scheduler › form closes on Cancel (retry #1)
+[1A[2K  169) [mobile-chrome] › tests\scheduler.spec.ts:98:3 › Scheduler › form closes on Cancel ──────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[442/284] (retries) [mobile-chrome] › tests\scheduler.spec.ts:105:3 › Scheduler › weekly mode shows day-of-week checkboxes
+[1A[2K[443/284] (retries) [mobile-chrome] › tests\scheduler.spec.ts:105:3 › Scheduler › weekly mode shows day-of-week checkboxes (retry #1)
+[1A[2K  170) [mobile-chrome] › tests\scheduler.spec.ts:105:3 › Scheduler › weekly mode shows day-of-week checkboxes 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[444/284] (retries) [mobile-chrome] › tests\settings.spec.ts:14:3 › Settings › renders page heading
+[1A[2K[445/284] (retries) [mobile-chrome] › tests\settings.spec.ts:14:3 › Settings › renders page heading (retry #1)
+[1A[2K  171) [mobile-chrome] › tests\settings.spec.ts:14:3 › Settings › renders page heading ─────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[446/284] (retries) [mobile-chrome] › tests\settings.spec.ts:18:3 › Settings › shows Appearance, Logging, Notifications, and Menu sections
+[1A[2K[447/284] (retries) [mobile-chrome] › tests\settings.spec.ts:18:3 › Settings › shows Appearance, Logging, Notifications, and Menu sections (retry #1)
+[1A[2K  172) [mobile-chrome] › tests\settings.spec.ts:18:3 › Settings › shows Appearance, Logging, Notifications, and Menu sections 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[448/284] (retries) [mobile-chrome] › tests\settings.spec.ts:25:3 › Settings › theme mode select has correct options
+[1A[2K[449/284] (retries) [mobile-chrome] › tests\settings.spec.ts:25:3 › Settings › theme mode select has correct options (retry #1)
+[1A[2K  173) [mobile-chrome] › tests\settings.spec.ts:25:3 › Settings › theme mode select has correct options 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[450/284] (retries) [mobile-chrome] › tests\settings.spec.ts:34:3 › Settings › changing theme mode persists to localStorage
+[1A[2K[451/284] (retries) [mobile-chrome] › tests\settings.spec.ts:34:3 › Settings › changing theme mode persists to localStorage (retry #1)
+[1A[2K  174) [mobile-chrome] › tests\settings.spec.ts:34:3 › Settings › changing theme mode persists to localStorage 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[452/284] (retries) [mobile-chrome] › tests\settings.spec.ts:45:3 › Settings › log level select has correct options
+[1A[2K[453/284] (retries) [mobile-chrome] › tests\settings.spec.ts:45:3 › Settings › log level select has correct options (retry #1)
+[1A[2K  175) [mobile-chrome] › tests\settings.spec.ts:45:3 › Settings › log level select has correct options 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[454/284] (retries) [mobile-chrome] › tests\settings.spec.ts:54:3 › Settings › menu position select has correct options
+[1A[2K[455/284] (retries) [mobile-chrome] › tests\settings.spec.ts:54:3 › Settings › menu position select has correct options (retry #1)
+[1A[2K  176) [mobile-chrome] › tests\settings.spec.ts:54:3 › Settings › menu position select has correct options 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[456/284] (retries) [mobile-chrome] › tests\settings.spec.ts:63:3 › Settings › menu position change persists to localStorage
+[1A[2K[457/284] (retries) [mobile-chrome] › tests\settings.spec.ts:63:3 › Settings › menu position change persists to localStorage (retry #1)
+[1A[2K  177) [mobile-chrome] › tests\settings.spec.ts:63:3 › Settings › menu position change persists to localStorage 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[458/284] (retries) [mobile-chrome] › tests\settings.spec.ts:77:3 › Settings › menu pin toggle is visible and functional
+[1A[2K[459/284] (retries) [mobile-chrome] › tests\settings.spec.ts:77:3 › Settings › menu pin toggle is visible and functional (retry #1)
+[1A[2K  178) [mobile-chrome] › tests\settings.spec.ts:77:3 › Settings › menu pin toggle is visible and functional 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[460/284] (retries) [mobile-chrome] › tests\settings.spec.ts:85:3 › Settings › Reset button restores defaults
+[1A[2K[461/284] (retries) [mobile-chrome] › tests\settings.spec.ts:85:3 › Settings › Reset button restores defaults (retry #1)
+[1A[2K  179) [mobile-chrome] › tests\settings.spec.ts:85:3 › Settings › Reset button restores defaults ───
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[462/284] (retries) [mobile-chrome] › tests\settings.spec.ts:101:3 › Settings › notifications toggle is visible
+[1A[2K[463/284] (retries) [mobile-chrome] › tests\settings.spec.ts:101:3 › Settings › notifications toggle is visible (retry #1)
+[1A[2K  180) [mobile-chrome] › tests\settings.spec.ts:101:3 › Settings › notifications toggle is visible ─
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[464/284] (retries) [webkit] › tests\scheduler.spec.ts:23:3 › Scheduler › opens create form on button click
+[1A[2K[465/284] (retries) [webkit] › tests\scheduler.spec.ts:23:3 › Scheduler › opens create form on button click (retry #1)
+[1A[2K  181) [webkit] › tests\scheduler.spec.ts:23:3 › Scheduler › opens create form on button click ─────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K[466/284] (retries) [firefox] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels (retry #1)
+[1A[2K  182) [firefox] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('navigation').getByText('לוח בקרה')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('navigation').getByText('לוח בקרה')[22m
+
+
+      23 |     // Hebrew nav labels should appear — scope to drawer to avoid matching header title
+      24 |     const drawer = page.locator('[class*="MuiDrawer"]');
+    > 25 |     await expect(drawer.getByText('לוח בקרה').first()).toBeVisible();
+         |                                             ^
+      26 |     await expect(drawer.getByText('מתזמן').first()).toBeVisible();
+      27 |   });
+      28 |
+        at c:\silent\tests\language.spec.ts:25:45
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\language-Language-Switchin-474e0-w-changes-navigation-labels-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\language-Language-Switchin-474e0-w-changes-navigation-labels-firefox\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+
+[1A[2K  182 failed
+    [chromium] › tests\help.spec.ts:128:3 › Help › contact form submits and shows success (mocked EmailJS) 
+    [chromium] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels 
+    [chromium] › tests\navigation.spec.ts:30:3 › Navigation › sidebar shows all nav items ──────────
+    [chromium] › tests\navigation.spec.ts:41:3 › Navigation › navigates to Scheduler page ──────────
+    [chromium] › tests\navigation.spec.ts:51:3 › Navigation › navigates to Logs page ───────────────
+    [chromium] › tests\navigation.spec.ts:61:3 › Navigation › navigates to Settings page ───────────
+    [chromium] › tests\navigation.spec.ts:71:3 › Navigation › navigates to About page ──────────────
+    [chromium] › tests\navigation.spec.ts:81:3 › Navigation › navigates to Help page ───────────────
+    [chromium] › tests\navigation.spec.ts:91:3 › Navigation › navigates to Donate page ─────────────
+    [firefox] › tests\help.spec.ts:128:3 › Help › contact form submits and shows success (mocked EmailJS) 
+    [firefox] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels 
+    [firefox] › tests\navigation.spec.ts:26:3 › Navigation › app loads with correct title ──────────
+    [firefox] › tests\navigation.spec.ts:30:3 › Navigation › sidebar shows all nav items ───────────
+    [firefox] › tests\navigation.spec.ts:41:3 › Navigation › navigates to Scheduler page ───────────
+    [firefox] › tests\navigation.spec.ts:51:3 › Navigation › navigates to Logs page ────────────────
+    [firefox] › tests\navigation.spec.ts:61:3 › Navigation › navigates to Settings page ────────────
+    [firefox] › tests\navigation.spec.ts:71:3 › Navigation › navigates to About page ───────────────
+    [firefox] › tests\navigation.spec.ts:81:3 › Navigation › navigates to Help page ────────────────
+    [firefox] › tests\navigation.spec.ts:91:3 › Navigation › navigates to Donate page ──────────────
+    [firefox] › tests\navigation.spec.ts:101:3 › Navigation › header shows app title with emoji ────
+    [firefox] › tests\navigation.spec.ts:107:3 › Navigation › theme toggle button is visible in header 
+    [firefox] › tests\navigation.spec.ts:113:3 › Navigation › clicking theme toggle changes icon ───
+    [firefox] › tests\scheduler.spec.ts:14:3 › Scheduler › renders page heading and New Schedule button 
+    [firefox] › tests\scheduler.spec.ts:19:3 › Scheduler › shows empty state when no schedules exist 
+    [firefox] › tests\scheduler.spec.ts:23:3 › Scheduler › opens create form on button click ───────
+    [firefox] › tests\scheduler.spec.ts:33:3 › Scheduler › creates a new daily schedule ────────────
+    [firefox] › tests\scheduler.spec.ts:53:3 › Scheduler › can toggle a schedule on/off ────────────
+    [firefox] › tests\scheduler.spec.ts:74:3 › Scheduler › can delete a schedule ───────────────────
+    [firefox] › tests\scheduler.spec.ts:98:3 › Scheduler › form closes on Cancel ───────────────────
+    [firefox] › tests\scheduler.spec.ts:105:3 › Scheduler › weekly mode shows day-of-week checkboxes 
+    [firefox] › tests\settings.spec.ts:14:3 › Settings › renders page heading ──────────────────────
+    [firefox] › tests\settings.spec.ts:18:3 › Settings › shows Appearance, Logging, Notifications, and Menu sections 
+    [firefox] › tests\settings.spec.ts:25:3 › Settings › theme mode select has correct options ─────
+    [firefox] › tests\settings.spec.ts:34:3 › Settings › changing theme mode persists to localStorage 
+    [firefox] › tests\settings.spec.ts:45:3 › Settings › log level select has correct options ──────
+    [firefox] › tests\settings.spec.ts:54:3 › Settings › menu position select has correct options ──
+    [firefox] › tests\settings.spec.ts:63:3 › Settings › menu position change persists to localStorage 
+    [firefox] › tests\settings.spec.ts:77:3 › Settings › menu pin toggle is visible and functional ─
+    [firefox] › tests\settings.spec.ts:85:3 › Settings › Reset button restores defaults ────────────
+    [firefox] › tests\settings.spec.ts:101:3 › Settings › notifications toggle is visible ──────────
+    [webkit] › tests\about.spec.ts:12:3 › About › renders page heading ─────────────────────────────
+    [webkit] › tests\about.spec.ts:16:3 › About › shows developer name ─────────────────────────────
+    [webkit] › tests\about.spec.ts:21:3 › About › shows developer title ────────────────────────────
+    [webkit] › tests\about.spec.ts:28:3 › About › shows location ───────────────────────────────────
+    [webkit] › tests\about.spec.ts:32:3 › About › GitHub link points to correct URL ────────────────
+    [webkit] › tests\about.spec.ts:38:3 › About › LinkedIn link points to correct URL ──────────────
+    [webkit] › tests\about.spec.ts:44:3 › About › Portfolio link points to correct URL ─────────────
+    [webkit] › tests\about.spec.ts:50:3 › About › shows experience section with two roles ──────────
+    [webkit] › tests\about.spec.ts:57:3 › About › shows skill chips for primary skills ─────────────
+    [webkit] › tests\about.spec.ts:63:3 › About › shows About Silent app info card ─────────────────
+    [webkit] › tests\about.spec.ts:67:3 › About › shows disclaimer card ────────────────────────────
+    [webkit] › tests\dashboard.spec.ts:16:3 › Dashboard › renders page heading ─────────────────────
+    [webkit] › tests\dashboard.spec.ts:20:3 › Dashboard › shows "no active reminder" alert when no schedules exist 
+    [webkit] › tests\dashboard.spec.ts:26:3 › Dashboard › shows schedules count card ───────────────
+    [webkit] › tests\dashboard.spec.ts:32:3 › Dashboard › shows theme darkness percentage card ─────
+    [webkit] › tests\dashboard.spec.ts:38:3 › Dashboard › "Manage Schedules" button navigates to scheduler 
+    [webkit] › tests\dashboard.spec.ts:43:3 › Dashboard › shows active warning when a schedule is currently active 
+    [webkit] › tests\help.spec.ts:12:3 › Help › renders page heading ───────────────────────────────
+    [webkit] › tests\help.spec.ts:16:3 › Help › shows FAQ section ──────────────────────────────────
+    [webkit] › tests\help.spec.ts:20:3 › Help › FAQ items are collapsed by default ─────────────────
+    [webkit] › tests\help.spec.ts:27:3 › Help › FAQ item expands on click ──────────────────────────
+    [webkit] › tests\help.spec.ts:41:3 › Help › multiple FAQ items can be opened independently ─────
+    [webkit] › tests\help.spec.ts:61:3 › Help › shows Contact the Developer section ────────────────
+    [webkit] › tests\help.spec.ts:65:3 › Help › contact form has all required fields ───────────────
+    [webkit] › tests\help.spec.ts:73:3 › Help › contact form shows validation errors on empty submit 
+    [webkit] › tests\help.spec.ts:86:3 › Help › contact form fields accept input ───────────────────
+    [webkit] › tests\help.spec.ts:112:3 › Help › FAQ covers all 7 questions ────────────────────────
+    [webkit] › tests\help.spec.ts:128:3 › Help › contact form submits and shows success (mocked EmailJS) 
+    [webkit] › tests\language.spec.ts:13:3 › Language Switching › EN button is active by default ───
+    [webkit] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels 
+    [webkit] › tests\language.spec.ts:29:3 › Language Switching › switching to Hebrew sets RTL direction 
+    [webkit] › tests\language.spec.ts:35:3 › Language Switching › switching back to English restores LTR 
+    [webkit] › tests\language.spec.ts:46:3 › Language Switching › language preference persists across reload 
+    [webkit] › tests\logs.spec.ts:14:3 › Logs › renders page heading ───────────────────────────────
+    [webkit] › tests\logs.spec.ts:18:3 › Logs › shows empty state with no logs ─────────────────────
+    [webkit] › tests\logs.spec.ts:24:3 › Logs › Delete Selected button is disabled with no selection 
+    [webkit] › tests\logs.spec.ts:30:3 › Logs › Clear All button is disabled with no logs ──────────
+    [webkit] › tests\logs.spec.ts:36:3 › Logs › shows log entries when logs exist in localStorage ──
+    [webkit] › tests\logs.spec.ts:58:3 › Logs › level chips display correctly ──────────────────────
+    [webkit] › tests\logs.spec.ts:73:3 › Logs › can select all logs and clear them ─────────────────
+    [webkit] › tests\logs.spec.ts:100:3 › Logs › Export JSON button triggers download ──────────────
+    [webkit] › tests\logs.spec.ts:116:3 › Logs › Refresh button reloads logs from storage ──────────
+    [webkit] › tests\navigation.spec.ts:26:3 › Navigation › app loads with correct title ───────────
+    [webkit] › tests\navigation.spec.ts:30:3 › Navigation › sidebar shows all nav items ────────────
+    [webkit] › tests\navigation.spec.ts:41:3 › Navigation › navigates to Scheduler page ────────────
+    [webkit] › tests\navigation.spec.ts:51:3 › Navigation › navigates to Logs page ─────────────────
+    [webkit] › tests\navigation.spec.ts:61:3 › Navigation › navigates to Settings page ─────────────
+    [webkit] › tests\navigation.spec.ts:71:3 › Navigation › navigates to About page ────────────────
+    [webkit] › tests\navigation.spec.ts:81:3 › Navigation › navigates to Help page ─────────────────
+    [webkit] › tests\navigation.spec.ts:91:3 › Navigation › navigates to Donate page ───────────────
+    [webkit] › tests\navigation.spec.ts:101:3 › Navigation › header shows app title with emoji ─────
+    [webkit] › tests\navigation.spec.ts:107:3 › Navigation › theme toggle button is visible in header 
+    [webkit] › tests\navigation.spec.ts:113:3 › Navigation › clicking theme toggle changes icon ────
+    [webkit] › tests\scheduler.spec.ts:14:3 › Scheduler › renders page heading and New Schedule button 
+    [webkit] › tests\scheduler.spec.ts:19:3 › Scheduler › shows empty state when no schedules exist 
+    [webkit] › tests\scheduler.spec.ts:23:3 › Scheduler › opens create form on button click ────────
+    [webkit] › tests\scheduler.spec.ts:33:3 › Scheduler › creates a new daily schedule ─────────────
+    [webkit] › tests\scheduler.spec.ts:53:3 › Scheduler › can toggle a schedule on/off ─────────────
+    [webkit] › tests\scheduler.spec.ts:74:3 › Scheduler › can delete a schedule ────────────────────
+    [webkit] › tests\scheduler.spec.ts:98:3 › Scheduler › form closes on Cancel ────────────────────
+    [webkit] › tests\scheduler.spec.ts:105:3 › Scheduler › weekly mode shows day-of-week checkboxes 
+    [webkit] › tests\settings.spec.ts:14:3 › Settings › renders page heading ───────────────────────
+    [webkit] › tests\settings.spec.ts:18:3 › Settings › shows Appearance, Logging, Notifications, and Menu sections 
+    [webkit] › tests\settings.spec.ts:25:3 › Settings › theme mode select has correct options ──────
+    [webkit] › tests\settings.spec.ts:34:3 › Settings › changing theme mode persists to localStorage 
+    [webkit] › tests\settings.spec.ts:45:3 › Settings › log level select has correct options ───────
+    [webkit] › tests\settings.spec.ts:54:3 › Settings › menu position select has correct options ───
+    [webkit] › tests\settings.spec.ts:63:3 › Settings › menu position change persists to localStorage 
+    [webkit] › tests\settings.spec.ts:77:3 › Settings › menu pin toggle is visible and functional ──
+    [webkit] › tests\settings.spec.ts:85:3 › Settings › Reset button restores defaults ─────────────
+    [webkit] › tests\settings.spec.ts:101:3 › Settings › notifications toggle is visible ───────────
+    [mobile-chrome] › tests\about.spec.ts:12:3 › About › renders page heading ──────────────────────
+    [mobile-chrome] › tests\about.spec.ts:16:3 › About › shows developer name ──────────────────────
+    [mobile-chrome] › tests\about.spec.ts:21:3 › About › shows developer title ─────────────────────
+    [mobile-chrome] › tests\about.spec.ts:28:3 › About › shows location ────────────────────────────
+    [mobile-chrome] › tests\about.spec.ts:32:3 › About › GitHub link points to correct URL ─────────
+    [mobile-chrome] › tests\about.spec.ts:38:3 › About › LinkedIn link points to correct URL ───────
+    [mobile-chrome] › tests\about.spec.ts:44:3 › About › Portfolio link points to correct URL ──────
+    [mobile-chrome] › tests\about.spec.ts:50:3 › About › shows experience section with two roles ───
+    [mobile-chrome] › tests\about.spec.ts:57:3 › About › shows skill chips for primary skills ──────
+    [mobile-chrome] › tests\about.spec.ts:63:3 › About › shows About Silent app info card ──────────
+    [mobile-chrome] › tests\about.spec.ts:67:3 › About › shows disclaimer card ─────────────────────
+    [mobile-chrome] › tests\dashboard.spec.ts:16:3 › Dashboard › renders page heading ──────────────
+    [mobile-chrome] › tests\dashboard.spec.ts:20:3 › Dashboard › shows "no active reminder" alert when no schedules exist 
+    [mobile-chrome] › tests\dashboard.spec.ts:26:3 › Dashboard › shows schedules count card ────────
+    [mobile-chrome] › tests\dashboard.spec.ts:32:3 › Dashboard › shows theme darkness percentage card 
+    [mobile-chrome] › tests\dashboard.spec.ts:38:3 › Dashboard › "Manage Schedules" button navigates to scheduler 
+    [mobile-chrome] › tests\dashboard.spec.ts:43:3 › Dashboard › shows active warning when a schedule is currently active 
+    [mobile-chrome] › tests\help.spec.ts:12:3 › Help › renders page heading ────────────────────────
+    [mobile-chrome] › tests\help.spec.ts:16:3 › Help › shows FAQ section ───────────────────────────
+    [mobile-chrome] › tests\help.spec.ts:20:3 › Help › FAQ items are collapsed by default ──────────
+    [mobile-chrome] › tests\help.spec.ts:27:3 › Help › FAQ item expands on click ───────────────────
+    [mobile-chrome] › tests\help.spec.ts:41:3 › Help › multiple FAQ items can be opened independently 
+    [mobile-chrome] › tests\help.spec.ts:61:3 › Help › shows Contact the Developer section ─────────
+    [mobile-chrome] › tests\help.spec.ts:65:3 › Help › contact form has all required fields ────────
+    [mobile-chrome] › tests\help.spec.ts:73:3 › Help › contact form shows validation errors on empty submit 
+    [mobile-chrome] › tests\help.spec.ts:86:3 › Help › contact form fields accept input ────────────
+    [mobile-chrome] › tests\help.spec.ts:112:3 › Help › FAQ covers all 7 questions ─────────────────
+    [mobile-chrome] › tests\help.spec.ts:128:3 › Help › contact form submits and shows success (mocked EmailJS) 
+    [mobile-chrome] › tests\language.spec.ts:13:3 › Language Switching › EN button is active by default 
+    [mobile-chrome] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels 
+    [mobile-chrome] › tests\language.spec.ts:29:3 › Language Switching › switching to Hebrew sets RTL direction 
+    [mobile-chrome] › tests\language.spec.ts:35:3 › Language Switching › switching back to English restores LTR 
+    [mobile-chrome] › tests\language.spec.ts:46:3 › Language Switching › language preference persists across reload 
+    [mobile-chrome] › tests\logs.spec.ts:14:3 › Logs › renders page heading ────────────────────────
+    [mobile-chrome] › tests\logs.spec.ts:18:3 › Logs › shows empty state with no logs ──────────────
+    [mobile-chrome] › tests\logs.spec.ts:24:3 › Logs › Delete Selected button is disabled with no selection 
+    [mobile-chrome] › tests\logs.spec.ts:30:3 › Logs › Clear All button is disabled with no logs ───
+    [mobile-chrome] › tests\logs.spec.ts:36:3 › Logs › shows log entries when logs exist in localStorage 
+    [mobile-chrome] › tests\logs.spec.ts:58:3 › Logs › level chips display correctly ───────────────
+    [mobile-chrome] › tests\logs.spec.ts:73:3 › Logs › can select all logs and clear them ──────────
+    [mobile-chrome] › tests\logs.spec.ts:100:3 › Logs › Export JSON button triggers download ───────
+    [mobile-chrome] › tests\logs.spec.ts:116:3 › Logs › Refresh button reloads logs from storage ───
+    [mobile-chrome] › tests\navigation.spec.ts:26:3 › Navigation › app loads with correct title ────
+    [mobile-chrome] › tests\navigation.spec.ts:30:3 › Navigation › sidebar shows all nav items ─────
+    [mobile-chrome] › tests\navigation.spec.ts:41:3 › Navigation › navigates to Scheduler page ─────
+    [mobile-chrome] › tests\navigation.spec.ts:51:3 › Navigation › navigates to Logs page ──────────
+    [mobile-chrome] › tests\navigation.spec.ts:61:3 › Navigation › navigates to Settings page ──────
+    [mobile-chrome] › tests\navigation.spec.ts:71:3 › Navigation › navigates to About page ─────────
+    [mobile-chrome] › tests\navigation.spec.ts:81:3 › Navigation › navigates to Help page ──────────
+    [mobile-chrome] › tests\navigation.spec.ts:91:3 › Navigation › navigates to Donate page ────────
+    [mobile-chrome] › tests\navigation.spec.ts:101:3 › Navigation › header shows app title with emoji 
+    [mobile-chrome] › tests\navigation.spec.ts:107:3 › Navigation › theme toggle button is visible in header 
+    [mobile-chrome] › tests\navigation.spec.ts:113:3 › Navigation › clicking theme toggle changes icon 
+    [mobile-chrome] › tests\scheduler.spec.ts:14:3 › Scheduler › renders page heading and New Schedule button 
+    [mobile-chrome] › tests\scheduler.spec.ts:19:3 › Scheduler › shows empty state when no schedules exist 
+    [mobile-chrome] › tests\scheduler.spec.ts:23:3 › Scheduler › opens create form on button click ─
+    [mobile-chrome] › tests\scheduler.spec.ts:33:3 › Scheduler › creates a new daily schedule ──────
+    [mobile-chrome] › tests\scheduler.spec.ts:53:3 › Scheduler › can toggle a schedule on/off ──────
+    [mobile-chrome] › tests\scheduler.spec.ts:74:3 › Scheduler › can delete a schedule ─────────────
+    [mobile-chrome] › tests\scheduler.spec.ts:98:3 › Scheduler › form closes on Cancel ─────────────
+    [mobile-chrome] › tests\scheduler.spec.ts:105:3 › Scheduler › weekly mode shows day-of-week checkboxes 
+    [mobile-chrome] › tests\settings.spec.ts:14:3 › Settings › renders page heading ────────────────
+    [mobile-chrome] › tests\settings.spec.ts:18:3 › Settings › shows Appearance, Logging, Notifications, and Menu sections 
+    [mobile-chrome] › tests\settings.spec.ts:25:3 › Settings › theme mode select has correct options 
+    [mobile-chrome] › tests\settings.spec.ts:34:3 › Settings › changing theme mode persists to localStorage 
+    [mobile-chrome] › tests\settings.spec.ts:45:3 › Settings › log level select has correct options 
+    [mobile-chrome] › tests\settings.spec.ts:54:3 › Settings › menu position select has correct options 
+    [mobile-chrome] › tests\settings.spec.ts:63:3 › Settings › menu position change persists to localStorage 
+    [mobile-chrome] › tests\settings.spec.ts:77:3 › Settings › menu pin toggle is visible and functional 
+    [mobile-chrome] › tests\settings.spec.ts:85:3 › Settings › Reset button restores defaults ──────
+    [mobile-chrome] › tests\settings.spec.ts:101:3 › Settings › notifications toggle is visible ────
+  102 passed (4.9m)

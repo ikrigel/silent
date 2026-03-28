@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, CssBaseline, createTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useAppTheme } from '@/hooks/useAppTheme';
+import { useAuthStore } from '@/store/authStore';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import Dashboard from '@/pages/Dashboard';
 import SchedulerPage from '@/pages/Scheduler';
@@ -12,6 +13,7 @@ import AboutPage from '@/pages/About';
 import HelpPage from '@/pages/Help';
 import RobotPage from '@/pages/Robot';
 import DonatePage from '@/pages/Donate';
+import LoginPage from '@/pages/Login';
 import '@/i18n';
 
 /**
@@ -21,7 +23,13 @@ import '@/i18n';
 const App: React.FC = () => {
   const baseTheme = useAppTheme();
   const { i18n } = useTranslation();
+  const { subscribeToAuth } = useAuthStore();
   const isRTL = i18n.language === 'he';
+
+  // Initialize Firebase auth listener on app mount
+  useEffect(() => {
+    subscribeToAuth();
+  }, [subscribeToAuth]);
 
   // Rebuild theme with correct direction whenever language changes
   const theme = React.useMemo(
@@ -40,6 +48,10 @@ const App: React.FC = () => {
       <CssBaseline />
       <BrowserRouter>
         <Routes>
+          {/* Login page (no layout wrapper) */}
+          <Route path="/login" element={<LoginPage />} />
+
+          {/* Main app with layout */}
           <Route path="/" element={<AppLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="scheduler" element={<SchedulerPage />} />

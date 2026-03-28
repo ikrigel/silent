@@ -177,7 +177,12 @@
     "exp2b1": "Contributed to multiple open-source projects with focus on developer tools and utilities",
     "exp2b2": "Maintained repositories with comprehensive documentation and CI/CD pipelines",
     "exp2b3": "Collaborated with community members on bug fixes and feature implementations",
-    "exp2b4": "Created educational content and tutorials for developers"
+    "exp2b4": "Created educational content and tutorials for developers",
+    "version": "Version",
+    "downloadApk": "Download Android APK",
+    "apkNote": "Requires Silent Robot accessibility service on Android",
+    "newApkAvailable": "New version {{version}} available!",
+    "signInToDownload": "Sign in to download APK"
   },
   "help": {
     "title": "Help",
@@ -230,5 +235,15 @@
   "lang": {
     "en": "English",
     "he": "עברית"
+  },
+  "auth": {
+    "signIn": "Sign in with Google",
+    "signOut": "Sign out",
+    "signedInAs": "Signed in as {{name}}",
+    "loginRequired": "Sign in with Google to download the APK and receive updates.",
+    "login": "Login"
+  },
+  "common": {
+    "loading": "Loading..."
   }
 }

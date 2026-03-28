@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box, Typography, Card, CardContent, Avatar, Stack,
-  Button, Chip, Divider,
+  Button, Chip, Divider, Alert, CircularProgress,
 } from '@mui/material';
-import { GitHub, LinkedIn, OpenInNew, Work, Code } from '@mui/icons-material';
+import { GitHub, LinkedIn, OpenInNew, Work, Code, Download } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
+import { useAuthStore } from '@/store/authStore';
+import { getIdToken } from '@/services/authService';
+import { useNavigate } from 'react-router-dom';
 
 const SKILLS_PRIMARY = ['React', 'TypeScript', 'Node.js', 'Claude API', 'Gemini API', 'N8N', 'PostgreSQL', 'Vercel'];
 const SKILLS_OSS = ['JavaScript', 'TypeScript', 'Python', 'Git', 'GitHub'];
@@ -12,6 +15,10 @@ const SKILLS_OSS = ['JavaScript', 'TypeScript', 'Python', 'Git', 'GitHub'];
 /** About page — developer bio, experience, skills, and project info */
 const AboutPage: React.FC = () => {
   const { t } = useTranslation();
+  const { user } = useAuthStore();
+  const navigate = useNavigate();
+  const [downloadLoading, setDownloadLoading] = useState(false);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
 
   const EXPERIENCE = [
     {
@@ -31,6 +38,40 @@ const AboutPage: React.FC = () => {
       skills: SKILLS_OSS,
     },
   ];
+
+  const handleDownloadApk = async () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    setDownloadLoading(true);
+    setDownloadError(null);
+    try {
+      const idToken = await getIdToken();
+      if (!idToken) {
+        setDownloadError('Failed to get authentication token');
+        return;
+      }
+
+      const response = await fetch('/api/download-apk', {
+        headers: { Authorization: `Bearer ${idToken}` },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      // Redirect to APK download URL
+      window.location.href = data.url;
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setDownloadError(`Download failed: ${msg}`);
+    } finally {
+      setDownloadLoading(false);
+    }
+  };
 
   return (
     <Box>
@@ -100,13 +141,56 @@ const AboutPage: React.FC = () => {
 
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Typography variant="h6" gutterBottom>{t('about.appTitle')}</Typography>
-          <Typography variant="body2" paragraph>{t('about.appDesc')}</Typography>
-          <Divider sx={{ my: 2 }} />
-          <Stack direction="row" flexWrap="wrap" gap={0.5}>
-            {['React', 'TypeScript', 'MUI', 'Vite', 'Zustand'].map((tech) => (
-              <Chip key={tech} label={tech} size="small" variant="outlined" />
-            ))}
+          <Stack spacing={2}>
+            <Box>
+              <Typography variant="h6" gutterBottom>{t('about.appTitle')}</Typography>
+              <Typography variant="body2" paragraph>{t('about.appDesc')}</Typography>
+            </Box>
+
+            {/* Version and Download */}
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ xs: 'flex-start', sm: 'center' }}>
+              <Chip
+                label={`${t('about.version')}: v${__APP_VERSION__}`}
+                variant="outlined"
+                size="small"
+              />
+              {user ? (
+                <Button
+                  variant="contained"
+                  size="small"
+                  startIcon={downloadLoading ? <CircularProgress size={16} /> : <Download />}
+                  onClick={handleDownloadApk}
+                  disabled={downloadLoading}
+                >
+                  {t('about.downloadApk')}
+                </Button>
+              ) : (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => navigate('/login')}
+                >
+                  {t('about.signInToDownload')}
+                </Button>
+              )}
+            </Stack>
+
+            {downloadError && (
+              <Alert severity="error" onClose={() => setDownloadError(null)}>
+                {downloadError}
+              </Alert>
+            )}
+
+            <Typography variant="caption" color="text.secondary">
+              {t('about.apkNote')}
+            </Typography>
+
+            <Divider sx={{ my: 1 }} />
+            <Stack direction="row" flexWrap="wrap" gap={0.5}>
+              {['React', 'TypeScript', 'MUI', 'Vite', 'Zustand', 'Firebase'].map((tech) => (
+                <Chip key={tech} label={tech} size="small" variant="outlined" />
+              ))}
+            </Stack>
           </Stack>
         </CardContent>
       </Card>
