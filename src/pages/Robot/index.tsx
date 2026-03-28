@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  Alert, Box, Button, Card, CardContent, Divider,
+  Alert, Box, Button, Card, CardContent, CircularProgress, Divider,
   Stack, Typography,
 } from '@mui/material';
 import AndroidIcon from '@mui/icons-material/Android';
@@ -8,20 +8,26 @@ import DownloadIcon from '@mui/icons-material/Download';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { robotService } from '@/services/robotService';
 import { writeLog } from '@/services/logService';
+import { useAuthStore } from '@/store/authStore';
+import { getIdToken } from '@/services/authService';
 import SetupGuide from './SetupGuide';
 import RecordingControls from './RecordingControls';
 import RecordingList from './RecordingList';
 
 const RobotPage: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { user } = useAuthStore();
   const isAndroid = robotService.isAndroid();
   const [accessibilityEnabled, setAccessibilityEnabled] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [status, setStatus] = useState<'idle' | 'working'>('idle');
   const [msg, setMsg] = useState('');
   const [error, setError] = useState('');
+  const [downloadLoading, setDownloadLoading] = useState(false);
 
   useEffect(() => {
     if (isAndroid) {
@@ -31,6 +37,39 @@ const RobotPage: React.FC = () => {
 
   const handleEnabled = useCallback(() => setAccessibilityEnabled(true), []);
   const handleSaved = useCallback(() => setRefreshKey((k) => k + 1), []);
+
+  const handleDownloadApk = async () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    setDownloadLoading(true);
+    try {
+      const idToken = await getIdToken();
+      if (!idToken) {
+        setError('Failed to get authentication token');
+        return;
+      }
+
+      const response = await fetch('/api/download-apk', {
+        headers: { Authorization: `Bearer ${idToken}` },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      // Redirect to APK download URL
+      window.location.href = data.url;
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : String(err);
+      setError(`Download failed: ${errMsg}`);
+    } finally {
+      setDownloadLoading(false);
+    }
+  };
 
   const runAction = async (action: 'silence' | 'unsilence' | 'airplane_on' | 'airplane_off') => {
     writeLog('info',`Robot page: User triggered action: ${action}`);
@@ -78,16 +117,31 @@ const RobotPage: React.FC = () => {
               <Typography variant="h6">{t('robot.webNotice.title')}</Typography>
             </Box>
             <Typography color="text.secondary" mb={2}>{t('robot.webNotice.desc')}</Typography>
-            <Button
-              variant="contained"
-              color="success"
-              startIcon={<DownloadIcon />}
-              href="https://github.com/ikrigel/silent/releases"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t('robot.webNotice.downloadApk')}
-            </Button>
+            {user ? (
+              <Button
+                variant="contained"
+                color="success"
+                startIcon={downloadLoading ? <CircularProgress size={16} /> : <DownloadIcon />}
+                onClick={handleDownloadApk}
+                disabled={downloadLoading}
+              >
+                {t('robot.webNotice.downloadApk')}
+              </Button>
+            ) : (
+              <Button
+                variant="outlined"
+                color="success"
+                startIcon={<DownloadIcon />}
+                onClick={() => navigate('/login')}
+              >
+                {t('robot.webNotice.signInToDownload')}
+              </Button>
+            )}
+            {error && (
+              <Alert severity="error" onClose={() => setError('')} sx={{ mt: 2 }}>
+                {error}
+              </Alert>
+            )}
           </CardContent>
         </Card>
         <Card>

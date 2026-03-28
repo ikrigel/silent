@@ -68,6 +68,7 @@
       "title": "Android App Required",
       "desc": "The Robot feature requires the Silent Android app with Accessibility Service. Download the latest APK from GitHub Releases and install it on your Android device.",
       "downloadApk": "Download from GitHub Releases",
+      "signInToDownload": "Sign in to download APK",
       "installTitle": "Installation Steps",
       "step1": "Go to GitHub Releases and download the latest app-release.apk",
       "step2": "On your Android device, go to Settings → Security → enable \"Install from Unknown Sources\"",
