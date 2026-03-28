@@ -38,6 +38,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_21
         targetCompatibility JavaVersion.VERSION_21
     }
+
+    // Kotlin compiler options
+    kotlinOptions {
+        jvmTarget = "21"
+    }
 }
 
 repositories {
