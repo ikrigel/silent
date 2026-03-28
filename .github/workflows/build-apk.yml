@@ -67,24 +67,15 @@ jobs:
           fi
           echo "✓ Capacitor synced successfully"
 
-      - name: Ensure debug keystore exists
+      - name: Set up release keystore
         run: |
-          if [ ! -f "$HOME/.android/debug.keystore" ]; then
-            echo "Creating debug keystore..."
-            mkdir -p "$HOME/.android"
-            keytool -genkey -v \
-              -keystore "$HOME/.android/debug.keystore" \
-              -storepass android \
-              -alias androiddebugkey \
-              -keypass android \
-              -dname "CN=Android Debug,O=Android,C=US" \
-              -keyalg RSA \
-              -keysize 2048 \
-              -validity 10000
-            echo "✓ Debug keystore created"
-          else
-            echo "✓ Debug keystore already exists"
-          fi
+          mkdir -p "$HOME/.android"
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > "$HOME/.android/silent-release.keystore"
+          echo "KEYSTORE_PATH=$HOME/.android/silent-release.keystore" >> $GITHUB_ENV
+          echo "ANDROID_STORE_PASSWORD=${{ secrets.ANDROID_STORE_PASSWORD }}" >> $GITHUB_ENV
+          echo "ANDROID_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}" >> $GITHUB_ENV
+          echo "ANDROID_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}" >> $GITHUB_ENV
+          echo "✓ Release keystore set up"
 
       - name: Make gradlew executable
         run: |

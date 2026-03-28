@@ -37,10 +37,9 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, title }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [hasApkUpdate, setHasApkUpdate] = useState(false);
 
-  // Check for new APK version on mount (if logged in)
+  // Check for new APK version on mount (runs for all users)
+  // The banner shows for APK users with older bundled versions; browser users see it when GitHub has a newer release
   useEffect(() => {
-    if (!user) return;
-
     const checkVersion = async () => {
       const latestVersion = await getLatestApkVersion();
       if (latestVersion) {
@@ -50,7 +49,7 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, title }) => {
     };
 
     checkVersion();
-  }, [user]);
+  }, []);
 
   const themeLabels: Record<ThemeMode, string> = {
     light: t('theme.switchToDark'),
