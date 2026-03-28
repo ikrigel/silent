@@ -203,7 +203,13 @@
       "q6": "Where is my data stored?",
       "a6": "All schedules, logs, and settings are stored locally in your browser's localStorage. Nothing is sent to any server.",
       "q7": "How do I contact the developer?",
-      "a7": "Use the contact form below to send a message directly. Fill in your name, email, subject, and message, then click Send."
+      "a7": "Use the contact form below to send a message directly. Fill in your name, email, subject, and message, then click Send.",
+      "q8": "How do I sign in with Google?",
+      "a8": "Click the \"Login\" button in the top-right corner of the app header, then click \"Sign in with Google\". You'll be redirected to Google's secure login page. After signing in, your profile is automatically saved and you'll have access to download the Android APK.",
+      "q9": "Why do I need to sign in to download the APK?",
+      "a9": "User registration helps us track app usage and send you notifications about new versions. Only registered users can download the APK to ensure a more secure distribution. Your data is stored securely in our Firestore database.",
+      "q10": "How do I know if a new APK version is available?",
+      "a10": "When you sign in and open the app, it automatically checks GitHub Releases for the latest APK version. If a newer version is available, you'll see a \"New version X.X.X available!\" notification in the header. Click it to go to the About page and download the latest APK."
     },
     "form": {
       "name": "Your Name",

@@ -8,16 +8,29 @@
 
 ## Features
 
+### Core Functionality
 - 📅 **Scheduler** — Create silencing schedules: daily, weekly, custom date range, overnight spans
+- 🤖 **Robot Automation** (Android) — Accessibility service integration for automated alert silencing
 - 🌓 **Time-based Theme** — Sinusoidal transition from light (noon) → dark (midnight), updates every 5s
 - 🖼️ **Parallax Background** — Subtle depth-effect background image
 - 🌐 **Hebrew / English** — Full i18n with RTL layout support for Hebrew
 - 📋 **Logs** — Verbose/Info/Error/None logging; export JSON, delete selected or all
-- ⚙️ **Settings** — Theme mode, log level, browser notification permission
-- 👤 **About** — Developer bio, experience, skills, social links
+- ⚙️ **Settings** — Theme mode, log level, browser notification permission, menu customization
+- 👤 **About** — Developer bio, experience, skills, social links, version display
 - ❓ **Help** — FAQ accordion + contact form (EmailJS, pre-configured)
-- 🧪 **Playwright Tests** — 7 test suites covering all pages + language switching + email form mock
-- 🚀 **CI/CD** — GitHub Actions: tests must pass before every Vercel deploy
+
+### Authentication & APK Management
+- 🔐 **Google OAuth** — Sign in with Google via Firebase Authentication
+- 👥 **User Registration** — Automatically saved to Firestore database
+- 📲 **APK Versioning** — In-app version display with automatic update detection
+- 🔔 **Update Notifications** — Real-time "New version available!" banner (authenticated users)
+- 🔒 **Registered User APK Download** — Only authenticated users can download APK
+- 🚀 **GitHub Releases Integration** — Automatic APK distribution via GitHub Actions
+
+### Quality & Deployment
+- 🧪 **Playwright Tests** — 292+ test cases covering all pages, language switching, authentication flows
+- 🚀 **CI/CD** — GitHub Actions: tests → Vercel deploy (web) + automatic APK builds on git tags
+- 📦 **Firebase Integration** — Firestore database, Google Authentication, serverless functions
 
 ---
 
@@ -31,10 +44,14 @@
 | Routing | React Router v6 |
 | i18n | react-i18next (EN + HE/RTL) |
 | Forms | React Hook Form |
+| Authentication | Firebase Auth (Google OAuth) |
+| Database | Firestore |
+| Backend Functions | Vercel Serverless Functions |
 | Email | EmailJS (pre-configured) |
-| Testing | Playwright |
+| Testing | Playwright (292+ tests) |
 | Bundler | Vite |
-| CI/CD | GitHub Actions → Vercel |
+| Mobile | Capacitor (Android) |
+| CI/CD | GitHub Actions → Vercel (web) + Auto APK builds |
 
 ---
 
@@ -68,6 +85,76 @@ npm run build
 | `npm run test:headed` | Watch tests run in a browser |
 | `npm run test:report` | Open last HTML test report |
 | `npm run deploy` | Deploy to Vercel production |
+
+---
+
+## Firebase Setup
+
+The app uses Firebase for authentication and user registration:
+
+1. Create a Firebase project at [console.firebase.google.com](https://console.firebase.google.com)
+2. Enable **Google Authentication** in Auth providers
+3. Create a **Firestore database** (production mode, nearest region)
+4. Add environment variables to `.env`:
+   ```env
+   VITE_FIREBASE_API_KEY=your_api_key
+   VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
+   VITE_FIREBASE_PROJECT_ID=your_project_id
+   VITE_FIREBASE_APP_ID=your_app_id
+   ```
+5. Set **Firestore security rules**:
+   ```
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /users/{uid} {
+         allow read, write: if request.auth != null && request.auth.uid == uid;
+       }
+     }
+   }
+   ```
+
+Users can now sign in with Google and their profile is automatically saved to Firestore.
+
+---
+
+## APK Builds & Distribution
+
+### Automatic Builds (Recommended)
+
+Push a git tag to trigger automatic APK builds:
+
+```bash
+# Update version in package.json and android/app/build.gradle
+git tag v1.0.33
+git push origin v1.0.33
+```
+
+The GitHub Actions `build-apk.yml` workflow will:
+1. Build the APK with Java 21
+2. Create a GitHub Release
+3. Attach the APK for download at: https://github.com/ikrigel/silent/releases
+
+### Local Builds
+
+Requires **Java 21+** and **Android SDK**:
+
+```bash
+# Set Java 21
+set JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot
+
+# Build APK
+cd android
+./gradlew clean assembleRelease -x lint
+```
+
+APK output: `android/app/build/outputs/apk/release/app-release.apk`
+
+### APK Versioning
+
+- Web app version: `package.json` → shown in About page
+- APK version: `android/app/build.gradle` → `versionCode` and `versionName`
+- Both versions should stay in sync for consistency
 
 ---
 

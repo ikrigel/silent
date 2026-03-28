@@ -86,8 +86,31 @@ tests/
 - Email form test mocks `api.emailjs.com` network calls
 - Run: `npm test` (headless) | `npm run test:ui` (interactive)
 
+## Firebase Integration
+- **Authentication**: Google OAuth via Firebase Auth (`src/services/authService.ts`)
+- **User Storage**: Firestore database auto-creates `users` collection on first sign-in
+- **Security Rules**: Users can only read/write their own documents
+- **Zustand Store**: `useAuthStore` manages authentication state globally
+- **Protected Routes**: Login page at `/login`, APK download gated to authenticated users
+- **Vercel Functions**: `/api/download-apk` verifies Firebase tokens server-side
+
+## APK Versioning & Distribution
+- **Version Injection**: `vite.config.ts` injects `__APP_VERSION__` from `package.json`
+- **Version Display**: About page shows current version with `__APP_VERSION__` global
+- **Update Detection**: `apkVersionService.ts` checks GitHub Releases API for new versions
+- **Update Banner**: Header shows "New version X.X.X available!" chip when newer version exists
+- **APK Download**: Authenticated users only; backend (`/api/download-apk`) returns GitHub URL
+- **GitHub Releases**: v1.0.30+ releases include pre-built APK files
+
+## Android Build
+- **Build Config**: `android/app/build.gradle` with versionCode and versionName
+- **Java Toolchain**: `android/gradle.properties` explicitly sets `org.gradle.java.home` to Java 21
+- **Gradle Wrapper**: Version 8.14.3, requires Java 11+ (GitHub Actions uses Java 21)
+- **Capacitor**: Bridges React web app to native Android via Capacitor plugins
+
 ## Deployment
-- **Vercel**: `vercel.json` rewrites all routes to `/` for SPA routing
-- **CI**: GitHub Actions (`.github/workflows/deploy.yml`) — tests must pass before deploy
-- **Build**: `npm run build` → `dist/` folder
-- **Manual deploy**: `npm run deploy` (runs `vercel --prod`)
+- **Web**: Vercel SPA (`.github/workflows/deploy.yml`) — tests must pass before deploy
+- **APK**: GitHub Actions (`build-apk.yml`) — triggered by `git tag v*`
+- **Build**: `npm run build` → `dist/` folder (web); `./gradlew assembleRelease` → APK (mobile)
+- **Manual web deploy**: `npm run deploy` (runs `vercel --prod`)
+- **Manual APK build**: `cd android && ./gradlew clean assembleRelease -x lint`
