@@ -89,7 +89,15 @@ jobs:
           echo "KEYSTORE_PATH=$HOME/.android/silent-release.keystore" >> $GITHUB_ENV
           echo "ANDROID_STORE_PASSWORD=${{ secrets.ANDROID_STORE_PASSWORD }}" >> $GITHUB_ENV
           echo "ANDROID_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}" >> $GITHUB_ENV
-          echo "ANDROID_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}" >> $GITHUB_ENV
+
+          # For PKCS12 keystores: key password = store password
+          # If ANDROID_KEY_PASSWORD secret is set, use it; otherwise fall back to store password
+          if [ -n "${{ secrets.ANDROID_KEY_PASSWORD }}" ]; then
+            echo "ANDROID_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}" >> $GITHUB_ENV
+          else
+            echo "ANDROID_KEY_PASSWORD=${{ secrets.ANDROID_STORE_PASSWORD }}" >> $GITHUB_ENV
+            echo "ℹ️  ANDROID_KEY_PASSWORD not set; using ANDROID_STORE_PASSWORD"
+          fi
 
           # Validate keystore with keytool (PKCS12 uses store password for both)
           keytool -list -v \
