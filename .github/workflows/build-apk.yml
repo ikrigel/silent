@@ -70,12 +70,45 @@ jobs:
       - name: Set up release keystore
         run: |
           mkdir -p "$HOME/.android"
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > "$HOME/.android/silent-release.keystore"
+
+          # Decode base64 keystore (strip CR in case of CRLF issues)
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | tr -d '\r' | base64 --decode > "$HOME/.android/silent-release.keystore" || {
+            echo "❌ Failed to decode ANDROID_KEYSTORE_BASE64"
+            exit 1
+          }
+
+          # Ensure file was created and is non-empty
+          if [ ! -s "$HOME/.android/silent-release.keystore" ]; then
+            echo "❌ Keystore file is missing or empty after decoding"
+            ls -la "$HOME/.android"
+            exit 1
+          fi
+          echo "✓ Keystore file decoded successfully ($(stat -f%z "$HOME/.android/silent-release.keystore" 2>/dev/null || stat -c%s "$HOME/.android/silent-release.keystore") bytes)"
+
+          # Export secrets to environment
           echo "KEYSTORE_PATH=$HOME/.android/silent-release.keystore" >> $GITHUB_ENV
           echo "ANDROID_STORE_PASSWORD=${{ secrets.ANDROID_STORE_PASSWORD }}" >> $GITHUB_ENV
           echo "ANDROID_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}" >> $GITHUB_ENV
           echo "ANDROID_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}" >> $GITHUB_ENV
-          echo "✓ Release keystore set up"
+
+          # Validate keystore with keytool
+          keytool -list -v \
+            -keystore "$HOME/.android/silent-release.keystore" \
+            -storepass "${{ secrets.ANDROID_STORE_PASSWORD }}" \
+            -alias "${{ secrets.ANDROID_KEY_ALIAS }}" \
+            > /dev/null 2>&1 || {
+            echo "❌ Keystore validation failed!"
+            echo "Check that:"
+            echo "  - ANDROID_KEYSTORE_BASE64 is correct base64 encoding"
+            echo "  - ANDROID_STORE_PASSWORD matches the keystore"
+            echo "  - ANDROID_KEY_ALIAS is '${{ secrets.ANDROID_KEY_ALIAS }}'"
+            echo ""
+            echo "Keystore file info:"
+            file "$HOME/.android/silent-release.keystore"
+            ls -l "$HOME/.android/silent-release.keystore"
+            exit 1
+          }
+          echo "✓ Keystore validated successfully"
 
       - name: Make gradlew executable
         run: |
