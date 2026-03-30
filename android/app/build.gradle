@@ -26,10 +26,12 @@ android {
         }
         release {
             // Release keystore from GitHub secrets (CI/CD) or local debug keystore (local builds)
+            // PKCS12 keystores use only store password (key password is ignored)
             storeFile file(System.getenv("KEYSTORE_PATH") ?: (System.getProperty('user.home') + '/.android/debug.keystore'))
             storePassword System.getenv("ANDROID_STORE_PASSWORD") ?: "android"
             keyAlias System.getenv("ANDROID_KEY_ALIAS") ?: "androiddebugkey"
-            keyPassword System.getenv("ANDROID_KEY_PASSWORD") ?: "android"
+            // Note: PKCS12 doesn't support separate key passwords; uncomment for JKS keystores if needed
+            // keyPassword System.getenv("ANDROID_KEY_PASSWORD") ?: "android"
         }
     }
 
