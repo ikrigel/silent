@@ -91,7 +91,7 @@ jobs:
           echo "ANDROID_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}" >> $GITHUB_ENV
           echo "ANDROID_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}" >> $GITHUB_ENV
 
-          # Validate keystore with keytool
+          # Validate keystore with keytool (PKCS12 uses store password for both)
           keytool -list -v \
             -keystore "$HOME/.android/silent-release.keystore" \
             -storepass "${{ secrets.ANDROID_STORE_PASSWORD }}" \
@@ -100,8 +100,9 @@ jobs:
             echo "❌ Keystore validation failed!"
             echo "Check that:"
             echo "  - ANDROID_KEYSTORE_BASE64 is correct base64 encoding"
-            echo "  - ANDROID_STORE_PASSWORD matches the keystore"
+            echo "  - ANDROID_STORE_PASSWORD is correct"
             echo "  - ANDROID_KEY_ALIAS is '${{ secrets.ANDROID_KEY_ALIAS }}'"
+            echo "  - For PKCS12 keystores: ANDROID_KEY_PASSWORD must equal ANDROID_STORE_PASSWORD"
             echo ""
             echo "Keystore file info:"
             file "$HOME/.android/silent-release.keystore"
