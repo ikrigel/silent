@@ -159,11 +159,17 @@ jobs:
           echo ""
           echo "✓ Gradle build completed successfully"
 
+      - name: Rename APK to include version
+        run: |
+          cp android/app/build/outputs/apk/release/app-release.apk \
+             android/app/build/outputs/apk/release/silent-${{ github.ref_name }}.apk
+          echo "✓ APK renamed to silent-${{ github.ref_name }}.apk"
+
       - name: Check if APK was created
         run: |
-          if [ -f "android/app/build/outputs/apk/release/app-release.apk" ]; then
+          if [ -f "android/app/build/outputs/apk/release/silent-${{ github.ref_name }}.apk" ]; then
             echo "✓ APK file created successfully"
-            ls -lh android/app/build/outputs/apk/release/app-release.apk
+            ls -lh android/app/build/outputs/apk/release/silent-${{ github.ref_name }}.apk
           else
             echo "✗ APK file not found!"
             echo ""
@@ -185,21 +191,21 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: silent-release-apk
-          path: android/app/build/outputs/apk/release/app-release.apk
+          path: android/app/build/outputs/apk/release/silent-${{ github.ref_name }}.apk
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: android/app/build/outputs/apk/release/app-release.apk
+          files: android/app/build/outputs/apk/release/silent-${{ github.ref_name }}.apk
           name: Silent ${{ github.ref_name }}
           body: |
             ## Silent ${{ github.ref_name }}
 
-            Download `app-release.apk` below and install it on your Android device.
+            Download `silent-${{ github.ref_name }}.apk` below and install it on your Android device.
 
             **Installation Instructions:**
-            1. Download `app-release.apk` from the Assets section below
+            1. Download `silent-${{ github.ref_name }}.apk` from the Assets section below
             2. On your Android device, go to Settings → Security → Enable "Install from Unknown Sources"
             3. Open the downloaded APK file and tap Install
             4. Open Silent and go to Robot page → Follow the setup guide to enable Accessibility Service

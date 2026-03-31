@@ -6,8 +6,15 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Logs', () => {
   test.beforeEach(async ({ page }) => {
-    // Clear storage first so the page loads in the desired state
-    await page.evaluate(() => localStorage.clear());
+    // Inject script to clear localStorage before app loads (avoids SecurityError on WebKit/mobile)
+    // addInitScript runs before page scripts, in the correct page context
+    await page.addInitScript(() => {
+      try {
+        localStorage.clear();
+      } catch {
+        // ignore — some contexts may not allow direct access
+      }
+    });
     await page.goto('/logs', { waitUntil: 'networkidle' });
     await page.waitForLoadState('networkidle');
   });
