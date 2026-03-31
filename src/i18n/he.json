@@ -118,11 +118,14 @@
     "exp2b2": "תחזקתי מאגרים עם תיעוד מקיף וצינורות CI/CD",
     "exp2b3": "שיתפתי פעולה עם חברי קהילה על תיקוני באגים ויישום תכונות",
     "exp2b4": "יצרתי תוכן חינוכי ומדריכים למפתחים",
+    "webVersion": "אפליקציית אינטרנט",
+    "apkAvailableVersion": "ה-APK העדכני ביותר הזמין",
     "version": "גרסה",
     "downloadApk": "הורד Android APK",
     "apkNote": "דורש שירות הנגישות של Silent Robot באנדרואיד",
-    "newApkAvailable": "גרסה חדשה {{version}} זמינה!",
-    "signInToDownload": "התחבר כדי להוריד APK"
+    "newApkAvailable": "גרסה חדשה של APK זמינה",
+    "signInToDownload": "התחבר כדי להוריד APK",
+    "loading": "טוען..."
   },
   "help": {
     "title": "עזרה",

@@ -179,11 +179,14 @@
     "exp2b2": "Maintained repositories with comprehensive documentation and CI/CD pipelines",
     "exp2b3": "Collaborated with community members on bug fixes and feature implementations",
     "exp2b4": "Created educational content and tutorials for developers",
+    "webVersion": "Web App",
+    "apkAvailableVersion": "Latest APK Available",
     "version": "Version",
     "downloadApk": "Download Android APK",
     "apkNote": "Requires Silent Robot accessibility service on Android",
-    "newApkAvailable": "New version {{version}} available!",
-    "signInToDownload": "Sign in to download APK"
+    "newApkAvailable": "New APK version available",
+    "signInToDownload": "Sign in to download APK",
+    "loading": "Loading..."
   },
   "help": {
     "title": "Help",

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box, Typography, Card, CardContent, Avatar, Stack,
   Button, Chip, Divider, Alert, CircularProgress,
@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/store/authStore';
 import { getIdToken } from '@/services/authService';
 import { useNavigate } from 'react-router-dom';
+import { getLatestApkVersion } from '@/services/apkVersionService';
 
 const SKILLS_PRIMARY = ['React', 'TypeScript', 'Node.js', 'Claude API', 'Gemini API', 'N8N', 'PostgreSQL', 'Vercel'];
 const SKILLS_OSS = ['JavaScript', 'TypeScript', 'Python', 'Git', 'GitHub'];
@@ -19,6 +20,16 @@ const AboutPage: React.FC = () => {
   const navigate = useNavigate();
   const [downloadLoading, setDownloadLoading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
+  const [latestApkVersion, setLatestApkVersion] = useState<string | null>(null);
+
+  // Fetch latest APK version on mount
+  useEffect(() => {
+    const fetchLatestApk = async () => {
+      const version = await getLatestApkVersion();
+      setLatestApkVersion(version);
+    };
+    fetchLatestApk();
+  }, []);
 
   const EXPERIENCE = [
     {
@@ -148,31 +159,54 @@ const AboutPage: React.FC = () => {
             </Box>
 
             {/* Version and Download */}
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ xs: 'flex-start', sm: 'center' }}>
-              <Chip
-                label={`${t('about.version')}: v${__APP_VERSION__}`}
-                variant="outlined"
-                size="small"
-              />
-              {user ? (
-                <Button
-                  variant="contained"
-                  size="small"
-                  startIcon={downloadLoading ? <CircularProgress size={16} /> : <Download />}
-                  onClick={handleDownloadApk}
-                  disabled={downloadLoading}
-                >
-                  {t('about.downloadApk')}
-                </Button>
-              ) : (
-                <Button
+            <Stack spacing={2}>
+              {/* Web and APK Versions */}
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} alignItems={{ xs: 'flex-start', sm: 'center' }} flexWrap="wrap" useFlexGap>
+                <Chip
+                  label={`${t('about.webVersion')}: v${__APP_VERSION__}`}
                   variant="outlined"
                   size="small"
-                  onClick={() => navigate('/login')}
-                >
-                  {t('about.signInToDownload')}
-                </Button>
-              )}
+                  color="primary"
+                />
+                {latestApkVersion ? (
+                  <Chip
+                    label={`${t('about.apkAvailableVersion')}: ${latestApkVersion}`}
+                    variant="outlined"
+                    size="small"
+                    color="success"
+                  />
+                ) : (
+                  <Chip
+                    label={`${t('about.apkAvailableVersion')}: ${t('about.loading')}`}
+                    variant="outlined"
+                    size="small"
+                    disabled
+                  />
+                )}
+              </Stack>
+
+              {/* Download Button */}
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="flex-start">
+                {user ? (
+                  <Button
+                    variant="contained"
+                    size="small"
+                    startIcon={downloadLoading ? <CircularProgress size={16} /> : <Download />}
+                    onClick={handleDownloadApk}
+                    disabled={downloadLoading}
+                  >
+                    {t('about.downloadApk')}
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => navigate('/login')}
+                  >
+                    {t('about.signInToDownload')}
+                  </Button>
+                )}
+              </Stack>
             </Stack>
 
             {downloadError && (

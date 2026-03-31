@@ -36,6 +36,7 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, title }) => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [hasApkUpdate, setHasApkUpdate] = useState(false);
+  const [latestApkVersion, setLatestApkVersion] = useState<string | null>(null);
 
   // Check for new APK version on mount (runs for all users)
   // The banner shows for APK users with older bundled versions; browser users see it when GitHub has a newer release
@@ -43,6 +44,7 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, title }) => {
     const checkVersion = async () => {
       const latestVersion = await getLatestApkVersion();
       if (latestVersion) {
+        setLatestApkVersion(latestVersion);
         const isNewer = isNewerVersion(__APP_VERSION__, latestVersion);
         setHasApkUpdate(isNewer);
       }
@@ -96,9 +98,9 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, title }) => {
         </Typography>
 
         {/* New APK Available Chip */}
-        {hasApkUpdate && (
+        {hasApkUpdate && latestApkVersion && (
           <Chip
-            label={t('about.newApkAvailable', { version: '' }).replace(/\s+$/, '')}
+            label={`${t('about.newApkAvailable')}: ${latestApkVersion}`}
             color="warning"
             size="small"
             onClick={handleNavigateToAbout}
