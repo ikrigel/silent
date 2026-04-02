@@ -16,11 +16,17 @@ import { getIdToken } from '@/services/authService';
 import SetupGuide from './SetupGuide';
 import RecordingControls from './RecordingControls';
 import RecordingList from './RecordingList';
+import IOSManualSteps from './IOSManualSteps';
 
 const RobotPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { user } = useAuthStore();
+
+  // Detect iOS and show manual steps if on iPhone/iPad
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if (isIOS) return <IOSManualSteps />;
+
   const isAndroid = robotService.isAndroid();
   const [accessibilityEnabled, setAccessibilityEnabled] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);

@@ -23,6 +23,16 @@
   },
   "robot": {
     "title": "Robot",
+    "ios": {
+      "title": "iPhone / iPad — Manual Steps",
+      "desc": "iOS does not allow automatic alert control. Follow these steps when your schedule is active.",
+      "step1Label": "Control Center (fastest)",
+      "step1Desc": "Swipe down from the top-right corner → tap the Airplane Mode icon (✈).",
+      "step2Label": "Settings method",
+      "step2Desc": "Open Settings → tap the Airplane Mode toggle at the top.",
+      "step3Label": "Silence emergency alerts",
+      "step3Desc": "Settings → Notifications → scroll to bottom → Government Alerts → toggle off Extreme Alert and Public Safety Alert."
+    },
     "setup": {
       "title": "Enable Silent Robot",
       "info": "The robot needs Accessibility Service permission to navigate your phone Settings automatically.",
@@ -123,7 +133,12 @@
     "noLogs": "No logs to show. Actions will be logged here.",
     "timestamp": "Timestamp",
     "level": "Level",
-    "message": "Message"
+    "message": "Message",
+    "viewReport": "View Report",
+    "failureDialog": "Failure Report",
+    "copyJson": "Copy JSON",
+    "copied": "Copied!",
+    "download": "Download"
   },
   "settings": {
     "title": "Settings",

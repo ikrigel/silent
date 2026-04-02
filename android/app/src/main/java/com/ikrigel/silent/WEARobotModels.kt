@@ -67,6 +67,26 @@ object BuiltInRecordings {
         ),
     )
 
+    // Airplane mode labels across different manufacturers and languages
+    private val airplaneLabels = listOf(
+        // English: Stock Android, Samsung, OnePlus, Pixel
+        "Airplane mode", "Airplane", "Flight mode", "Plane mode",
+        // Hebrew
+        "טיסה", "מצב טיסה",
+        // Arabic
+        "وضع الطائرة",
+        // Russian (Huawei, some Xiaomi)
+        "Режим полёта",
+        // French
+        "Mode avion",
+        // German
+        "Flugzeugmodus",
+        // Spanish
+        "Modo avión", "Modo avion",
+        // Chinese (Xiaomi/MIUI)
+        "飞行模式"
+    )
+
     val AIRPLANE_ON = RobotRecording(
         id        = "builtin_airplane_on",
         name      = "Enable Airplane Mode",
@@ -74,7 +94,7 @@ object BuiltInRecordings {
         createdAt = "built-in",
         steps     = listOf(
             RobotStep("quick_settings", ""),
-            RobotStep("click_any", "Airplane mode|Airplane|Flight mode|טיסה"),
+            RobotStep("toggle_on_any", airplaneLabels.joinToString("|")),
         ),
     )
 
@@ -85,7 +105,7 @@ object BuiltInRecordings {
         createdAt = "built-in",
         steps     = listOf(
             RobotStep("quick_settings", ""),
-            RobotStep("click_any", "Airplane mode|Airplane|Flight mode|טיסה"),
+            RobotStep("toggle_off_any", airplaneLabels.joinToString("|")),
         ),
     )
 

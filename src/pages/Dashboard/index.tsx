@@ -151,8 +151,8 @@ const Dashboard: React.FC = () => {
         }
       >
         {isReminderActive
-          ? `Reminder active — go to your phone Settings now to silence alerts manually`
-          : 'No active reminder schedules'}
+          ? t('dashboard.reminder', { count: activeSchedules.length })
+          : t('dashboard.noActive')}
       </Alert>
 
       {/* ── Step-by-step guide (shown when reminder is active) ─────────────── */}

@@ -159,4 +159,34 @@ test.describe('Scheduler', () => {
     // Verify it's in the list
     await expect(page.getByText('22:00 – 07:00')).toBeVisible();
   });
+
+  test('schedule with useAirplaneMode saves and reloads correctly', async ({ page }) => {
+    // Test that schedules with useAirplaneMode field save and load without errors
+    const scheduleWithAirplane = {
+      id: 'airplane-test',
+      name: 'Airplane Mode Schedule',
+      enabled: true,
+      startTime: '21:00',
+      endTime: '22:00',
+      repeatMode: 'daily',
+      daysOfWeek: [],
+      createdAt: new Date().toISOString(),
+      useAirplaneMode: true,
+      restoreOnEnd: true,
+      unsilenceWEAOnEnd: false,
+    };
+
+    await page.evaluate((s) => {
+      localStorage.setItem('schedules', JSON.stringify([s]));
+    }, scheduleWithAirplane);
+
+    await page.reload();
+
+    // Schedule should load without error
+    await expect(page.getByText('Airplane Mode Schedule')).toBeVisible();
+    // Verify the schedule is in the list
+    await expect(page.getByText('21:00 – 22:00')).toBeVisible();
+    // Verify daily repeats are shown
+    await expect(page.getByText(/daily/i)).toBeVisible();
+  });
 });
