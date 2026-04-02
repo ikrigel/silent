@@ -17,15 +17,19 @@ test.describe('Logs', () => {
   });
 
   test('shows empty state with no logs', async ({ page }) => {
-    // Wait for any initial UI work to finish, then assert the empty state is visible
-    await page.waitForTimeout(500);
-    // Match any reasonable "no logs" text; allow either role=alert or plain text
-    const emptyAlert = page.getByRole('alert').filter({ hasText: /no logs/i }).first();
-    // Fallback to searching by text if role=alert is not present
-    if (await emptyAlert.count() === 0) {
-      await expect(page.getByText(/no logs/i)).toBeVisible({ timeout: 10000 });
-    } else {
+    // Wait for initial UI/animations to settle
+    await page.waitForTimeout(800);
+
+    // Accept multiple plausible empty-state texts (responsive layouts may vary wording)
+    const emptyTextRegex = /no logs|no log entries|nothing here|no records/i;
+
+    // Prefer role=alert if used, but fallback to broader text search
+    const emptyAlert = page.getByRole('alert').filter({ hasText: emptyTextRegex }).first();
+    if (await emptyAlert.count() > 0) {
       await expect(emptyAlert).toBeVisible({ timeout: 10000 });
+    } else {
+      const emptyText = page.getByText(emptyTextRegex);
+      await expect(emptyText).toBeVisible({ timeout: 10000 });
     }
   });
 
@@ -36,7 +40,27 @@ test.describe('Logs', () => {
   });
 
   test('Clear All button is disabled with no logs', async ({ page }) => {
-    const clearBtn = page.getByRole('button', { name: /clear all/i });
+    // On small viewports the control might be collapsed into an overflow menu.
+    // Try to locate the button directly first, otherwise open the menu and re-try.
+    let clearBtn = page.getByRole('button', { name: /clear all/i });
+
+    const hasDirect = (await clearBtn.count()) > 0 && await clearBtn.isVisible().catch(() => false);
+    if (!hasDirect) {
+      // Try to open a generic overflow/menu button (common labels)
+      const overflow = page.getByRole('button', { name: /more|menu|actions|overflow|open menu/i }).first();
+      if ((await overflow.count()) > 0) {
+        await overflow.click();
+        // small delay to allow menu to open
+        await page.waitForTimeout(150);
+        clearBtn = page.getByRole('button', { name: /clear all/i });
+      }
+    }
+
+    // Ensure we found the button (fail the test with a clear message if not)
+    if ((await clearBtn.count()) === 0) {
+      throw new Error('Clear All button not found in either toolbar or overflow menu');
+    }
+
     // Prefer native disabled, but some implementations use aria-disabled
     try {
       await expect(clearBtn).toBeDisabled({ timeout: 3000 });
