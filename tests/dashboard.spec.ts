@@ -72,12 +72,13 @@ test.describe('Dashboard', () => {
 
   test('schedule with restoreOnEnd field saves without error', async ({ page }) => {
     // Verify that new ScheduleEntry fields (restoreOnEnd, unsilenceWEAOnEnd) don't cause issues
+    // Use a guaranteed-inactive time window: 03:00–04:00 (unlikely to be current time)
     const schedule = {
       id: 'test-restore',
       name: 'Test Restore State',
       enabled: true,
-      startTime: '22:00',
-      endTime: '07:00',
+      startTime: '03:00',
+      endTime: '04:00',
       repeatMode: 'daily',
       daysOfWeek: [],
       createdAt: new Date().toISOString(),
@@ -94,7 +95,7 @@ test.describe('Dashboard', () => {
 
     // Schedules should load without crashing
     await expect(page.getByRole('heading', { name: /dashboard/i })).toBeVisible();
-    // Active schedules list should be empty (time window doesn't match current time)
+    // Active schedules list should be empty (time window 03:00-04:00 doesn't match current time)
     await expect(page.getByText(/no active reminder schedules/i)).toBeVisible();
   });
 });

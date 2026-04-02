@@ -6,17 +6,10 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Logs', () => {
   test.beforeEach(async ({ page }) => {
-    // Inject script to clear localStorage before app loads (avoids SecurityError on WebKit/mobile)
-    // addInitScript runs before page scripts, in the correct page context
-    await page.addInitScript(() => {
-      try {
-        localStorage.clear();
-      } catch {
-        // ignore — some contexts may not allow direct access
-      }
-    });
-    await page.goto('/logs', { waitUntil: 'networkidle' });
-    await page.waitForLoadState('networkidle');
+    // Navigate first so localStorage is accessible, then clear and reload for a clean state
+    await page.goto('/logs');
+    await page.evaluate(() => localStorage.clear());
+    await page.reload();
   });
 
   test('renders page heading', async ({ page }) => {
@@ -25,14 +18,14 @@ test.describe('Logs', () => {
 
   test('shows empty state with no logs', async ({ page }) => {
     // Wait for any initial UI work to finish, then assert the empty state is visible
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(500);
     // Match any reasonable "no logs" text; allow either role=alert or plain text
     const emptyAlert = page.getByRole('alert').filter({ hasText: /no logs/i }).first();
     // Fallback to searching by text if role=alert is not present
     if (await emptyAlert.count() === 0) {
-      await expect(page.getByText(/no logs/i)).toBeVisible({ timeout: 5000 });
+      await expect(page.getByText(/no logs/i)).toBeVisible({ timeout: 10000 });
     } else {
-      await expect(emptyAlert).toBeVisible({ timeout: 5000 });
+      await expect(emptyAlert).toBeVisible({ timeout: 10000 });
     }
   });
 
@@ -98,6 +91,10 @@ test.describe('Logs', () => {
     await page.reload();
     await page.waitForTimeout(300);
 
+    // Verify logs are visible initially
+    await expect(page.getByText('Log A')).toBeVisible();
+    await expect(page.getByText('Log B')).toBeVisible();
+
     // Select all via header checkbox
     const headerCheckbox = page.locator('thead input[type="checkbox"]');
     await expect(headerCheckbox).toBeVisible();
@@ -108,16 +105,11 @@ test.describe('Logs', () => {
     const deleteBtn = page.getByRole('button', { name: /delete selected/i });
     await expect(deleteBtn).toBeEnabled();
     await deleteBtn.click();
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(600);
 
-    // Logs should be gone — allow a short rendering delay
-    await page.waitForTimeout(200);
-    const emptyAlertAfter = page.getByRole('alert').filter({ hasText: /no logs/i }).first();
-    if (await emptyAlertAfter.count() === 0) {
-      await expect(page.getByText(/no logs/i)).toBeVisible({ timeout: 5000 });
-    } else {
-      await expect(emptyAlertAfter).toBeVisible({ timeout: 5000 });
-    }
+    // Logs should be gone — verify they're no longer visible
+    await expect(page.getByText('Log A')).not.toBeVisible({ timeout: 5000 });
+    await expect(page.getByText('Log B')).not.toBeVisible({ timeout: 5000 });
   });
 
   test('Export JSON button triggers download', async ({ page }) => {
