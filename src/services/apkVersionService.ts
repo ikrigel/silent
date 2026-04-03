@@ -1,7 +1,9 @@
 import { writeLog } from './logService';
 
-/** Module-level cache to prevent duplicate API calls */
+/** Module-level cache with TTL to prevent duplicate API calls but allow retries on error */
 let cachedVersion: string | null | undefined = undefined;
+let cacheTimestamp: number | null = null;
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes — retry errors after this time
 
 /**
  * Fetch the latest GitHub release tag from the Silent repository.
@@ -9,7 +11,11 @@ let cachedVersion: string | null | undefined = undefined;
  * Results are cached to avoid duplicate API calls (Header + About pages).
  */
 export async function getLatestApkVersion(): Promise<string | null> {
-  if (cachedVersion !== undefined) return cachedVersion;
+  // Return cached version if still valid (TTL not expired)
+  const now = Date.now();
+  if (cachedVersion !== undefined && cacheTimestamp && (now - cacheTimestamp) < CACHE_TTL_MS) {
+    return cachedVersion;
+  }
 
   try {
     const response = await fetch(
@@ -19,7 +25,6 @@ export async function getLatestApkVersion(): Promise<string | null> {
 
     if (!response.ok) {
       writeLog('error', `apkVersionService: GitHub API returned ${response.status}`);
-      cachedVersion = null;
       return null;
     }
 
@@ -27,11 +32,11 @@ export async function getLatestApkVersion(): Promise<string | null> {
     const tagName = data.tag_name as string; // e.g., "v1.0.1"
     writeLog('verbose', `apkVersionService: Latest version from GitHub: ${tagName}`);
     cachedVersion = tagName;
+    cacheTimestamp = now;
     return tagName;
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     writeLog('error', `apkVersionService: Failed to fetch latest version: ${msg}`);
-    cachedVersion = null;
     return null;
   }
 }
