@@ -107,7 +107,7 @@ test.describe('Logs', () => {
         timestamp: new Date().toISOString(),
       },
     ];
-    await page.evaluate((l) => localStorage.setItem('logs', JSON.stringify(l)), logs);
+    await page.context().addInitScript((l) => localStorage.setItem('logs', JSON.stringify(l)), logs);
     await page.reload();
 
     await expect(page.getByText('Test info log message')).toBeVisible();
@@ -120,7 +120,7 @@ test.describe('Logs', () => {
       { id: 'l2', level: 'error',   message: 'Error entry',   timestamp: new Date().toISOString() },
       { id: 'l3', level: 'verbose', message: 'Verbose entry', timestamp: new Date().toISOString() },
     ];
-    await page.evaluate((l) => localStorage.setItem('logs', JSON.stringify(l)), logs);
+    await page.context().addInitScript((l) => localStorage.setItem('logs', JSON.stringify(l)), logs);
     await page.reload();
     await page.waitForTimeout(300);
 
@@ -134,7 +134,7 @@ test.describe('Logs', () => {
       { id: 'l1', level: 'info', message: 'Log A', timestamp: new Date().toISOString() },
       { id: 'l2', level: 'info', message: 'Log B', timestamp: new Date().toISOString() },
     ];
-    await page.evaluate((l) => localStorage.setItem('logs', JSON.stringify(l)), logs);
+    await page.context().addInitScript((l) => localStorage.setItem('logs', JSON.stringify(l)), logs);
     await page.reload();
     await page.waitForTimeout(300);
 
@@ -163,7 +163,7 @@ test.describe('Logs', () => {
     const logs = [
       { id: 'l1', level: 'info', message: 'Export me', timestamp: new Date().toISOString() },
     ];
-    await page.evaluate((l) => localStorage.setItem('logs', JSON.stringify(l)), logs);
+    await page.context().addInitScript((l) => localStorage.setItem('logs', JSON.stringify(l)), logs);
     await page.reload();
 
     // Listen for download event
