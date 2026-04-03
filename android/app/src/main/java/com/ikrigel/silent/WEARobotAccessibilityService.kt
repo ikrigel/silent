@@ -131,11 +131,25 @@ class WEARobotAccessibilityService : AccessibilityService() {
         val root = rootInActiveWindow ?: return
         for (label in labels) {
             val node = findNodeByText(root, label.trim()) ?: continue
-            // Traverse up to find the nearest Switch/CheckBox ancestor
-            val toggle = findToggleAncestor(node) ?: node
-            val isChecked = toggle.isChecked
-            if (isChecked != targetState) {
-                clickNode(toggle)
+
+            // First try traditional Switch/CheckBox (Settings app)
+            val switchAncestor = findToggleAncestor(node)
+            if (switchAncestor != null) {
+                if (switchAncestor.isChecked != targetState) {
+                    clickNode(switchAncestor)
+                }
+                return
+            }
+
+            // Fall back to Quick Settings tile (ViewGroup with state in content-desc)
+            // QS content-desc format: "Airplane,mode,Off,Button" or "Airplane,mode,On,Button"
+            val desc = node.contentDescription?.toString() ?: ""
+            val isOn = desc.contains(",On,", ignoreCase = true)
+            val isOff = desc.contains(",Off,", ignoreCase = true)
+
+            if ((isOn && !targetState) || (isOff && targetState)) {
+                // State mismatch — click to toggle
+                clickNode(node)
             }
             return
         }
