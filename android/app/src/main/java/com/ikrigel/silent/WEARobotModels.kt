@@ -37,9 +37,19 @@ enum class RobotState { IDLE, RECORDING, PLAYING }
  */
 object BuiltInRecordings {
     // Labels used by different manufacturers for the WEA settings path
-    private val safetyLabels  = listOf("Safety & emergency", "Safety and emergency", "Emergency alerts", "Safety")
-    private val weaLabels     = listOf("Wireless Emergency Alerts", "Emergency alert settings", "Alerts")
-    private val extremeLabels = listOf("Extreme threats", "Extreme alerts", "Extreme alert", "Extreme")
+    // Samsung uses commas in accessibility labels instead of spaces/ampersands
+    private val safetyLabels  = listOf(
+        "Safety & emergency", "Safety and emergency", "Emergency alerts", "Safety",
+        "Safety,&,emergency", "Safety,and,emergency"  // Samsung comma format
+    )
+    private val weaLabels     = listOf(
+        "Wireless Emergency Alerts", "Emergency alert settings", "Alerts",
+        "Wireless,Emergency,Alerts", "Emergency,alert,settings"  // Samsung comma format
+    )
+    private val extremeLabels = listOf(
+        "Extreme threats", "Extreme alerts", "Extreme alert", "Extreme",
+        "Extreme,threats", "Extreme,alerts"  // Samsung comma format
+    )
 
     val SILENCE_WEA = RobotRecording(
         id        = "builtin_silence",
@@ -71,6 +81,8 @@ object BuiltInRecordings {
     private val airplaneLabels = listOf(
         // English: Stock Android, Samsung, OnePlus, Pixel
         "Airplane mode", "Airplane", "Flight mode", "Plane mode",
+        // Samsung uses commas in accessibility labels instead of spaces
+        "Airplane,mode",
         // Hebrew
         "טיסה", "מצב טיסה",
         // Arabic
