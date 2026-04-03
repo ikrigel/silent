@@ -21,6 +21,9 @@ const AboutPage: React.FC = () => {
   const [downloadLoading, setDownloadLoading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [latestApkVersion, setLatestApkVersion] = useState<string | null>(null);
+  // Detect if app is running in Capacitor (APK/native Android)
+  const isCapacitor = typeof (window as any).Capacitor !== 'undefined'
+    && (window as any).Capacitor.isNativePlatform?.();
 
   // Fetch latest APK version on mount
   useEffect(() => {
@@ -187,7 +190,18 @@ const AboutPage: React.FC = () => {
 
               {/* Download Button */}
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="flex-start">
-                {user ? (
+                {isCapacitor ? (
+                  <Button
+                    variant="contained"
+                    size="small"
+                    startIcon={<Download />}
+                    onClick={() => {
+                      window.open('https://github.com/ikrigel/silent/releases/latest', '_system');
+                    }}
+                  >
+                    {t('about.downloadFromGitHub')}
+                  </Button>
+                ) : user ? (
                   <Button
                     variant="contained"
                     size="small"
