@@ -40,15 +40,18 @@ object BuiltInRecordings {
     // Samsung uses commas in accessibility labels instead of spaces/ampersands
     private val safetyLabels  = listOf(
         "Safety & emergency", "Safety and emergency", "Emergency alerts", "Safety",
-        "Safety,&,emergency", "Safety,and,emergency"  // Samsung comma format
+        "Safety,&,emergency", "Safety,and,emergency",  // Samsung comma format
+        "התרעות"  // Hebrew: Alerts/Warnings section
     )
     private val weaLabels     = listOf(
         "Wireless Emergency Alerts", "Emergency alert settings", "Alerts",
-        "Wireless,Emergency,Alerts", "Emergency,alert,settings"  // Samsung comma format
+        "Wireless,Emergency,Alerts", "Emergency,alert,settings",  // Samsung comma format
+        "הצעות התרעות"  // Hebrew: Alerts/Notifications offers
     )
     private val extremeLabels = listOf(
         "Extreme threats", "Extreme alerts", "Extreme alert", "Extreme",
-        "Extreme,threats", "Extreme,alerts"  // Samsung comma format
+        "Extreme,threats", "Extreme,alerts",  // Samsung comma format
+        "איומים קיצוניים", "איומים קיצוניים אחרים"  // Hebrew: Extreme threats (regular and "Other")
     )
 
     val SILENCE_WEA = RobotRecording(
