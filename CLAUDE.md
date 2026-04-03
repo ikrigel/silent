@@ -22,14 +22,14 @@ Developer: **Igal Krigel** | Location: Ramat Zvi, Israel
 src/
 ├── i18n/             — i18next config + en.json + he.json translations
 ├── types/index.ts    — all TypeScript types
-├── services/         — storage, logService, emailService, schedulerService
-├── store/            — Zustand: settingsStore, schedulerStore, logStore
+├── services/         — storage, logService, emailService, schedulerService, apkVersionService
+├── store/            — Zustand: settingsStore, schedulerStore, logStore, authStore
 ├── theme/            — colorInterpolation.ts, themes.ts
 ├── hooks/            — useAppTheme.ts
 ├── components/
 │   ├── Layout/       — AppLayout (parallax bg), Sidebar, Header
 │   └── LanguageSwitcher.tsx
-└── pages/            — Dashboard, Scheduler, Logs, Settings, About, Help
+└── pages/            — Dashboard, Scheduler, Logs, Settings, About, Help, Login, Robot, Donate
 
 public/
 └── silent.png        — parallax background image
@@ -42,7 +42,8 @@ tests/
 ├── settings.spec.ts
 ├── about.spec.ts
 ├── help.spec.ts      — includes mocked EmailJS submit test
-└── language.spec.ts  — EN/HE switching + RTL direction tests
+├── language.spec.ts  — EN/HE switching + RTL direction tests
+└── robot.spec.ts     — Android Robot accessibility automation tests
 ```
 
 ## Key Rules
@@ -73,11 +74,18 @@ tests/
 - All logs stored in localStorage (max 500 entries)
 - Exportable as JSON from Logs page
 
-## EmailJS Config
+## Email & Version Services
+### EmailJS Config
 - Service ID: `service_eghiyme`
 - Template ID: `template_4v9rsyj`
 - Public Key: hardcoded in `src/services/emailService.ts` — NOT in Settings
 - Contact form is in Help page; no user configuration required
+
+### APK Version Service (`src/services/apkVersionService.ts`)
+- Fetches latest GitHub release from `https://api.github.com/repos/ikrigel/silent/releases/latest`
+- Module-level cache prevents duplicate API calls (Header + About pages share cached result)
+- Exports `getLatestApkVersion()` and `isNewerVersion(current, remote)` functions
+- Semantic versioning: strips `v` prefix, compares major.minor.patch numerically
 
 ## Testing
 - Framework: Playwright
@@ -97,10 +105,17 @@ tests/
 ## APK Versioning & Distribution
 - **Version Injection**: `vite.config.ts` injects `__APP_VERSION__` from `package.json`
 - **Version Display**: About page shows current version with `__APP_VERSION__` global
-- **Update Detection**: `apkVersionService.ts` checks GitHub Releases API for new versions
+- **Update Detection**: `apkVersionService.ts` checks GitHub Releases API for new versions (module-level cached)
 - **Update Banner**: Header shows "New version X.X.X available!" chip when newer version exists
+  - X dismiss button persists dismissal to `dismissedUpdateVersion` in localStorage
+  - Dismissal survives across reloads
+  - New releases automatically show notification again
+  - Global toggle in Settings → Notifications (`showUpdateNotifications`)
 - **APK Download**: Authenticated users only; backend (`/api/download-apk`) returns GitHub URL
 - **GitHub Releases**: v1.0.30+ releases include pre-built APK files
+- **Settings**:
+  - `showUpdateNotifications: boolean` (default true) — controls visibility of update notifications
+  - `dismissedUpdateVersion: string | undefined` — tracks dismissed version for per-version dismiss functionality
 
 ## Android Build
 - **Build Config**: `android/app/build.gradle` with versionCode and versionName

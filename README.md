@@ -23,12 +23,16 @@
 - 🔐 **Google OAuth** — Sign in with Google via Firebase Authentication
 - 👥 **User Registration** — Automatically saved to Firestore database
 - 📲 **APK Versioning** — In-app version display with automatic update detection
-- 🔔 **Update Notifications** — Real-time "New version available!" banner (authenticated users)
+- 🔔 **Update Notifications** — Smart per-version dismissal with global toggle in Settings
+  - Click X to dismiss notifications for a specific version
+  - Dismissal persists across reloads
+  - New versions automatically re-trigger notifications
+  - Global on/off toggle in Settings → Notifications
 - 🔒 **Registered User APK Download** — Only authenticated users can download APK
 - 🚀 **GitHub Releases Integration** — Automatic APK distribution via GitHub Actions
 
 ### Quality & Deployment
-- 🧪 **Playwright Tests** — 292+ test cases covering all pages, language switching, authentication flows
+- 🧪 **Playwright Tests** — 312+ test cases covering all pages, language switching, authentication, notifications
 - 🚀 **CI/CD** — GitHub Actions: tests → Vercel deploy (web) + automatic APK builds on git tags
 - 📦 **Firebase Integration** — Firestore database, Google Authentication, serverless functions
 
