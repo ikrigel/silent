@@ -5,11 +5,18 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('Logs', () => {
-  test.beforeEach(async ({ page }) => {
-    // Navigate first so localStorage is accessible, then clear and reload for a clean state
+  test.beforeEach(async ({ page, context }) => {
+    // Ensure localStorage is cleared before any page script runs so the app can't seed logs
+    await context.addInitScript(() => {
+      try {
+        localStorage.clear();
+      } catch (e) {
+        /* ignore */
+      }
+    });
+
+    // Then navigate to the page under test
     await page.goto('/logs');
-    await page.evaluate(() => localStorage.clear());
-    await page.reload();
   });
 
   test('renders page heading', async ({ page }) => {
@@ -18,34 +25,30 @@ test.describe('Logs', () => {
 
   test('shows empty state with no logs', async ({ page }) => {
     // Wait for initial UI/animations to settle
-    await page.waitForTimeout(1000);
-
-    // Accept multiple plausible empty-state texts (responsive layouts may vary wording)
-    const emptyTextRegex = /no logs|no log entries|actions will be logged|nothing here|no records/i;
-
-    // Prefer role=alert if used, but fallback to broader text search
-    const emptyAlert = page.getByRole('alert').filter({ hasText: emptyTextRegex }).first();
-    if (await emptyAlert.count() > 0) {
-      await expect(emptyAlert).toBeVisible({ timeout: 10000 });
-      return;
-    }
-
-    const emptyText = page.getByText(emptyTextRegex);
-    if ((await emptyText.count()) > 0) {
-      await expect(emptyText).toBeVisible({ timeout: 10000 });
-      return;
-    }
-
-    // Fallback: check that the logs table has zero rows (robust to wording/layout changes).
-    // Wait longer for DOM to fully update after clearing localStorage
     await page.waitForTimeout(800);
-    const rows = page.locator('table tbody tr');
-    const rowCount = await rows.count();
-    if (rowCount === 0) {
-      return; // Empty state is valid
+
+    const emptyTextRegex = /no logs|no log entries|nothing here|no records|no entries/i;
+
+    // Try a couple of roles / fallbacks to be resilient to markup changes
+    const candidates = [
+      page.getByRole('alert').filter({ hasText: emptyTextRegex }).first(),
+      page.getByRole('status').filter({ hasText: emptyTextRegex }).first(),
+      page.getByText(emptyTextRegex),
+    ];
+
+    let found = false;
+    for (const c of candidates) {
+      if ((await c.count()) > 0) {
+        await expect(c).toBeVisible({ timeout: 10000 });
+        found = true;
+        break;
+      }
     }
 
-    throw new Error(`Empty state not detected: table has ${rowCount} rows and no matching text found`);
+    if (!found) {
+      // Helpful failure message when nothing matches
+      throw new Error('Empty state text not found. Searched roles: alert, status, and plain text.');
+    }
   });
 
   test('Delete Selected button is disabled with no selection', async ({ page }) => {
@@ -55,61 +58,37 @@ test.describe('Logs', () => {
   });
 
   test('Clear All button is disabled with no logs', async ({ page }) => {
-    // Wait for page to fully settle (webkit needs more time)
-    await page.waitForTimeout(600);
-
     // On small viewports the control might be collapsed into an overflow menu.
     // Try to locate the button directly first, otherwise open the menu and re-try.
-    let clearBtn = page.getByRole('button', { name: /clear all/i });
+    let clearBtn = page.getByRole('button', { name: /clear( all| logs)?/i });
 
     const hasDirect = (await clearBtn.count()) > 0 && await clearBtn.isVisible().catch(() => false);
     if (!hasDirect) {
-      // Try to open a generic overflow/menu button (broader label matching)
-      const overflow = page.getByRole('button', { name: /more|menu|actions|overflow|open menu|more actions/i }).first();
-      if ((await overflow.count()) > 0 && await overflow.isVisible().catch(() => false)) {
+      // Try to open a generic overflow/menu button (common labels)
+      const overflow = page.getByRole('button', { name: /more|menu|actions|overflow|open menu/i }).first();
+      if ((await overflow.count()) > 0) {
         await overflow.click();
-        // small delay to allow menu to open (webkit needs more time)
-        await page.waitForTimeout(250);
-        clearBtn = page.getByRole('button', { name: /clear all/i });
+        // small delay to allow menu to open
+        await page.waitForTimeout(150);
+        clearBtn = page.getByRole('button', { name: /clear( all| logs)?/i });
       }
     }
 
-    // If button is not present at all, that's acceptable for some implementations.
     if ((await clearBtn.count()) === 0) {
-      // Nothing to assert — consider this behaviour valid (clear option not shown when empty).
-      return;
+      throw new Error('Clear All button not found in either toolbar or overflow menu');
     }
 
-    // Verify button is disabled via multiple methods (webkit may report differently)
+    // Accept native disabled, aria-disabled, or a disabled class
     try {
-      // First, try native isDisabled()
-      const isDisabledNative = await clearBtn.isDisabled().catch(() => false);
-      if (isDisabledNative) {
-        return;
-      }
+      await expect(clearBtn).toBeDisabled({ timeout: 3000 });
+    } catch {
+      const aria = await clearBtn.getAttribute('aria-disabled');
+      const nativeDisabled = (await clearBtn.getAttribute('disabled')) !== null;
+      const hasDisabledClass = await clearBtn.evaluate((el) => el.classList?.contains?.('disabled') || false);
 
-      // Check aria-disabled attribute
-      const ariaDisabled = await clearBtn.getAttribute('aria-disabled');
-      if (ariaDisabled === 'true') {
-        return;
+      if (aria !== 'true' && !nativeDisabled && !hasDisabledClass) {
+        throw new Error('Clear All button is not disabled: not disabled, no aria-disabled="true", and no disabled class present.');
       }
-
-      // Check disabled attribute
-      const disabledAttr = await clearBtn.getAttribute('disabled');
-      if (disabledAttr !== null) {
-        return;
-      }
-
-      // Final fallback: check if button is visually disabled (lower opacity)
-      const opacity = await clearBtn.evaluate(el => window.getComputedStyle(el).opacity);
-      if (parseFloat(opacity) < 0.7) {
-        return;
-      }
-
-      throw new Error('Clear All button is present but not disabled (checked: native disabled, aria-disabled, disabled attr, opacity)');
-    } catch (e) {
-      // If evaluation fails, the button is likely not accessible/disabled
-      throw e;
     }
   });
 
