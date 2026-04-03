@@ -61,6 +61,8 @@ export interface AppSettings {
   notificationsEnabled: boolean;
   menuPosition?: 'left' | 'right' | 'top' | 'bottom';
   menuPinned?: boolean;
+  showUpdateNotifications?: boolean;    // default true — show APK version update notifications
+  dismissedUpdateVersion?: string;      // version string user dismissed, e.g. "v1.0.47"
 }
 
 export type LocalStorageSchema = {

@@ -8,6 +8,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   notificationsEnabled: true,
   menuPosition: 'left',
   menuPinned: true,
+  showUpdateNotifications: true,
 };
 
 interface SettingsState {
@@ -17,6 +18,8 @@ interface SettingsState {
   setNotificationsEnabled: (enabled: boolean) => void;
   setMenuPosition: (pos: 'left' | 'right' | 'top' | 'bottom') => void;
   setMenuPinned: (pinned: boolean) => void;
+  setShowUpdateNotifications: (enabled: boolean) => void;
+  setDismissedUpdateVersion: (version: string | undefined) => void;
   resetSettings: () => void;
 }
 
@@ -33,6 +36,8 @@ export const useSettingsStore = create<SettingsState>((set, get) => {
     setNotificationsEnabled: (enabled) => { const s = { ...get().settings, notificationsEnabled: enabled }; persist(s); set({ settings: s }); },
     setMenuPosition: (pos) => { const s = { ...get().settings, menuPosition: pos }; persist(s); set({ settings: s }); },
     setMenuPinned: (pinned) => { const s = { ...get().settings, menuPinned: pinned }; persist(s); set({ settings: s }); },
+    setShowUpdateNotifications: (enabled) => { const s = { ...get().settings, showUpdateNotifications: enabled }; persist(s); set({ settings: s }); },
+    setDismissedUpdateVersion: (version) => { const s = { ...get().settings, dismissedUpdateVersion: version }; persist(s); set({ settings: s }); },
     resetSettings: () => { storage.remove('settings'); set({ settings: DEFAULT_SETTINGS }); },
   };
 });

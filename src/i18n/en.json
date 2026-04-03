@@ -155,6 +155,7 @@
     "logVerbose": "Verbose (all)",
     "notifications": "Browser Notifications",
     "notificationsLabel": "Enable schedule change notifications",
+    "showUpdateNotifications": "Show new version notifications",
     "grantPermission": "Grant Notification Permission",
     "menu": "Menu Customization",
     "menuPosition": "Menu Position",

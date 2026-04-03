@@ -1,10 +1,16 @@
 import { writeLog } from './logService';
 
+/** Module-level cache to prevent duplicate API calls */
+let cachedVersion: string | null | undefined = undefined;
+
 /**
  * Fetch the latest GitHub release tag from the Silent repository.
  * Uses public GitHub API — no authentication required.
+ * Results are cached to avoid duplicate API calls (Header + About pages).
  */
 export async function getLatestApkVersion(): Promise<string | null> {
+  if (cachedVersion !== undefined) return cachedVersion;
+
   try {
     const response = await fetch(
       'https://api.github.com/repos/ikrigel/silent/releases/latest',
@@ -13,16 +19,19 @@ export async function getLatestApkVersion(): Promise<string | null> {
 
     if (!response.ok) {
       writeLog('error', `apkVersionService: GitHub API returned ${response.status}`);
+      cachedVersion = null;
       return null;
     }
 
     const data = await response.json();
     const tagName = data.tag_name as string; // e.g., "v1.0.1"
     writeLog('verbose', `apkVersionService: Latest version from GitHub: ${tagName}`);
+    cachedVersion = tagName;
     return tagName;
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     writeLog('error', `apkVersionService: Failed to fetch latest version: ${msg}`);
+    cachedVersion = null;
     return null;
   }
 }

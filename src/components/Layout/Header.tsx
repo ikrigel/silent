@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Tooltip, useTheme, Avatar, Menu, MenuItem, Chip, Button } from '@mui/material';
-import { Menu as MenuIcon, LightMode, DarkMode, AccessTime, Login as LoginIcon } from '@mui/icons-material';
+import { AppBar, Toolbar, IconButton, Typography, Tooltip, useTheme, Avatar, Menu, MenuItem, Chip, Button, Box } from '@mui/material';
+import { Menu as MenuIcon, LightMode, DarkMode, AccessTime, Login as LoginIcon, Close } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useSettingsStore } from '@/store/settingsStore';
@@ -28,7 +28,7 @@ const THEME_CYCLE: Record<ThemeMode, ThemeMode> = {
 
 /** Top application bar with menu toggle, theme switcher, language switcher, and user auth */
 export const Header: React.FC<HeaderProps> = ({ onMenuClick, title }) => {
-  const { settings, setThemeMode } = useSettingsStore();
+  const { settings, setThemeMode, setDismissedUpdateVersion } = useSettingsStore();
   const { user, signOut } = useAuthStore();
   const { t } = useTranslation();
   const theme = useTheme();
@@ -78,6 +78,11 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, title }) => {
 
   const handleNavigateToAbout = () => {
     navigate('/about');
+  };
+
+  const handleDismissUpdate = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setDismissedUpdateVersion(latestApkVersion ?? undefined);
     setHasApkUpdate(false);
   };
 
@@ -98,14 +103,26 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, title }) => {
         </Typography>
 
         {/* New APK Available Chip */}
-        {hasApkUpdate && latestApkVersion && (
-          <Chip
-            label={`${t('about.newApkAvailable')}: ${latestApkVersion}`}
-            color="warning"
-            size="small"
-            onClick={handleNavigateToAbout}
-            sx={{ mr: 1 }}
-          />
+        {hasApkUpdate &&
+          latestApkVersion &&
+          settings.showUpdateNotifications !== false &&
+          latestApkVersion !== settings.dismissedUpdateVersion && (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mr: 1 }}>
+            <Chip
+              label={`${t('about.newApkAvailable')}: ${latestApkVersion}`}
+              color="warning"
+              size="small"
+              onClick={handleNavigateToAbout}
+            />
+            <IconButton
+              size="small"
+              color="inherit"
+              onClick={handleDismissUpdate}
+              sx={{ p: 0.25 }}
+            >
+              <Close fontSize="small" />
+            </IconButton>
+          </Box>
         )}
 
         <Tooltip title={themeLabels[settings.themeMode]}>

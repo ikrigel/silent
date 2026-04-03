@@ -13,7 +13,7 @@ const SettingsPage: React.FC = () => {
   const { t } = useTranslation();
   const {
     settings, setThemeMode, setLogLevel,
-    setNotificationsEnabled, setMenuPosition, setMenuPinned, resetSettings,
+    setNotificationsEnabled, setMenuPosition, setMenuPinned, setShowUpdateNotifications, resetSettings,
   } = useSettingsStore();
 
   const requestNotificationPermission = async () => {
@@ -74,6 +74,15 @@ const SettingsPage: React.FC = () => {
                 />
               }
               label={t('settings.notificationsLabel')}
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={settings.showUpdateNotifications !== false}
+                  onChange={(e) => setShowUpdateNotifications(e.target.checked)}
+                />
+              }
+              label={t('settings.showUpdateNotifications')}
             />
             <Box mt={1}>
               <Button variant="outlined" size="small" onClick={requestNotificationPermission}>
