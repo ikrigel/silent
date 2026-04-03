@@ -84,7 +84,9 @@ object BuiltInRecordings {
         // Spanish
         "Modo avión", "Modo avion",
         // Chinese (Xiaomi/MIUI)
-        "飞行模式"
+        "飞行模式",
+        // Korean (Samsung KR firmware)
+        "비행기 모드", "비행기"
     )
 
     val AIRPLANE_ON = RobotRecording(

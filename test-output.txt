@@ -1,0 +1,370 @@
+
+> silent@1.0.40 test
+> playwright test
+
+
+Running 316 tests using 8 workers
+
+[1A[2K[1/316] [chromium] › tests\about.spec.ts:12:3 › About › renders page heading
+[1A[2K[2/316] [chromium] › tests\about.spec.ts:16:3 › About › shows developer name
+[1A[2K[3/316] [chromium] › tests\about.spec.ts:44:3 › About › Portfolio link points to correct URL
+[1A[2K[4/316] [chromium] › tests\about.spec.ts:50:3 › About › shows experience section with two roles
+[1A[2K[5/316] [chromium] › tests\about.spec.ts:38:3 › About › LinkedIn link points to correct URL
+[1A[2K[6/316] [chromium] › tests\about.spec.ts:28:3 › About › shows location
+[1A[2K[7/316] [chromium] › tests\about.spec.ts:21:3 › About › shows developer title
+[1A[2K[8/316] [chromium] › tests\about.spec.ts:32:3 › About › GitHub link points to correct URL
+[1A[2K[9/316] [chromium] › tests\about.spec.ts:57:3 › About › shows skill chips for primary skills
+[1A[2K[10/316] [chromium] › tests\about.spec.ts:63:3 › About › shows About Silent app info card
+[1A[2K[11/316] [chromium] › tests\about.spec.ts:67:3 › About › shows disclaimer card
+[1A[2K[12/316] [chromium] › tests\dashboard.spec.ts:32:3 › Dashboard › shows theme darkness percentage card
+[1A[2K[13/316] [chromium] › tests\dashboard.spec.ts:26:3 › Dashboard › shows schedules count card
+[1A[2K[14/316] [chromium] › tests\dashboard.spec.ts:38:3 › Dashboard › "Manage Schedules" button navigates to scheduler
+[1A[2K[15/316] [chromium] › tests\dashboard.spec.ts:20:3 › Dashboard › shows "no active reminder" alert when no schedules exist
+[1A[2K[16/316] [chromium] › tests\dashboard.spec.ts:16:3 › Dashboard › renders page heading
+[1A[2K[17/316] [chromium] › tests\dashboard.spec.ts:43:3 › Dashboard › shows active warning when a schedule is currently active
+[1A[2K[18/316] [chromium] › tests\dashboard.spec.ts:73:3 › Dashboard › schedule with restoreOnEnd field saves without error
+[1A[2K[19/316] [chromium] › tests\help.spec.ts:15:3 › Help › renders page heading
+[1A[2K[20/316] [chromium] › tests\help.spec.ts:23:3 › Help › FAQ items are collapsed by default
+[1A[2K[21/316] [chromium] › tests\help.spec.ts:19:3 › Help › shows FAQ section
+[1A[2K[22/316] [chromium] › tests\help.spec.ts:30:3 › Help › FAQ item expands on click
+[1A[2K[23/316] [chromium] › tests\help.spec.ts:44:3 › Help › multiple FAQ items can be opened independently
+[1A[2K[24/316] [chromium] › tests\help.spec.ts:64:3 › Help › shows Contact the Developer section
+[1A[2K[25/316] [chromium] › tests\help.spec.ts:68:3 › Help › contact form has all required fields
+[1A[2K[26/316] [chromium] › tests\help.spec.ts:76:3 › Help › contact form shows validation errors on empty submit
+[1A[2K[27/316] [chromium] › tests\help.spec.ts:86:3 › Help › contact form fields accept input
+[1A[2K[28/316] [chromium] › tests\help.spec.ts:106:3 › Help › FAQ covers all 7 questions
+[1A[2K[29/316] [chromium] › tests\help.spec.ts:122:8 › Help › contact form submits and shows success (mocked EmailJS)
+[1A[2K[30/316] [chromium] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels
+[1A[2K[31/316] [chromium] › tests\language.spec.ts:13:3 › Language Switching › EN button is active by default
+[1A[2K[32/316] [chromium] › tests\language.spec.ts:39:3 › Language Switching › switching to Hebrew sets RTL direction
+[1A[2K[33/316] [chromium] › tests\language.spec.ts:45:3 › Language Switching › switching back to English restores LTR
+[1A[2K[34/316] [chromium] › tests\language.spec.ts:56:3 › Language Switching › language preference persists across reload
+[1A[2K[35/316] [chromium] › tests\logs.spec.ts:15:3 › Logs › renders page heading
+[1A[2K[36/316] [chromium] › tests\logs.spec.ts:19:3 › Logs › shows empty state with no logs
+[1A[2K[37/316] [chromium] › tests\logs.spec.ts:50:3 › Logs › Delete Selected button is disabled with no selection
+[1A[2K[38/316] [chromium] › tests\logs.spec.ts:56:3 › Logs › Clear All button is disabled with no logs
+[1A[2K[39/316] [chromium] › tests\logs.spec.ts:104:3 › Logs › shows log entries when logs exist in localStorage
+[1A[2K[40/316] [chromium] › tests\logs.spec.ts:126:3 › Logs › level chips display correctly
+[1A[2K[41/316] [chromium] › tests\logs.spec.ts:141:3 › Logs › can select all logs and clear them
+[1A[2K[42/316] [chromium] › tests\logs.spec.ts:171:3 › Logs › Export JSON button triggers download
+[1A[2K[43/316] [chromium] › tests\logs.spec.ts:187:3 › Logs › Refresh button reloads logs from storage
+[1A[2K[44/316] [chromium] › tests\navigation.spec.ts:31:3 › Navigation › app loads with correct title
+[1A[2K[45/316] [chromium] › tests\navigation.spec.ts:35:3 › Navigation › sidebar shows all nav items
+[1A[2K[46/316] [chromium] › tests\navigation.spec.ts:46:3 › Navigation › navigates to Scheduler page
+[1A[2K[47/316] [chromium] › tests\navigation.spec.ts:56:3 › Navigation › navigates to Logs page
+[1A[2K[48/316] [chromium] › tests\navigation.spec.ts:66:3 › Navigation › navigates to Settings page
+[1A[2K[49/316] [chromium] › tests\navigation.spec.ts:76:3 › Navigation › navigates to About page
+[1A[2K[50/316] [chromium] › tests\navigation.spec.ts:86:3 › Navigation › navigates to Help page
+[1A[2K[51/316] [chromium] › tests\navigation.spec.ts:96:3 › Navigation › navigates to Donate page
+[1A[2K[52/316] [chromium] › tests\navigation.spec.ts:106:3 › Navigation › header shows app title with emoji
+[1A[2K[53/316] [chromium] › tests\navigation.spec.ts:118:3 › Navigation › clicking theme toggle changes icon
+[1A[2K[54/316] [chromium] › tests\navigation.spec.ts:112:3 › Navigation › theme toggle button is visible in header
+[1A[2K[55/316] [chromium] › tests\robot.spec.ts:15:3 › Robot › renders page heading
+[1A[2K[56/316] [chromium] › tests\robot.spec.ts:19:3 › Robot › shows Android App Required notice on web
+[1A[2K[57/316] [chromium] › tests\robot.spec.ts:24:3 › Robot › shows sign-in prompt when not logged in
+[1A[2K[58/316] [chromium] › tests\robot.spec.ts:30:3 › Robot › page loads without errors
+[1A[2K[59/316] [chromium] › tests\scheduler.spec.ts:14:3 › Scheduler › renders page heading and New Schedule button
+[1A[2K[60/316] [chromium] › tests\scheduler.spec.ts:19:3 › Scheduler › shows empty state when no schedules exist
+[1A[2K[61/316] [chromium] › tests\scheduler.spec.ts:23:3 › Scheduler › opens create form on button click
+[1A[2K[62/316] [chromium] › tests\scheduler.spec.ts:33:3 › Scheduler › creates a new daily schedule
+[1A[2K[63/316] [chromium] › tests\scheduler.spec.ts:53:3 › Scheduler › can toggle a schedule on/off
+[1A[2K[64/316] [chromium] › tests\scheduler.spec.ts:74:3 › Scheduler › can delete a schedule
+[1A[2K[65/316] [chromium] › tests\scheduler.spec.ts:98:3 › Scheduler › form closes on Cancel
+[1A[2K[66/316] [chromium] › tests\scheduler.spec.ts:105:3 › Scheduler › weekly mode shows day-of-week checkboxes
+[1A[2K[67/316] [chromium] › tests\scheduler.spec.ts:115:3 › Scheduler › shows "Restore previous state on end" checkbox when airplane mode is checked
+[1A[2K[68/316] [chromium] › tests\scheduler.spec.ts:136:3 › Scheduler › schedule with new restoration fields saves correctly
+[1A[2K[69/316] [chromium] › tests\scheduler.spec.ts:163:3 › Scheduler › schedule with useAirplaneMode saves and reloads correctly
+[1A[2K[70/316] [chromium] › tests\settings.spec.ts:14:3 › Settings › renders page heading
+[1A[2K[71/316] [chromium] › tests\settings.spec.ts:18:3 › Settings › shows Appearance, Logging, Notifications, and Menu sections
+[1A[2K[72/316] [chromium] › tests\settings.spec.ts:25:3 › Settings › theme mode select has correct options
+[1A[2K[73/316] [chromium] › tests\settings.spec.ts:34:3 › Settings › changing theme mode persists to localStorage
+[1A[2K[74/316] [chromium] › tests\settings.spec.ts:45:3 › Settings › log level select has correct options
+[1A[2K[75/316] [chromium] › tests\settings.spec.ts:54:3 › Settings › menu position select has correct options
+[1A[2K[76/316] [chromium] › tests\settings.spec.ts:63:3 › Settings › menu position change persists to localStorage
+[1A[2K[77/316] [chromium] › tests\settings.spec.ts:77:3 › Settings › menu pin toggle is visible and functional
+[1A[2K[78/316] [chromium] › tests\settings.spec.ts:85:3 › Settings › Reset button restores defaults
+[1A[2K[79/316] [chromium] › tests\settings.spec.ts:101:3 › Settings › notifications toggle is visible
+[1A[2K[80/316] [firefox] › tests\about.spec.ts:12:3 › About › renders page heading
+[1A[2K[81/316] [firefox] › tests\about.spec.ts:16:3 › About › shows developer name
+[1A[2K[82/316] [firefox] › tests\about.spec.ts:21:3 › About › shows developer title
+[1A[2K[83/316] [firefox] › tests\about.spec.ts:28:3 › About › shows location
+[1A[2K[84/316] [firefox] › tests\about.spec.ts:32:3 › About › GitHub link points to correct URL
+[1A[2K[85/316] [firefox] › tests\about.spec.ts:38:3 › About › LinkedIn link points to correct URL
+[1A[2K[86/316] [firefox] › tests\about.spec.ts:44:3 › About › Portfolio link points to correct URL
+[1A[2K[87/316] [firefox] › tests\about.spec.ts:50:3 › About › shows experience section with two roles
+[1A[2K[88/316] [firefox] › tests\about.spec.ts:57:3 › About › shows skill chips for primary skills
+[1A[2K[89/316] [firefox] › tests\about.spec.ts:63:3 › About › shows About Silent app info card
+[1A[2K[90/316] [firefox] › tests\about.spec.ts:67:3 › About › shows disclaimer card
+[1A[2K[91/316] [firefox] › tests\dashboard.spec.ts:16:3 › Dashboard › renders page heading
+[1A[2K[92/316] [firefox] › tests\dashboard.spec.ts:20:3 › Dashboard › shows "no active reminder" alert when no schedules exist
+[1A[2K[93/316] [firefox] › tests\dashboard.spec.ts:26:3 › Dashboard › shows schedules count card
+[1A[2K[94/316] [firefox] › tests\dashboard.spec.ts:32:3 › Dashboard › shows theme darkness percentage card
+[1A[2K[95/316] [firefox] › tests\dashboard.spec.ts:38:3 › Dashboard › "Manage Schedules" button navigates to scheduler
+[1A[2K[96/316] [firefox] › tests\dashboard.spec.ts:43:3 › Dashboard › shows active warning when a schedule is currently active
+[1A[2K[97/316] [firefox] › tests\dashboard.spec.ts:73:3 › Dashboard › schedule with restoreOnEnd field saves without error
+[1A[2K[98/316] [firefox] › tests\help.spec.ts:15:3 › Help › renders page heading
+[1A[2K[99/316] [firefox] › tests\help.spec.ts:19:3 › Help › shows FAQ section
+[1A[2K[100/316] [firefox] › tests\help.spec.ts:23:3 › Help › FAQ items are collapsed by default
+[1A[2K[101/316] [firefox] › tests\help.spec.ts:30:3 › Help › FAQ item expands on click
+[1A[2K[102/316] [firefox] › tests\help.spec.ts:44:3 › Help › multiple FAQ items can be opened independently
+[1A[2K[103/316] [firefox] › tests\help.spec.ts:64:3 › Help › shows Contact the Developer section
+[1A[2K[104/316] [firefox] › tests\help.spec.ts:68:3 › Help › contact form has all required fields
+[1A[2K[105/316] [firefox] › tests\help.spec.ts:76:3 › Help › contact form shows validation errors on empty submit
+[1A[2K[106/316] [firefox] › tests\help.spec.ts:86:3 › Help › contact form fields accept input
+[1A[2K[107/316] [firefox] › tests\help.spec.ts:106:3 › Help › FAQ covers all 7 questions
+[1A[2K[108/316] [firefox] › tests\help.spec.ts:122:8 › Help › contact form submits and shows success (mocked EmailJS)
+[1A[2K[109/316] [firefox] › tests\language.spec.ts:13:3 › Language Switching › EN button is active by default
+[1A[2K[110/316] [firefox] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels
+[1A[2K[111/316] [firefox] › tests\language.spec.ts:39:3 › Language Switching › switching to Hebrew sets RTL direction
+[1A[2K[112/316] [firefox] › tests\language.spec.ts:45:3 › Language Switching › switching back to English restores LTR
+[1A[2K[113/316] [firefox] › tests\language.spec.ts:56:3 › Language Switching › language preference persists across reload
+[1A[2K[114/316] [firefox] › tests\logs.spec.ts:15:3 › Logs › renders page heading
+[1A[2K[115/316] [firefox] › tests\logs.spec.ts:19:3 › Logs › shows empty state with no logs
+[1A[2K[116/316] [firefox] › tests\logs.spec.ts:50:3 › Logs › Delete Selected button is disabled with no selection
+[1A[2K[117/316] [firefox] › tests\logs.spec.ts:56:3 › Logs › Clear All button is disabled with no logs
+[1A[2K[118/316] [firefox] › tests\logs.spec.ts:104:3 › Logs › shows log entries when logs exist in localStorage
+[1A[2K[119/316] [firefox] › tests\logs.spec.ts:126:3 › Logs › level chips display correctly
+[1A[2K[120/316] [firefox] › tests\logs.spec.ts:141:3 › Logs › can select all logs and clear them
+[1A[2K[121/316] [firefox] › tests\logs.spec.ts:171:3 › Logs › Export JSON button triggers download
+[1A[2K[122/316] [firefox] › tests\logs.spec.ts:187:3 › Logs › Refresh button reloads logs from storage
+[1A[2K[123/316] [firefox] › tests\navigation.spec.ts:31:3 › Navigation › app loads with correct title
+[1A[2K[124/316] [firefox] › tests\navigation.spec.ts:35:3 › Navigation › sidebar shows all nav items
+[1A[2K[125/316] [firefox] › tests\navigation.spec.ts:46:3 › Navigation › navigates to Scheduler page
+[1A[2K[126/316] [firefox] › tests\navigation.spec.ts:56:3 › Navigation › navigates to Logs page
+[1A[2K[127/316] [firefox] › tests\navigation.spec.ts:66:3 › Navigation › navigates to Settings page
+[1A[2K[128/316] [firefox] › tests\navigation.spec.ts:76:3 › Navigation › navigates to About page
+[1A[2K[129/316] [firefox] › tests\navigation.spec.ts:86:3 › Navigation › navigates to Help page
+[1A[2K[130/316] [firefox] › tests\navigation.spec.ts:96:3 › Navigation › navigates to Donate page
+[1A[2K[131/316] [firefox] › tests\navigation.spec.ts:106:3 › Navigation › header shows app title with emoji
+[1A[2K[132/316] [firefox] › tests\navigation.spec.ts:112:3 › Navigation › theme toggle button is visible in header
+[1A[2K[133/316] [firefox] › tests\navigation.spec.ts:118:3 › Navigation › clicking theme toggle changes icon
+[1A[2K[134/316] [firefox] › tests\robot.spec.ts:15:3 › Robot › renders page heading
+[1A[2K[135/316] [firefox] › tests\robot.spec.ts:19:3 › Robot › shows Android App Required notice on web
+[1A[2K[136/316] [firefox] › tests\robot.spec.ts:24:3 › Robot › shows sign-in prompt when not logged in
+[1A[2K[137/316] [firefox] › tests\robot.spec.ts:30:3 › Robot › page loads without errors
+[1A[2K[138/316] [firefox] › tests\scheduler.spec.ts:14:3 › Scheduler › renders page heading and New Schedule button
+[1A[2K[139/316] [firefox] › tests\scheduler.spec.ts:19:3 › Scheduler › shows empty state when no schedules exist
+[1A[2K[140/316] [firefox] › tests\scheduler.spec.ts:23:3 › Scheduler › opens create form on button click
+[1A[2K[141/316] [firefox] › tests\scheduler.spec.ts:33:3 › Scheduler › creates a new daily schedule
+[1A[2K[142/316] [firefox] › tests\scheduler.spec.ts:53:3 › Scheduler › can toggle a schedule on/off
+[1A[2K[143/316] [firefox] › tests\scheduler.spec.ts:74:3 › Scheduler › can delete a schedule
+[1A[2K[144/316] [firefox] › tests\scheduler.spec.ts:98:3 › Scheduler › form closes on Cancel
+[1A[2K[145/316] [firefox] › tests\scheduler.spec.ts:105:3 › Scheduler › weekly mode shows day-of-week checkboxes
+[1A[2K[146/316] [firefox] › tests\scheduler.spec.ts:115:3 › Scheduler › shows "Restore previous state on end" checkbox when airplane mode is checked
+[1A[2K[147/316] [firefox] › tests\scheduler.spec.ts:136:3 › Scheduler › schedule with new restoration fields saves correctly
+[1A[2K[148/316] [firefox] › tests\scheduler.spec.ts:163:3 › Scheduler › schedule with useAirplaneMode saves and reloads correctly
+[1A[2K[149/316] [firefox] › tests\settings.spec.ts:14:3 › Settings › renders page heading
+[1A[2K[150/316] [firefox] › tests\settings.spec.ts:18:3 › Settings › shows Appearance, Logging, Notifications, and Menu sections
+[1A[2K[151/316] [firefox] › tests\settings.spec.ts:25:3 › Settings › theme mode select has correct options
+[1A[2K[152/316] [firefox] › tests\settings.spec.ts:34:3 › Settings › changing theme mode persists to localStorage
+[1A[2K[153/316] [firefox] › tests\settings.spec.ts:45:3 › Settings › log level select has correct options
+[1A[2K[154/316] [firefox] › tests\settings.spec.ts:54:3 › Settings › menu position select has correct options
+[1A[2K[155/316] [firefox] › tests\settings.spec.ts:63:3 › Settings › menu position change persists to localStorage
+[1A[2K[156/316] [firefox] › tests\settings.spec.ts:77:3 › Settings › menu pin toggle is visible and functional
+[1A[2K[157/316] [firefox] › tests\settings.spec.ts:85:3 › Settings › Reset button restores defaults
+[1A[2K[158/316] [firefox] › tests\settings.spec.ts:101:3 › Settings › notifications toggle is visible
+[1A[2K[159/316] [webkit] › tests\about.spec.ts:32:3 › About › GitHub link points to correct URL
+[1A[2K[160/316] [webkit] › tests\about.spec.ts:28:3 › About › shows location
+[1A[2K[161/316] [webkit] › tests\about.spec.ts:38:3 › About › LinkedIn link points to correct URL
+[1A[2K[162/316] [webkit] › tests\about.spec.ts:21:3 › About › shows developer title
+[1A[2K[163/316] [webkit] › tests\about.spec.ts:50:3 › About › shows experience section with two roles
+[1A[2K[164/316] [webkit] › tests\about.spec.ts:44:3 › About › Portfolio link points to correct URL
+[1A[2K[165/316] [webkit] › tests\about.spec.ts:16:3 › About › shows developer name
+[1A[2K[166/316] [webkit] › tests\about.spec.ts:12:3 › About › renders page heading
+[1A[2K[167/316] [webkit] › tests\about.spec.ts:57:3 › About › shows skill chips for primary skills
+[1A[2K[168/316] [webkit] › tests\about.spec.ts:63:3 › About › shows About Silent app info card
+[1A[2K[169/316] [webkit] › tests\about.spec.ts:67:3 › About › shows disclaimer card
+[1A[2K[170/316] [webkit] › tests\dashboard.spec.ts:16:3 › Dashboard › renders page heading
+[1A[2K[171/316] [webkit] › tests\dashboard.spec.ts:20:3 › Dashboard › shows "no active reminder" alert when no schedules exist
+[1A[2K[172/316] [webkit] › tests\dashboard.spec.ts:32:3 › Dashboard › shows theme darkness percentage card
+[1A[2K[173/316] [webkit] › tests\dashboard.spec.ts:38:3 › Dashboard › "Manage Schedules" button navigates to scheduler
+[1A[2K[174/316] [webkit] › tests\dashboard.spec.ts:26:3 › Dashboard › shows schedules count card
+[1A[2K[175/316] [webkit] › tests\dashboard.spec.ts:43:3 › Dashboard › shows active warning when a schedule is currently active
+[1A[2K[176/316] [webkit] › tests\dashboard.spec.ts:73:3 › Dashboard › schedule with restoreOnEnd field saves without error
+[1A[2K[177/316] [webkit] › tests\help.spec.ts:15:3 › Help › renders page heading
+[1A[2K[178/316] [webkit] › tests\help.spec.ts:19:3 › Help › shows FAQ section
+[1A[2K[179/316] [webkit] › tests\help.spec.ts:23:3 › Help › FAQ items are collapsed by default
+[1A[2K[180/316] [webkit] › tests\help.spec.ts:30:3 › Help › FAQ item expands on click
+[1A[2K[181/316] [webkit] › tests\help.spec.ts:44:3 › Help › multiple FAQ items can be opened independently
+[1A[2K[182/316] [webkit] › tests\help.spec.ts:64:3 › Help › shows Contact the Developer section
+[1A[2K[183/316] [webkit] › tests\help.spec.ts:68:3 › Help › contact form has all required fields
+[1A[2K[184/316] [webkit] › tests\help.spec.ts:76:3 › Help › contact form shows validation errors on empty submit
+[1A[2K[185/316] [webkit] › tests\help.spec.ts:86:3 › Help › contact form fields accept input
+[1A[2K[186/316] [webkit] › tests\help.spec.ts:122:8 › Help › contact form submits and shows success (mocked EmailJS)
+[1A[2K[187/316] [webkit] › tests\language.spec.ts:13:3 › Language Switching › EN button is active by default
+[1A[2K[188/316] [webkit] › tests\help.spec.ts:106:3 › Help › FAQ covers all 7 questions
+[1A[2K[189/316] [webkit] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels
+[1A[2K[190/316] [webkit] › tests\language.spec.ts:39:3 › Language Switching › switching to Hebrew sets RTL direction
+[1A[2K[191/316] [webkit] › tests\language.spec.ts:45:3 › Language Switching › switching back to English restores LTR
+[1A[2K[192/316] [webkit] › tests\language.spec.ts:56:3 › Language Switching › language preference persists across reload
+[1A[2K[193/316] [webkit] › tests\logs.spec.ts:15:3 › Logs › renders page heading
+[1A[2K[194/316] [webkit] › tests\logs.spec.ts:19:3 › Logs › shows empty state with no logs
+[1A[2K[195/316] [webkit] › tests\logs.spec.ts:50:3 › Logs › Delete Selected button is disabled with no selection
+[1A[2K[196/316] [webkit] › tests\logs.spec.ts:56:3 › Logs › Clear All button is disabled with no logs
+[1A[2K[197/316] [webkit] › tests\logs.spec.ts:104:3 › Logs › shows log entries when logs exist in localStorage
+[1A[2K[198/316] [webkit] › tests\logs.spec.ts:126:3 › Logs › level chips display correctly
+[1A[2K[199/316] [webkit] › tests\logs.spec.ts:141:3 › Logs › can select all logs and clear them
+[1A[2K[200/316] [webkit] › tests\logs.spec.ts:171:3 › Logs › Export JSON button triggers download
+[1A[2K[201/316] [webkit] › tests\logs.spec.ts:187:3 › Logs › Refresh button reloads logs from storage
+[1A[2K[202/316] [webkit] › tests\navigation.spec.ts:31:3 › Navigation › app loads with correct title
+[1A[2K[203/316] [webkit] › tests\logs.spec.ts:19:3 › Logs › shows empty state with no logs (retry #1)
+[1A[2K[204/316] [webkit] › tests\navigation.spec.ts:35:3 › Navigation › sidebar shows all nav items
+[1A[2K[205/316] [webkit] › tests\logs.spec.ts:56:3 › Logs › Clear All button is disabled with no logs (retry #1)
+[1A[2K[206/316] [webkit] › tests\navigation.spec.ts:46:3 › Navigation › navigates to Scheduler page
+[1A[2K[207/316] [webkit] › tests\navigation.spec.ts:56:3 › Navigation › navigates to Logs page
+[1A[2K[208/316] [webkit] › tests\navigation.spec.ts:66:3 › Navigation › navigates to Settings page
+[1A[2K[209/316] [webkit] › tests\navigation.spec.ts:76:3 › Navigation › navigates to About page
+[1A[2K[210/316] [webkit] › tests\navigation.spec.ts:86:3 › Navigation › navigates to Help page
+[1A[2K[211/316] [webkit] › tests\navigation.spec.ts:96:3 › Navigation › navigates to Donate page
+[1A[2K  1) [webkit] › tests\logs.spec.ts:56:3 › Logs › Clear All button is disabled with no logs ─────────
+
+    Error: Clear All button is present but not disabled (native disabled / aria-disabled / disabled attribute all absent)
+
+       99 |     }
+      100 |
+    > 101 |     throw new Error('Clear All button is present but not disabled (native disabled / aria-disabled / disabled attribute all absent)');
+          |           ^
+      102 |   });
+      103 |
+      104 |   test('shows log entries when logs exist in localStorage', async ({ page }) => {
+        at C:\silent\tests\logs.spec.ts:101:11
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\logs-Logs-Clear-All-button-is-disabled-with-no-logs-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\logs-Logs-Clear-All-button-is-disabled-with-no-logs-webkit\error-context.md
+
+
+[1A[2K[212/316] [webkit] › tests\navigation.spec.ts:106:3 › Navigation › header shows app title with emoji
+[1A[2K[213/316] [webkit] › tests\navigation.spec.ts:112:3 › Navigation › theme toggle button is visible in header
+[1A[2K  2) [webkit] › tests\logs.spec.ts:19:3 › Logs › shows empty state with no logs ────────────────────
+
+    Error: Empty state not detected: no matching text and logs rows were found
+
+      45 |     }
+      46 |
+    > 47 |     throw new Error('Empty state not detected: no matching text and logs rows were found');
+         |           ^
+      48 |   });
+      49 |
+      50 |   test('Delete Selected button is disabled with no selection', async ({ page }) => {
+        at C:\silent\tests\logs.spec.ts:47:11
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\logs-Logs-shows-empty-state-with-no-logs-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\logs-Logs-shows-empty-state-with-no-logs-webkit\error-context.md
+
+
+[1A[2K[214/316] [webkit] › tests\navigation.spec.ts:118:3 › Navigation › clicking theme toggle changes icon
+[1A[2K[215/316] [webkit] › tests\robot.spec.ts:15:3 › Robot › renders page heading
+[1A[2K[216/316] [webkit] › tests\robot.spec.ts:19:3 › Robot › shows Android App Required notice on web
+[1A[2K[217/316] [webkit] › tests\robot.spec.ts:24:3 › Robot › shows sign-in prompt when not logged in
+[1A[2K[218/316] [webkit] › tests\robot.spec.ts:30:3 › Robot › page loads without errors
+[1A[2K[219/316] [webkit] › tests\scheduler.spec.ts:14:3 › Scheduler › renders page heading and New Schedule button
+[1A[2K[220/316] [webkit] › tests\scheduler.spec.ts:19:3 › Scheduler › shows empty state when no schedules exist
+[1A[2K[221/316] [webkit] › tests\scheduler.spec.ts:23:3 › Scheduler › opens create form on button click
+[1A[2K[222/316] [webkit] › tests\scheduler.spec.ts:33:3 › Scheduler › creates a new daily schedule
+[1A[2K[223/316] [webkit] › tests\scheduler.spec.ts:53:3 › Scheduler › can toggle a schedule on/off
+[1A[2K[224/316] [webkit] › tests\scheduler.spec.ts:74:3 › Scheduler › can delete a schedule
+[1A[2K[225/316] [webkit] › tests\scheduler.spec.ts:98:3 › Scheduler › form closes on Cancel
+[1A[2K[226/316] [webkit] › tests\scheduler.spec.ts:115:3 › Scheduler › shows "Restore previous state on end" checkbox when airplane mode is checked
+[1A[2K[227/316] [webkit] › tests\scheduler.spec.ts:105:3 › Scheduler › weekly mode shows day-of-week checkboxes
+[1A[2K[228/316] [webkit] › tests\scheduler.spec.ts:136:3 › Scheduler › schedule with new restoration fields saves correctly
+[1A[2K[229/316] [webkit] › tests\scheduler.spec.ts:163:3 › Scheduler › schedule with useAirplaneMode saves and reloads correctly
+[1A[2K[230/316] [webkit] › tests\settings.spec.ts:14:3 › Settings › renders page heading
+[1A[2K[231/316] [webkit] › tests\settings.spec.ts:18:3 › Settings › shows Appearance, Logging, Notifications, and Menu sections
+[1A[2K[232/316] [webkit] › tests\settings.spec.ts:25:3 › Settings › theme mode select has correct options
+[1A[2K[233/316] [webkit] › tests\settings.spec.ts:34:3 › Settings › changing theme mode persists to localStorage
+[1A[2K[234/316] [webkit] › tests\settings.spec.ts:45:3 › Settings › log level select has correct options
+[1A[2K[235/316] [webkit] › tests\settings.spec.ts:54:3 › Settings › menu position select has correct options
+[1A[2K[236/316] [webkit] › tests\settings.spec.ts:63:3 › Settings › menu position change persists to localStorage
+[1A[2K[237/316] [webkit] › tests\settings.spec.ts:77:3 › Settings › menu pin toggle is visible and functional
+[1A[2K[238/316] [webkit] › tests\settings.spec.ts:85:3 › Settings › Reset button restores defaults
+[1A[2K[239/316] [webkit] › tests\settings.spec.ts:101:3 › Settings › notifications toggle is visible
+[1A[2K[240/316] [mobile-chrome] › tests\about.spec.ts:12:3 › About › renders page heading
+[1A[2K[241/316] [mobile-chrome] › tests\about.spec.ts:16:3 › About › shows developer name
+[1A[2K[242/316] [mobile-chrome] › tests\about.spec.ts:50:3 › About › shows experience section with two roles
+[1A[2K[243/316] [mobile-chrome] › tests\about.spec.ts:21:3 › About › shows developer title
+[1A[2K[244/316] [mobile-chrome] › tests\about.spec.ts:28:3 › About › shows location
+[1A[2K[245/316] [mobile-chrome] › tests\about.spec.ts:63:3 › About › shows About Silent app info card
+[1A[2K[246/316] [mobile-chrome] › tests\about.spec.ts:32:3 › About › GitHub link points to correct URL
+[1A[2K[247/316] [mobile-chrome] › tests\about.spec.ts:38:3 › About › LinkedIn link points to correct URL
+[1A[2K[248/316] [mobile-chrome] › tests\about.spec.ts:67:3 › About › shows disclaimer card
+[1A[2K[249/316] [mobile-chrome] › tests\dashboard.spec.ts:16:3 › Dashboard › renders page heading
+[1A[2K[250/316] [mobile-chrome] › tests\dashboard.spec.ts:20:3 › Dashboard › shows "no active reminder" alert when no schedules exist
+[1A[2K[251/316] [mobile-chrome] › tests\dashboard.spec.ts:26:3 › Dashboard › shows schedules count card
+[1A[2K[252/316] [mobile-chrome] › tests\dashboard.spec.ts:32:3 › Dashboard › shows theme darkness percentage card
+[1A[2K[253/316] [mobile-chrome] › tests\dashboard.spec.ts:38:3 › Dashboard › "Manage Schedules" button navigates to scheduler
+[1A[2K[254/316] [mobile-chrome] › tests\dashboard.spec.ts:43:3 › Dashboard › shows active warning when a schedule is currently active
+[1A[2K[255/316] [mobile-chrome] › tests\about.spec.ts:44:3 › About › Portfolio link points to correct URL
+[1A[2K[256/316] [mobile-chrome] › tests\dashboard.spec.ts:73:3 › Dashboard › schedule with restoreOnEnd field saves without error
+[1A[2K[257/316] [mobile-chrome] › tests\help.spec.ts:15:3 › Help › renders page heading
+[1A[2K[258/316] [mobile-chrome] › tests\help.spec.ts:19:3 › Help › shows FAQ section
+[1A[2K[259/316] [mobile-chrome] › tests\help.spec.ts:23:3 › Help › FAQ items are collapsed by default
+[1A[2K[260/316] [mobile-chrome] › tests\help.spec.ts:30:3 › Help › FAQ item expands on click
+[1A[2K[261/316] [mobile-chrome] › tests\help.spec.ts:44:3 › Help › multiple FAQ items can be opened independently
+[1A[2K[262/316] [mobile-chrome] › tests\about.spec.ts:57:3 › About › shows skill chips for primary skills
+[1A[2K[263/316] [mobile-chrome] › tests\help.spec.ts:64:3 › Help › shows Contact the Developer section
+[1A[2K[264/316] [mobile-chrome] › tests\help.spec.ts:68:3 › Help › contact form has all required fields
+[1A[2K[265/316] [mobile-chrome] › tests\help.spec.ts:76:3 › Help › contact form shows validation errors on empty submit
+[1A[2K[266/316] [mobile-chrome] › tests\help.spec.ts:86:3 › Help › contact form fields accept input
+[1A[2K[267/316] [mobile-chrome] › tests\help.spec.ts:106:3 › Help › FAQ covers all 7 questions
+[1A[2K[268/316] [mobile-chrome] › tests\help.spec.ts:122:8 › Help › contact form submits and shows success (mocked EmailJS)
+[1A[2K[269/316] [mobile-chrome] › tests\language.spec.ts:13:3 › Language Switching › EN button is active by default
+[1A[2K[270/316] [mobile-chrome] › tests\language.spec.ts:18:3 › Language Switching › switching to Hebrew changes navigation labels
+[1A[2K[271/316] [mobile-chrome] › tests\language.spec.ts:39:3 › Language Switching › switching to Hebrew sets RTL direction
+[1A[2K[272/316] [mobile-chrome] › tests\language.spec.ts:45:3 › Language Switching › switching back to English restores LTR
+[1A[2K[273/316] [mobile-chrome] › tests\language.spec.ts:56:3 › Language Switching › language preference persists across reload
+[1A[2K[274/316] [mobile-chrome] › tests\logs.spec.ts:15:3 › Logs › renders page heading
+[1A[2K[275/316] [mobile-chrome] › tests\logs.spec.ts:50:3 › Logs › Delete Selected button is disabled with no selection
+[1A[2K[276/316] [mobile-chrome] › tests\logs.spec.ts:19:3 › Logs › shows empty state with no logs
+[1A[2K[277/316] [mobile-chrome] › tests\logs.spec.ts:56:3 › Logs › Clear All button is disabled with no logs
+[1A[2K[278/316] [mobile-chrome] › tests\logs.spec.ts:104:3 › Logs › shows log entries when logs exist in localStorage
+[1A[2K[279/316] [mobile-chrome] › tests\logs.spec.ts:126:3 › Logs › level chips display correctly
+[1A[2K[280/316] [mobile-chrome] › tests\logs.spec.ts:141:3 › Logs › can select all logs and clear them
+[1A[2K[281/316] [mobile-chrome] › tests\logs.spec.ts:171:3 › Logs › Export JSON button triggers download
+[1A[2K[282/316] [mobile-chrome] › tests\logs.spec.ts:187:3 › Logs › Refresh button reloads logs from storage
+[1A[2K[283/316] [mobile-chrome] › tests\navigation.spec.ts:31:3 › Navigation › app loads with correct title
+[1A[2K[284/316] [mobile-chrome] › tests\navigation.spec.ts:35:3 › Navigation › sidebar shows all nav items
+[1A[2K[285/316] [mobile-chrome] › tests\navigation.spec.ts:46:3 › Navigation › navigates to Scheduler page
+[1A[2K[286/316] [mobile-chrome] › tests\navigation.spec.ts:56:3 › Navigation › navigates to Logs page
+[1A[2K[287/316] [mobile-chrome] › tests\navigation.spec.ts:66:3 › Navigation › navigates to Settings page
+[1A[2K[288/316] [mobile-chrome] › tests\navigation.spec.ts:76:3 › Navigation › navigates to About page
+[1A[2K[289/316] [mobile-chrome] › tests\navigation.spec.ts:86:3 › Navigation › navigates to Help page
+[1A[2K[290/316] [mobile-chrome] › tests\navigation.spec.ts:96:3 › Navigation › navigates to Donate page
+[1A[2K[291/316] [mobile-chrome] › tests\navigation.spec.ts:106:3 › Navigation › header shows app title with emoji
+[1A[2K[292/316] [mobile-chrome] › tests\navigation.spec.ts:112:3 › Navigation › theme toggle button is visible in header
+[1A[2K[293/316] [mobile-chrome] › tests\navigation.spec.ts:118:3 › Navigation › clicking theme toggle changes icon
+[1A[2K[294/316] [mobile-chrome] › tests\robot.spec.ts:15:3 › Robot › renders page heading
+[1A[2K[295/316] [mobile-chrome] › tests\robot.spec.ts:19:3 › Robot › shows Android App Required notice on web
+[1A[2K[296/316] [mobile-chrome] › tests\robot.spec.ts:24:3 › Robot › shows sign-in prompt when not logged in
+[1A[2K[297/316] [mobile-chrome] › tests\robot.spec.ts:30:3 › Robot › page loads without errors
+[1A[2K[298/316] [mobile-chrome] › tests\scheduler.spec.ts:14:3 › Scheduler › renders page heading and New Schedule button
+[1A[2K[299/316] [mobile-chrome] › tests\scheduler.spec.ts:23:3 › Scheduler › opens create form on button click
+[1A[2K[300/316] [mobile-chrome] › tests\scheduler.spec.ts:19:3 › Scheduler › shows empty state when no schedules exist
+[1A[2K[301/316] [mobile-chrome] › tests\scheduler.spec.ts:33:3 › Scheduler › creates a new daily schedule
+[1A[2K[302/316] [mobile-chrome] › tests\scheduler.spec.ts:53:3 › Scheduler › can toggle a schedule on/off
+[1A[2K[303/316] [mobile-chrome] › tests\scheduler.spec.ts:74:3 › Scheduler › can delete a schedule
+[1A[2K[304/316] [mobile-chrome] › tests\scheduler.spec.ts:98:3 › Scheduler › form closes on Cancel
+[1A[2K[305/316] [mobile-chrome] › tests\scheduler.spec.ts:105:3 › Scheduler › weekly mode shows day-of-week checkboxes
+[1A[2K[306/316] [mobile-chrome] › tests\scheduler.spec.ts:115:3 › Scheduler › shows "Restore previous state on end" checkbox when airplane mode is checked
+[1A[2K[307/316] [mobile-chrome] › tests\scheduler.spec.ts:136:3 › Scheduler › schedule with new restoration fields saves correctly
+[1A[2K[308/316] [mobile-chrome] › tests\scheduler.spec.ts:163:3 › Scheduler › schedule with useAirplaneMode saves and reloads correctly
+[1A[2K[309/316] [mobile-chrome] › tests\settings.spec.ts:14:3 › Settings › renders page heading
+[1A[2K[310/316] [mobile-chrome] › tests\settings.spec.ts:18:3 › Settings › shows Appearance, Logging, Notifications, and Menu sections
+[1A[2K[311/316] [mobile-chrome] › tests\settings.spec.ts:25:3 › Settings › theme mode select has correct options
+[1A[2K[312/316] [mobile-chrome] › tests\settings.spec.ts:34:3 › Settings › changing theme mode persists to localStorage
+[1A[2K[313/316] [mobile-chrome] › tests\settings.spec.ts:45:3 › Settings › log level select has correct options
+[1A[2K[314/316] [mobile-chrome] › tests\settings.spec.ts:54:3 › Settings › menu position select has correct options
+[1A[2K[315/316] [mobile-chrome] › tests\settings.spec.ts:63:3 › Settings › menu position change persists to localStorage
+[1A[2K[316/316] [mobile-chrome] › tests\settings.spec.ts:77:3 › Settings › menu pin toggle is visible and functional
+[1A[2K[317/316] (retries) [mobile-chrome] › tests\settings.spec.ts:85:3 › Settings › Reset button restores defaults
+[1A[2K[318/316] (retries) [mobile-chrome] › tests\settings.spec.ts:101:3 › Settings › notifications toggle is visible
+[1A[2K  2 flaky
+    [webkit] › tests\logs.spec.ts:19:3 › Logs › shows empty state with no logs ─────────────────────
+    [webkit] › tests\logs.spec.ts:56:3 › Logs › Clear All button is disabled with no logs ──────────
+  4 skipped
+  310 passed (4.7m)

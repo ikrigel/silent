@@ -1,5 +1,5 @@
 import { initializeApp, type FirebaseApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, type User, type Auth } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged, type User, type Auth } from 'firebase/auth';
 import { getFirestore, doc, setDoc, type Firestore } from 'firebase/firestore';
 import { writeLog } from './logService';
 
@@ -40,8 +40,25 @@ export interface AppUser {
   lastLoginAt: string;
 }
 
+/** Build AppUser from Firebase User object */
+function buildUser(firebaseUser: User): AppUser {
+  const { uid, email, displayName, photoURL } = firebaseUser;
+  if (!email || !displayName) {
+    throw new Error('Email or display name missing from Google profile');
+  }
+  return {
+    uid,
+    email,
+    displayName,
+    photoURL: photoURL || '',
+    registeredAt: new Date().toISOString(),
+    lastLoginAt: new Date().toISOString(),
+  };
+}
+
 /**
  * Sign in with Google OAuth.
+ * On native (Capacitor), uses redirect flow; on web, uses popup flow.
  * Automatically saves user profile to Firestore.
  */
 export async function signInWithGoogle(): Promise<AppUser> {
@@ -50,32 +67,55 @@ export async function signInWithGoogle(): Promise<AppUser> {
   }
   const provider = new GoogleAuthProvider();
   try {
-    const result = await signInWithPopup(auth, provider);
-    const { uid, email, displayName, photoURL } = result.user;
+    // Capacitor WebView cannot complete popup-based OAuth — use redirect flow instead
+    const isCapacitor = typeof (window as any).Capacitor !== 'undefined'
+      && (window as any).Capacitor.isNativePlatform?.();
 
-    if (!email || !displayName) {
-      throw new Error('Email or display name missing from Google profile');
+    if (isCapacitor) {
+      await signInWithRedirect(auth, provider);
+      // Page reloads after user logs in; result is picked up by handleRedirectResult()
+      return new Promise(() => {}); // never resolves — caller waits for page reload
     }
 
-    const user: AppUser = {
-      uid,
-      email,
-      displayName,
-      photoURL: photoURL || '',
-      registeredAt: new Date().toISOString(),
-      lastLoginAt: new Date().toISOString(),
-    };
+    const result = await signInWithPopup(auth, provider);
+    const user = buildUser(result.user);
 
     // Save user to Firestore (merge: true = upsert)
     if (db) {
-      await setDoc(doc(db, 'users', uid), user, { merge: true });
+      await setDoc(doc(db, 'users', user.uid), user, { merge: true });
     }
-    writeLog('info', `authService: User signed in: ${email}`);
+    writeLog('info', `authService: User signed in: ${user.email}`);
     return user;
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     writeLog('error', `authService: Sign in failed: ${msg}`);
     throw err;
+  }
+}
+
+/**
+ * Handle OAuth redirect result after page reloads.
+ * Call this once on app startup (e.g., in App.tsx useEffect).
+ * Returns the signed-in user, or null if no redirect was in progress.
+ */
+export async function handleRedirectResult(): Promise<AppUser | null> {
+  if (!auth) return null;
+  try {
+    const result = await getRedirectResult(auth);
+    if (!result) return null;
+
+    const user = buildUser(result.user);
+
+    // Save user to Firestore (merge: true = upsert)
+    if (db) {
+      await setDoc(doc(db, 'users', user.uid), user, { merge: true });
+    }
+    writeLog('info', `authService: User signed in via redirect: ${user.email}`);
+    return user;
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    writeLog('error', `authService: Redirect sign-in failed: ${msg}`);
+    return null;
   }
 }
 
