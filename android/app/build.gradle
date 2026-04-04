@@ -70,8 +70,8 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.24"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.24"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.20"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.20"
 
     // Firebase Android (required by @capacitor-firebase/authentication)
     implementation platform('com.google.firebase:firebase-bom:31.5.0')
