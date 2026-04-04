@@ -74,7 +74,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22"
 
     // Firebase Android (required by @capacitor-firebase/authentication)
-    implementation platform('com.google.firebase:firebase-bom:30.6.0')
+    implementation platform('com.google.firebase:firebase-bom:31.2.0')
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.android.gms:play-services-auth:20.5.0'
 }
