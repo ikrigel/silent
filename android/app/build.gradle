@@ -73,11 +73,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.24"
 
     // Firebase Android (required by @capacitor-firebase/authentication)
-    // Note: Firebase BOM 31.x includes firebase-auth 23.x which is compatible with Kotlin 1.9.24
-    // Firebase Auth 24.x requires Kotlin 2.0+ metadata
-    implementation platform('com.google.firebase:firebase-bom:31.5.0')
+    // Firebase BOM 29.x has firebase-auth 22.x, compatible with Kotlin 1.9.24
+    implementation platform('com.google.firebase:firebase-bom:29.3.1')
     implementation 'com.google.firebase:firebase-auth'
-    implementation 'com.google.android.gms:play-services-auth:20.7.0'
+    implementation 'com.google.android.gms:play-services-auth:20.4.1'
 }
 
 apply from: 'capacitor.build.gradle'
