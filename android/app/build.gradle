@@ -71,7 +71,6 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.24"
 
     // Firebase Android (required by @capacitor-firebase/authentication)
     // Firebase BOM 29.x has firebase-auth 22.x, compatible with Kotlin 1.9.24
