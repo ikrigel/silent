@@ -65,9 +65,41 @@ jobs:
 
       - name: Inject google-services.json
         run: |
-          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode \
-            > android/app/google-services.json
-          echo "✓ google-services.json written"
+          set -euo pipefail
+          OUTPUT="android/app/google-services.json"
+          mkdir -p "$(dirname "$OUTPUT")"
+
+          # Detect if secret is raw JSON or base64
+          FIRST_CHAR=$(echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | sed -n '1p' | cut -c1)
+
+          if [ "$FIRST_CHAR" = "{" ]; then
+            # Raw JSON — write directly
+            echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > "$OUTPUT"
+            echo "ℹ️  Injected raw JSON"
+          else
+            # Base64 — decode (strip CR to avoid CRLF issues)
+            echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | tr -d '\r' | base64 --decode > "$OUTPUT" || {
+              echo "❌ Failed to base64-decode GOOGLE_SERVICES_JSON"
+              exit 1
+            }
+            echo "ℹ️  Decoded base64 secret"
+          fi
+
+          # Validate JSON with jq
+          if ! command -v jq >/dev/null 2>&1; then
+            echo "Installing jq for JSON validation..."
+            apt-get update && apt-get install -y jq >/dev/null 2>&1
+          fi
+
+          if ! jq -e . "$OUTPUT" >/dev/null 2>&1; then
+            echo "❌ google-services.json is not valid JSON"
+            echo "First 200 bytes:"
+            head -c 200 "$OUTPUT"
+            echo ""
+            exit 1
+          fi
+
+          echo "✓ google-services.json written and validated"
 
       - name: Sync Capacitor
         run: |
