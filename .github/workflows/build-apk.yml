@@ -206,6 +206,8 @@ jobs:
         working-directory: android
         run: |
           echo "Starting Android APK build..."
+          echo "Cleaning Gradle cache..."
+          ./gradlew clean
           echo "Building with: ./gradlew assembleRelease -x lint"
           ./gradlew assembleRelease -x lint --stacktrace --info
           BUILD_STATUS=$?
