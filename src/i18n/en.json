@@ -199,7 +199,6 @@
     "apkAvailableVersion": "Latest APK Available",
     "version": "Version",
     "downloadApk": "Download Android APK",
-    "downloadFromGitHub": "Download Latest APK",
     "apkNote": "Requires Silent Robot accessibility service on Android",
     "newApkAvailable": "New APK version available",
     "signInToDownload": "Sign in to download APK",

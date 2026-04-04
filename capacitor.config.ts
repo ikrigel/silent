@@ -10,6 +10,11 @@ const config: CapacitorConfig = {
   webDir: 'dist',
   server: {
     androidScheme: 'https',  // Allow Firebase OAuth redirects to return to the WebView
+    allowNavigation: [
+      'accounts.google.com',
+      '*.googleapis.com',
+      '*.firebaseapp.com',
+    ],  // Allow WebView to navigate through OAuth flow instead of opening Chrome Custom Tab
   },
   android: {
     buildOptions: {

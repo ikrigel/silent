@@ -21,9 +21,6 @@ const AboutPage: React.FC = () => {
   const [downloadLoading, setDownloadLoading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [latestApkVersion, setLatestApkVersion] = useState<string | null>(null);
-  // Detect if app is running in Capacitor (APK/native Android)
-  const isCapacitor = typeof (window as any).Capacitor !== 'undefined'
-    && (window as any).Capacitor.isNativePlatform?.();
 
   // Fetch latest APK version on mount
   useEffect(() => {
@@ -77,8 +74,8 @@ const AboutPage: React.FC = () => {
       }
 
       const data = await response.json();
-      // Redirect to APK download URL
-      window.location.href = data.url;
+      // Open APK download URL (on APK, opens in Chrome via _system; on web, opens in new tab)
+      window.open(data.url, '_system');
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       setDownloadError(`Download failed: ${msg}`);
@@ -190,18 +187,7 @@ const AboutPage: React.FC = () => {
 
               {/* Download Button */}
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="flex-start">
-                {isCapacitor ? (
-                  <Button
-                    variant="contained"
-                    size="small"
-                    startIcon={<Download />}
-                    onClick={() => {
-                      window.open('https://github.com/ikrigel/silent/releases/latest', '_system');
-                    }}
-                  >
-                    {t('about.downloadFromGitHub')}
-                  </Button>
-                ) : user ? (
+                {user ? (
                   <Button
                     variant="contained"
                     size="small"

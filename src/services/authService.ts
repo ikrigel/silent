@@ -1,5 +1,5 @@
 import { initializeApp, type FirebaseApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged, type User, type Auth } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithCredential, getRedirectResult, signOut, onAuthStateChanged, type User, type Auth } from 'firebase/auth';
 import { getFirestore, doc, setDoc, type Firestore } from 'firebase/firestore';
 import { writeLog } from './logService';
 
@@ -58,7 +58,8 @@ function buildUser(firebaseUser: User): AppUser {
 
 /**
  * Sign in with Google OAuth.
- * On native (Capacitor), uses redirect flow; on web, uses popup flow.
+ * On native (Capacitor), uses native Google Sign-In via @capacitor-firebase/authentication.
+ * On web, uses popup flow.
  * Automatically saves user profile to Firestore.
  */
 export async function signInWithGoogle(): Promise<AppUser> {
@@ -67,16 +68,32 @@ export async function signInWithGoogle(): Promise<AppUser> {
   }
   const provider = new GoogleAuthProvider();
   try {
-    // Capacitor WebView cannot complete popup-based OAuth — use redirect flow instead
+    // Detect if running on native Android
     const isCapacitor = typeof (window as any).Capacitor !== 'undefined'
       && (window as any).Capacitor.isNativePlatform?.();
 
     if (isCapacitor) {
-      await signInWithRedirect(auth, provider);
-      // Page reloads after user logs in; result is picked up by handleRedirectResult()
-      return new Promise(() => {}); // never resolves — caller waits for page reload
+      // Native Google Sign-In — no browser redirect needed
+      const { FirebaseAuthentication } = await import('@capacitor-firebase/authentication');
+      const result = await FirebaseAuthentication.signInWithGoogle();
+      if (!result.credential?.idToken) {
+        throw new Error('No ID token returned from native Google Sign-In');
+      }
+
+      // Exchange native credential for Firebase session in WebView
+      const googleCredential = GoogleAuthProvider.credential(result.credential.idToken);
+      const userCredential = await signInWithCredential(auth, googleCredential);
+      const user = buildUser(userCredential.user);
+
+      // Save user to Firestore (merge: true = upsert)
+      if (db) {
+        await setDoc(doc(db, 'users', user.uid), user, { merge: true });
+      }
+      writeLog('info', `authService: User signed in (native): ${user.email}`);
+      return user;
     }
 
+    // Web: popup flow (unchanged)
     const result = await signInWithPopup(auth, provider);
     const user = buildUser(result.user);
 

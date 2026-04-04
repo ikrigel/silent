@@ -10,3 +10,6 @@ test-results/
 
 .vercel
 keytool\ -genkey\ -v.txt
+
+# Firebase (sensitive config)
+android/app/google-services.json
