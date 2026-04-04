@@ -21,6 +21,7 @@
 #-renamesourcefileattribute SourceFile
 
 # R8 compatibility rules to avoid parser errors and suppress false-positive warnings
+-ignorewarnings
 -dontwarn android.support.**
 -keep @interface androidx.annotation.Keep
 -dontnote **
