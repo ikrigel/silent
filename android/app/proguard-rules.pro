@@ -20,11 +20,10 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-# Ignore ProGuard warnings and skip checks for outdated android.support references
-# This prevents R8 parser errors from Firebase and other dependencies with old ProGuard rules
--ignorewarnings
+# R8 compatibility rules to avoid parser errors and suppress false-positive warnings
 -dontwarn android.support.**
--dontwarn androidx.annotation.Keep
+-keep @interface androidx.annotation.Keep
+-dontnote **
 
 # Keep app code and Firebase classes
 -keep class com.ikrigel.silent.** { *; }
