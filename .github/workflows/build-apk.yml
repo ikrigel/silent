@@ -69,37 +69,55 @@ jobs:
           OUTPUT="android/app/google-services.json"
           mkdir -p "$(dirname "$OUTPUT")"
 
-          # Detect if secret is raw JSON or base64
-          FIRST_CHAR=$(echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | sed -n '1p' | cut -c1)
+          SECRET_RAW="${{ secrets.GOOGLE_SERVICES_JSON }}"
 
-          if [ "$FIRST_CHAR" = "{" ]; then
-            # Raw JSON — write directly
-            echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > "$OUTPUT"
-            echo "ℹ️  Injected raw JSON"
-          else
-            # Base64 — decode (strip CR to avoid CRLF issues)
-            echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | tr -d '\r' | base64 --decode > "$OUTPUT" || {
-              echo "❌ Failed to base64-decode GOOGLE_SERVICES_JSON"
-              exit 1
-            }
-            echo "ℹ️  Decoded base64 secret"
-          fi
+          # Trim leading/trailing whitespace
+          SECRET=$(printf '%s' "$SECRET_RAW" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')
 
-          # Validate JSON with jq
+          # Ensure jq is available
           if ! command -v jq >/dev/null 2>&1; then
             echo "Installing jq for JSON validation..."
             apt-get update && apt-get install -y jq >/dev/null 2>&1
           fi
 
-          if ! jq -e . "$OUTPUT" >/dev/null 2>&1; then
-            echo "❌ google-services.json is not valid JSON"
+          # Helper to validate JSON
+          validate_json() {
+            if jq -e . "$1" >/dev/null 2>&1; then
+              return 0
+            else
+              return 1
+            fi
+          }
+
+          # 1) Try treating secret as raw JSON first
+          printf '%s' "$SECRET" > "$OUTPUT" || {
+            echo "❌ Failed writing secret to $OUTPUT"
+            exit 1
+          }
+
+          if validate_json "$OUTPUT"; then
+            echo "✓ Injected secret as raw JSON"
+            exit 0
+          fi
+
+          # 2) Not valid JSON as raw — try base64 decode
+          printf '%s' "$SECRET" | tr -d '\r' | base64 --decode > "$OUTPUT" 2>/dev/null || {
+            echo "❌ Failed to base64-decode GOOGLE_SERVICES_JSON"
+            echo "First 200 bytes of secret:"
+            head -c 200 "$OUTPUT" || true
+            exit 1
+          }
+
+          # Validate decoded JSON
+          if ! validate_json "$OUTPUT"; then
+            echo "❌ google-services.json is not valid JSON after decode"
             echo "First 200 bytes:"
-            head -c 200 "$OUTPUT"
+            head -c 200 "$OUTPUT" || true
             echo ""
             exit 1
           fi
 
-          echo "✓ google-services.json written and validated"
+          echo "✓ google-services.json written and validated (decoded from base64)"
 
       - name: Sync Capacitor
         run: |
