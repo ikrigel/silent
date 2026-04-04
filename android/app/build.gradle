@@ -38,8 +38,8 @@ android {
         release {
             signingConfig signingConfigs.release
             minifyEnabled false
-            // Only use our app's ProGuard rules, don't consume from dependencies
-            proguardFiles 'proguard-rules.pro'
+            // Use non-optimized ProGuard rules to avoid syntax errors in R8 parser
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
