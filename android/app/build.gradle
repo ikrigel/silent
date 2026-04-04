@@ -38,9 +38,7 @@ android {
         release {
             signingConfig signingConfigs.release
             minifyEnabled false
-            // Disable consuming ProGuard rules from dependencies to avoid syntax errors from outdated android.support references
-            consumeProguardFiles = false
-            // Only use our app's ProGuard rules
+            // Only use our app's ProGuard rules, don't consume from dependencies
             proguardFiles 'proguard-rules.pro'
         }
     }
