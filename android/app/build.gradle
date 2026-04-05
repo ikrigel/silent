@@ -66,15 +66,15 @@ dependencies {
     implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
     implementation project(':capacitor-android')
-    // Kotlin stdlib version is managed by root build.gradle resolutionStrategy (Kotlin 2.1.0)
+    // Kotlin stdlib version is managed by root build.gradle resolutionStrategy (Kotlin 1.9.24)
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
 
     // Firebase Android (required by @capacitor-firebase/authentication)
-    // Firebase BOM 31.x+ supports firebase-auth 24.x compatible with Kotlin 2.1.0
-    implementation platform('com.google.firebase:firebase-bom:33.0.0')
+    // Firebase BOM 32.7.0 with firebase-auth 23.x compatible with Kotlin 1.9.24
+    implementation platform('com.google.firebase:firebase-bom:32.7.0')
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.android.gms:play-services-auth:20.4.1'
 }
