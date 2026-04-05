@@ -47,7 +47,18 @@ tests/
 ```
 
 ## Key Rules
-1. **Max 250 lines per file** — split into sub-files if needed
+
+### Clean Architecture & File Size Limits
+1. **Max 250 lines per file** — this is a hard limit for maintainability
+   - When a file approaches 250 lines, refactor into smaller, focused modules
+   - Split by responsibility: separate components, hooks, utilities, services
+   - Examples:
+     - Large page components → extract sub-components, hooks, helpers
+     - Utility files → split into domain-specific modules
+     - Store files → keep each Zustand store focused on one domain
+   - **Why**: Smaller files are easier to test, reuse, and maintain; clearer responsibility; reduces cognitive load
+
+### Code Quality
 2. All code files must have JSDoc/inline comments
 3. TypeScript strict mode — no `any`
 4. Use `crypto.randomUUID()` for IDs

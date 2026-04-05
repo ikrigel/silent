@@ -124,41 +124,77 @@ Users can now sign in with Google and their profile is automatically saved to Fi
 
 ## APK Builds & Distribution
 
+### Build Requirements
+- **Java 21+** (Android Gradle Plugin 8.13.0)
+- **Android SDK 36** (`compileSdk = 36`, `targetSdk = 36`)
+- **Kotlin 2.1.0+** (Firebase auth v24.0.1 compatibility)
+- **Gradle 8.14.3+**
+
 ### Automatic Builds (Recommended)
 
-Push a git tag to trigger automatic APK builds:
+The `build-apk.yml` GitHub Actions workflow automatically builds APK when you:
 
+**Option 1: Push a git tag**
 ```bash
-# Update version in package.json and android/app/build.gradle
-git tag v1.0.33
-git push origin v1.0.33
+cd c:\silent
+git tag -a v1.0.54 -m "build: APK release v1.0.54"
+git push origin v1.0.54
 ```
 
-The GitHub Actions `build-apk.yml` workflow will:
-1. Build the APK with Java 21
-2. Create a GitHub Release
-3. Attach the APK for download at: https://github.com/ikrigel/silent/releases
+**Option 2: Manually trigger via GitHub Actions UI**
+- Go to: https://github.com/ikrigel/silent/actions
+- Select "Build Android APK" workflow
+- Click "Run workflow" button
+- Downloads at: https://github.com/ikrigel/silent/releases
 
 ### Local Builds
 
-Requires **Java 21+** and **Android SDK**:
+Test locally before pushing (requires Java 21+ and Android SDK):
 
 ```bash
-# Set Java 21
-set JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot
+# Navigate to android directory
+cd c:\silent\android
 
 # Build APK
-cd android
-./gradlew clean assembleRelease -x lint
+./gradlew clean assembleRelease
+
+# APK output
+ls -lh app/build/outputs/apk/release/app-release.apk
 ```
 
-APK output: `android/app/build/outputs/apk/release/app-release.apk`
+### Build & Release Workflow (Complete)
+
+```bash
+# 1. Commit your changes
+git add -A
+git commit -m "your changes"
+
+# 2. Test the build locally
+cd c:\silent\android && ./gradlew clean assembleRelease
+
+# 3. If successful, create and push tag (increments version)
+cd c:\silent
+git tag -a v1.0.54 -m "build: APK release v1.0.54 with [feature description]"
+git push origin v1.0.54
+
+# 4. Monitor the build
+# Go to: https://github.com/ikrigel/silent/actions
+```
 
 ### APK Versioning
 
-- Web app version: `package.json` → shown in About page
-- APK version: `android/app/build.gradle` → `versionCode` and `versionName`
-- Both versions should stay in sync for consistency
+- **Web app version**: `package.json` → shown in About page
+- **APK version**: `android/app/build.gradle` → `versionCode` and `versionName`
+- **SDK versions**: `android/variables.gradle` → `compileSdkVersion`, `targetSdkVersion`
+- Keep all three in sync for consistency
+
+### Known Issues & Fixes
+
+| Issue | Solution |
+|-------|----------|
+| Firebase auth metadata mismatch | Kotlin 2.1.0+ required (see `android/build.gradle`) |
+| JVM target mismatch (21 vs 17) | Update `android/app/build.gradle` to use `VERSION_21` |
+| compileSdk incompatibility | Update to SDK 36+ in `android/variables.gradle` |
 
 ---
 
