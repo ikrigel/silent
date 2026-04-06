@@ -23,6 +23,14 @@ allprojects {
         google()
         mavenCentral()
     }
+
+    // Global Firebase Auth pin to prevent capacitor-firebase-authentication plugin
+    // from pulling in firebase-auth:24.0.1 (Kotlin 2.1 metadata incompatible with 1.9.24 compiler)
+    configurations.all {
+        resolutionStrategy {
+            force "com.google.firebase:firebase-auth:23.1.0"
+        }
+    }
 }
 
 task clean(type: Delete) {
