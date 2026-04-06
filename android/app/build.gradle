@@ -73,9 +73,8 @@ dependencies {
     implementation project(':capacitor-cordova-android-plugins')
 
     // Firebase Android (required by @capacitor-firebase/authentication)
-    // Version pinning is handled by root build.gradle resolutionStrategy.force
-    // which ensures all Firebase/GMS artifacts are Kotlin 1.9.24 compatible
-    implementation platform('com.google.firebase:firebase-bom:32.7.0')
+    // Firebase BOM 33.0.0+ is compatible with Kotlin 2.1.0 and firebase-auth:24.0.1
+    implementation platform('com.google.firebase:firebase-bom:33.0.0')
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.android.gms:play-services-auth'
 }

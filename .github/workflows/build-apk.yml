@@ -208,6 +208,7 @@ jobs:
       - name: Clear Gradle cache (remove stale metadata)
         run: |
           echo "Clearing Gradle cache to avoid stale metadata..."
+          echo "Note: Kotlin 2.1.0 requires increased metaspace (configured in gradle.properties)"
           rm -rf android/.gradle android/app/build android/build
           echo "✓ Gradle cache and build directories cleared"
 
@@ -217,8 +218,8 @@ jobs:
           echo "Starting Android APK build..."
           echo "Cleaning Gradle cache..."
           ./gradlew clean
-          echo "Building with: ./gradlew assembleRelease -x lint"
-          ./gradlew assembleRelease -x lint --stacktrace --info
+          echo "Building with: ./gradlew assembleRelease"
+          ./gradlew assembleRelease --stacktrace --info
           BUILD_STATUS=$?
 
           if [ $BUILD_STATUS -ne 0 ]; then
