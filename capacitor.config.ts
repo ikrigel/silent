@@ -23,7 +23,11 @@ const config: CapacitorConfig = {
     },
   },
   plugins: {
-    // No core plugins needed — robot uses a custom local plugin
+    // Firebase Authentication plugin configuration
+    FirebaseAuthentication: {
+      skipNativeAuth: false,
+      providers: ['google'],  // Enable Google OAuth provider
+    },
   },
 };
 
