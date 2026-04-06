@@ -184,6 +184,18 @@ jobs:
           }
           echo "✓ Keystore validated successfully"
 
+      - name: Extract release keystore SHA-1 fingerprint
+        run: |
+          echo "=== RELEASE KEYSTORE SHA-1 (for Firebase Console) ==="
+          keytool -list -v \
+            -keystore "$HOME/.android/silent-release.keystore" \
+            -storepass "${{ secrets.ANDROID_STORE_PASSWORD }}" \
+            -alias "${{ secrets.ANDROID_KEY_ALIAS }}" \
+            | grep -i "SHA1" | awk '{print $NF}'
+          echo ""
+          echo "If you see no SHA1 above, the keystore is invalid."
+          echo "Add this SHA-1 to: Firebase Console → Project Settings → Your Apps → Android app"
+
       - name: Make gradlew executable
         run: |
           echo "Making gradlew executable..."

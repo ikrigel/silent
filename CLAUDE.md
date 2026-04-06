@@ -116,6 +116,8 @@ tests/
   - Configured in `capacitor.config.ts` with `providers: ['google']`
   - Enables native Google Sign-In on Android (via @capacitor-firebase/authentication@8.2.0)
   - `google-services.json` required in `android/app/` for native Firebase initialization
+  - **Critical**: `google-services.json` must include Android OAuth client (type 1) with SHA-1 fingerprints
+  - See [ANDROID_OAUTH_SETUP.md](ANDROID_OAUTH_SETUP.md) for configuration instructions
 
 ## APK Versioning & Distribution
 - **Version Injection**: `vite.config.ts` injects `__APP_VERSION__` from `package.json`
