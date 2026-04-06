@@ -205,6 +205,12 @@ jobs:
           echo "Android directory contents:"
           ls -la android/ | head -20
 
+      - name: Clear Gradle cache (remove stale metadata)
+        run: |
+          echo "Clearing Gradle cache to avoid stale metadata..."
+          rm -rf android/.gradle android/app/build android/build
+          echo "✓ Gradle cache and build directories cleared"
+
       - name: Build release APK
         working-directory: android
         run: |
