@@ -112,6 +112,10 @@ tests/
 - **Zustand Store**: `useAuthStore` manages authentication state globally
 - **Protected Routes**: Login page at `/login`, APK download gated to authenticated users
 - **Vercel Functions**: `/api/download-apk` verifies Firebase tokens server-side
+- **Capacitor Firebase Auth Plugin**: 
+  - Configured in `capacitor.config.ts` with `providers: ['google']`
+  - Enables native Google Sign-In on Android (via @capacitor-firebase/authentication@8.2.0)
+  - `google-services.json` required in `android/app/` for native Firebase initialization
 
 ## APK Versioning & Distribution
 - **Version Injection**: `vite.config.ts` injects `__APP_VERSION__` from `package.json`
