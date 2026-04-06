@@ -125,10 +125,12 @@ Users can now sign in with Google and their profile is automatically saved to Fi
 ## APK Builds & Distribution
 
 ### Build Requirements
-- **Java 21+** (Android Gradle Plugin 8.13.0)
+- **Java 21** (Gradle daemon JVM, compilation target, all toolchain layers)
 - **Android SDK 36** (`compileSdk = 36`, `targetSdk = 36`)
-- **Kotlin 2.1.0+** (Firebase auth v24.0.1 compatibility)
+- **Kotlin 1.9.24** (stable, well-tested, Firebase auth 23.1.0 compatible)
+- **Firebase Auth 23.1.0** (explicitly pinned to prevent Kotlin 2.1 metadata conflicts)
 - **Gradle 8.14.3+**
+- **Android Gradle Plugin 8.13.0**
 
 ### Automatic Builds (Recommended)
 
@@ -188,13 +190,21 @@ git push origin v1.0.54
 - **SDK versions**: `android/variables.gradle` → `compileSdkVersion`, `targetSdkVersion`
 - Keep all three in sync for consistency
 
-### Known Issues & Fixes
+### Known Issues & Fixes (v1.0.54+)
 
-| Issue | Solution |
-|-------|----------|
-| Firebase auth metadata mismatch | Kotlin 2.1.0+ required (see `android/build.gradle`) |
-| JVM target mismatch (21 vs 17) | Update `android/app/build.gradle` to use `VERSION_21` |
-| compileSdk incompatibility | Update to SDK 36+ in `android/variables.gradle` |
+| Issue | Root Cause | Solution | Files |
+|-------|-----------|----------|-------|
+| **Kotlin metadata mismatch** | Firebase plugin pulls auth 24.x (Kotlin 2.1 metadata) with Kotlin 1.9 compiler | Pin to firebase-auth:23.1.0 explicitly | `app/build.gradle` |
+| **JVM target inconsistency** | Gradle daemon (17), Java compilation (21), Kotlin target (21) all different | Align all to Java 21: `gradle.jvm.version=21` | `gradle.properties`, `app/build.gradle`, `capacitor.build.gradle` |
+| **compileSdk incompatibility** | AGP 8.13.0 requires SDK 36+ | Update `compileSdk = 36`, `targetSdk = 36` | `variables.gradle` |
+| **Gradle cache corruption in CI** | Stale Kotlin/Firebase metadata cached across builds | Clear `.gradle` and `build/` dirs before each build | `.github/workflows/build-apk.yml` |
+| **Capacitor overrides Java version** | `capacitor.build.gradle` auto-generated with `VERSION_17` | Update to `VERSION_21` after sync | `capacitor.build.gradle` (manual sync required) |
+| **Force Kotlin resolution harmful** | Force block doesn't fix metadata compatibility, only forces runtime | Remove entire resolutionStrategy block | `android/build.gradle` |
+| **Conflicting kotlin-stdlib** | Direct dependency in app module overrides BOM selection | Remove explicit version, let BOM/force block manage | `app/build.gradle` |
+
+### Debugging Guide
+
+For complete build debugging commands and techniques, see [ANDROID_BUILD_DEBUGGING.md](ANDROID_BUILD_DEBUGGING.md)
 
 ---
 

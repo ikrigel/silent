@@ -1,5 +1,13 @@
 # APK Build & Release Commands
 
+**For detailed debugging commands and common issues, see [ANDROID_BUILD_DEBUGGING.md](ANDROID_BUILD_DEBUGGING.md)**
+
+## Quick Reference
+
+### Build & Release (Complete Workflow)
+
+Push a tag to trigger automatic APK build on GitHub Actions:
+
 ## Bash / Git Bash (Recommended)
 
 ```bash
@@ -31,6 +39,72 @@ cd c:\silent\android && gradlew clean assembleRelease && cd .. && git tag -a v1.
 
 ---
 
+## Kotlin Compilation Debugging
+
+If the full APK build fails, isolate the Kotlin compiler error:
+
+### Bash
+```bash
+cd c:\silent\android && ./gradlew app:compileReleaseKotlin --stacktrace --info
+```
+
+### PowerShell
+```powershell
+cd android; .\gradlew app:compileReleaseKotlin --stacktrace --info
+```
+
+**What to look for:**
+- Lines starting with `e:` (errors) with file path and line number
+- Lines starting with `w:` (warnings)
+- These appear ABOVE the long Java stack trace
+- Example: `e: /path/to/File.kt: (42, 13): Unresolved reference: someClass`
+
+**Why this is useful:**
+- Much faster than full build (30-60 sec vs 2-5 min)
+- Shows exact file, line, and error message
+- No need to build resources or APK
+- Great for iterating on fixes
+
+---
+
+## Full Local Build
+
+To test the complete build chain end-to-end:
+
+### Bash
+```bash
+cd c:\silent\android && ./gradlew clean assembleRelease
+```
+
+### PowerShell
+```powershell
+cd android; .\gradlew clean assembleRelease
+```
+
+**Output:** `app/build/outputs/apk/release/app-release.apk`
+
+---
+
+## Clear Gradle Cache (When Stuck)
+
+If build behaves oddly or has stale metadata errors:
+
+### Bash
+```bash
+rm -rf android/.gradle android/app/build android/build
+```
+
+### PowerShell
+```powershell
+Remove-Item -Recurse -Force android\.gradle
+Remove-Item -Recurse -Force android\app\build
+Remove-Item -Recurse -Force android\build
+```
+
+**Warning:** This forces re-download of all dependencies (~2-3 min added to next build)
+
+---
+
 ## What This Does
 
 1. **Navigate to android directory** — `cd c:\silent\android`
@@ -55,7 +129,9 @@ This automatically triggers the GitHub Actions APK build workflow.
 
 ## Monitor the Build
 
-After pushing the tag, check the build status:
+After pushing the tag, GitHub Actions should start a build automatically within 10-30 seconds.
+
+### Monitor build progress:
 
 ```bash
 # View GitHub Actions workflow
