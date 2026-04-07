@@ -161,15 +161,15 @@ export async function signInWithGoogle(): Promise<AppUser> {
       }
     }
 
-    // Check if we're in a WebView context where popup won't work
-    if (isCapacitorApp) {
-      const msg = 'Capacitor app detected but native platform check failed. Cannot use popup auth in WebView due to COOP restrictions. Native Firebase plugin may not be available.';
-      console.error(msg);
-      throw new Error(msg);
+    // If Capacitor is present but not a native platform, we're likely on web
+    // Use popup auth (should work fine on browsers)
+    if (isCapacitorApp && !isNativePlatform) {
+      console.log('Capacitor detected but not native platform. Using web popup auth...');
+    } else if (!isCapacitorApp) {
+      console.log('Using web popup flow for authentication...');
     }
 
-    // Web browser: popup flow is safe
-    console.log('Using web popup flow for authentication...');
+    // Web browser or Capacitor web context: popup flow is the fallback
     const result = await signInWithPopup(auth, provider);
     const user = buildUser(result.user);
 
