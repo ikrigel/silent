@@ -109,6 +109,17 @@ export async function signInWithGoogle(): Promise<AppUser> {
       // Native Google Sign-In — no browser redirect needed
       console.log('Using native Capacitor Google Sign-In...');
       try {
+        // Diagnostic: Check the runtime Capacitor config seen by the plugin
+        const { Capacitor } = await import('@capacitor/core');
+        const runtimeConfig = (Capacitor as any).config;
+        console.log('Capacitor runtime config plugins:', JSON.stringify(runtimeConfig?.plugins));
+        if (runtimeConfig?.plugins?.FirebaseAuthentication) {
+          console.log('  - FirebaseAuthentication.skipNativeAuth:', runtimeConfig.plugins.FirebaseAuthentication.skipNativeAuth);
+          console.log('  - FirebaseAuthentication.providers:', runtimeConfig.plugins.FirebaseAuthentication.providers);
+        } else {
+          console.warn('FirebaseAuthentication plugin config not found in runtime config!');
+        }
+
         const { FirebaseAuthentication } = await import('@capacitor-firebase/authentication');
         console.log('Capacitor FirebaseAuthentication plugin loaded');
 

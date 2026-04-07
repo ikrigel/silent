@@ -134,6 +134,17 @@ tests/
   - `showUpdateNotifications: boolean` (default true) — controls visibility of update notifications
   - `dismissedUpdateVersion: string | undefined` — tracks dismissed version for per-version dismiss functionality
 
+## Android Accessibility Service Setup
+
+### Sideloaded APK Restriction (Android 13+)
+- **Samsung and Android 13+ devices** require explicit "Allow restricted settings" permission before accessibility services can be used
+- This is a system security measure for sideloaded apps
+- Users must go to **Settings → Apps → Silent → Allow restricted settings** before enabling Silent Robot
+- See [ROBOT_ACCESSIBILITY_SETUP.md](ROBOT_ACCESSIBILITY_SETUP.md) for the complete setup guide
+- **Important:** The app's `SetupGuide.tsx` component walks users through this 4-step process
+
+---
+
 ## Android Build
 
 ### Configuration
