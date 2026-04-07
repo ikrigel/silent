@@ -17,15 +17,40 @@ let auth: Auth | null = null;
 let db: Firestore | null = null;
 
 try {
+  // Log Firebase config status (safe: no secrets)
+  const hasApiKey = !!firebaseConfig.apiKey;
+  const hasProjectId = !!firebaseConfig.projectId;
+  const hasAuthDomain = !!firebaseConfig.authDomain;
+  const hasAppId = !!firebaseConfig.appId;
+
+  console.log('Firebase Config Status:', {
+    hasApiKey,
+    hasProjectId,
+    hasAuthDomain,
+    hasAppId,
+    projectId: firebaseConfig.projectId || 'MISSING',
+  });
+
   if (firebaseConfig.apiKey && firebaseConfig.projectId) {
     app = initializeApp(firebaseConfig);
     auth = getAuth(app);
     db = getFirestore(app);
+    console.log('Firebase initialized successfully');
   } else {
-    console.warn('Firebase config incomplete, auth features will be disabled');
+    const missing = [];
+    if (!firebaseConfig.apiKey) missing.push('apiKey');
+    if (!firebaseConfig.projectId) missing.push('projectId');
+    if (!firebaseConfig.authDomain) missing.push('authDomain');
+    if (!firebaseConfig.appId) missing.push('appId');
+    console.error('Firebase config incomplete. Missing:', missing.join(', '));
+    console.warn('Auth features will be disabled');
   }
 } catch (err) {
   console.error('Firebase initialization failed:', err);
+  if (err instanceof Error) {
+    console.error('Error message:', err.message);
+    console.error('Error stack:', err.stack);
+  }
 }
 
 export { auth, db };
@@ -64,7 +89,15 @@ function buildUser(firebaseUser: User): AppUser {
  */
 export async function signInWithGoogle(): Promise<AppUser> {
   if (!auth) {
-    throw new Error('Firebase auth not initialized');
+    const msg = 'Firebase auth not initialized. Check console for Firebase config status.';
+    console.error(msg);
+    console.error('Firebase config:', {
+      apiKey: firebaseConfig.apiKey ? '***present***' : 'MISSING',
+      authDomain: firebaseConfig.authDomain || 'MISSING',
+      projectId: firebaseConfig.projectId || 'MISSING',
+      appId: firebaseConfig.appId ? '***present***' : 'MISSING',
+    });
+    throw new Error(msg);
   }
   const provider = new GoogleAuthProvider();
   try {
@@ -74,23 +107,40 @@ export async function signInWithGoogle(): Promise<AppUser> {
 
     if (isCapacitor) {
       // Native Google Sign-In — no browser redirect needed
-      const { FirebaseAuthentication } = await import('@capacitor-firebase/authentication');
-      const result = await FirebaseAuthentication.signInWithGoogle();
-      if (!result.credential?.idToken) {
-        throw new Error('No ID token returned from native Google Sign-In');
-      }
+      console.log('Using native Capacitor Google Sign-In...');
+      try {
+        const { FirebaseAuthentication } = await import('@capacitor-firebase/authentication');
+        console.log('Capacitor FirebaseAuthentication plugin loaded');
 
-      // Exchange native credential for Firebase session in WebView
-      const googleCredential = GoogleAuthProvider.credential(result.credential.idToken);
-      const userCredential = await signInWithCredential(auth, googleCredential);
-      const user = buildUser(userCredential.user);
+        const result = await FirebaseAuthentication.signInWithGoogle();
+        console.log('Native sign-in result:', {
+          hasCredential: !!result.credential,
+          hasIdToken: !!result.credential?.idToken,
+        });
 
-      // Save user to Firestore (merge: true = upsert)
-      if (db) {
-        await setDoc(doc(db, 'users', user.uid), user, { merge: true });
+        if (!result.credential?.idToken) {
+          throw new Error('No ID token returned from native Google Sign-In');
+        }
+
+        // Exchange native credential for Firebase session in WebView
+        const googleCredential = GoogleAuthProvider.credential(result.credential.idToken);
+        const userCredential = await signInWithCredential(auth, googleCredential);
+        const user = buildUser(userCredential.user);
+
+        // Save user to Firestore (merge: true = upsert)
+        if (db) {
+          await setDoc(doc(db, 'users', user.uid), user, { merge: true });
+        }
+        writeLog('info', `authService: User signed in (native): ${user.email}`);
+        return user;
+      } catch (nativeErr: unknown) {
+        const nativeMsg = nativeErr instanceof Error ? nativeErr.message : String(nativeErr);
+        console.error('Native Google Sign-In failed:', nativeMsg);
+        if (nativeErr instanceof Error) {
+          console.error('Stack:', nativeErr.stack);
+        }
+        throw nativeErr;
       }
-      writeLog('info', `authService: User signed in (native): ${user.email}`);
-      return user;
     }
 
     // Web: popup flow (unchanged)
