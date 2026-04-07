@@ -194,8 +194,30 @@ See [ANDROID_BUILD_DEBUGGING.md](ANDROID_BUILD_DEBUGGING.md) for:
 - Common issues and fixes found during v1.0.54 builds
 
 ## Deployment
-- **Web**: Vercel SPA (`.github/workflows/deploy.yml`) — tests must pass before deploy
+- **Web**: Vercel SPA (`.github/workflows/deploy.yml`) at https://silent-eight.vercel.app
+  - Tests must pass before deploy
+  - IMPORTANT: Vercel uses COOP headers that block popup-based OAuth
+  - Solution: Use redirect-based auth (`signInWithRedirect`) instead of `signInWithPopup`
 - **APK**: GitHub Actions (`build-apk.yml`) — triggered by `git tag v*`
 - **Build**: `npm run build` → `dist/` folder (web); `./gradlew assembleRelease` → APK (mobile)
 - **Manual web deploy**: `npm run deploy` (runs `vercel --prod`)
-- **Manual APK build**: `cd android && ./gradlew clean assembleRelease -x lint`
+- **Manual APK build**: `cd android && ./gradlew clean assembleRelease`
+
+## OAuth Authentication Architecture
+
+### Web (Vercel)
+- Uses **redirect-based OAuth** (`signInWithRedirect` + `getRedirectResult`)
+- Does NOT use popup auth (blocked by COOP headers on Vercel)
+- Flow: Click Sign In → Redirect to Google → User signs in → Redirects back → App handles result
+
+### Mobile (APK)
+- Uses **native Firebase authentication** via `@capacitor-firebase/authentication`
+- Native plugin handles Google Sign-In via Android system
+- Direct credential exchange to Firebase
+- No popup or redirect needed
+
+### Critical Issue Resolved (v1.0.59)
+- **Problem**: Vercel's COOP header blocks `window.closed` checks used by popup auth
+- **Symptoms**: Console error "Cross-Origin-Opener-Policy policy would block the window.closed call"
+- **Solution**: Switch to redirect-based OAuth which avoids `window.closed` polling
+- **Fix**: Changed `signInWithPopup(auth, provider)` → `signInWithRedirect(auth, provider)`

@@ -4,37 +4,49 @@
 
 ### What It Means
 
-The WebView security policy (COOP header) is blocking Firebase's popup-based authentication flow. This happens because:
+COOP (Cross-Origin-Opener-Policy) security headers block Firebase's popup-based authentication because popups rely on `window.closed` polling, which COOP prevents.
 
-1. **Firebase popup auth** tries to open a new window and monitor it with `window.closed`
-2. **COOP header** in Capacitor WebView prevents checking `window.closed` on windows
-3. **Result:** Auth flow hangs — the popup never properly closes/communicates
+### Where It Happens
 
-### Why It Happens in the APK
+- **Capacitor WebView (APK):** COOP headers prevent `window.closed` checks
+- **Vercel (Web):** COOP headers also prevent `window.closed` checks
+- **Regular browsers:** Usually allow popup monitoring
 
-- Desktop/mobile browsers: Allow popup monitoring → popup auth works
-- **Capacitor WebView:** COOP headers block `window.closed` checks → popup auth fails
+### Solution: v1.0.59+
 
-### Solution: v1.0.57+
+v1.0.59 switches to **redirect-based OAuth** which doesn't rely on `window.closed`:
 
-v1.0.57 adds **explicit Capacitor detection** to prevent this:
-
+#### For Web (Vercel)
 ```typescript
-// Check if we're in a Capacitor app
-const isCapacitorApp = !!Capacitor && typeof Capacitor.isNativePlatform === 'function';
-const isNativePlatform = isCapacitorApp && Capacitor.isNativePlatform();
+// OLD (blocked by COOP):
+const result = await signInWithPopup(auth, provider);
 
-if (isNativePlatform) {
-  // Use native Firebase authentication (safe in WebView)
-  const result = await FirebaseAuthentication.signInWithGoogle();
-} else if (isCapacitorApp) {
-  // Capacitor app but native auth not available — error instead of attempting popup
-  throw new Error('Cannot use popup auth in WebView. Native Firebase plugin may not be available.');
-} else {
-  // Desktop/browser — popup auth is safe
-  const result = await signInWithPopup(auth, provider);
-}
+// NEW (works with COOP):
+await signInWithRedirect(auth, provider);
+// After redirect back, handleRedirectResult() is called in App.tsx
 ```
+
+**Redirect flow:**
+1. User clicks "Sign in with Google"
+2. App redirects to Google OAuth page
+3. User signs in
+4. Google redirects back to app
+5. `handleRedirectResult()` retrieves the signed-in user
+6. Auth succeeds ✓
+
+#### For Android APK
+```typescript
+// Uses native Firebase auth (doesn't use popups)
+const { FirebaseAuthentication } = await import('@capacitor-firebase/authentication');
+const result = await FirebaseAuthentication.signInWithGoogle();
+```
+
+**Native flow:**
+1. User clicks "Sign in with Google"
+2. Native Android OAuth dialog opens
+3. User signs in via native Google Accounts
+4. Plugin returns credential directly
+5. Auth succeeds ✓
 
 ---
 
