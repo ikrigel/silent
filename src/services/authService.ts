@@ -101,16 +101,23 @@ export async function signInWithGoogle(): Promise<AppUser> {
   }
   const provider = new GoogleAuthProvider();
   try {
-    // Detect if running on native Android
-    const isCapacitor = typeof (window as any).Capacitor !== 'undefined'
-      && (window as any).Capacitor.isNativePlatform?.();
+    // Detect if running on native Android — be explicit about detection
+    const Capacitor = (window as any).Capacitor;
+    const isCapacitorApp = !!Capacitor && typeof Capacitor.isNativePlatform === 'function';
+    const isNativePlatform = isCapacitorApp && Capacitor.isNativePlatform();
 
-    if (isCapacitor) {
+    console.log('Auth environment detection:', {
+      hasCapacitor: !!Capacitor,
+      isCapacitorApp,
+      isNativePlatform,
+      windowProtocol: window.location.protocol,
+    });
+
+    if (isNativePlatform) {
       // Native Google Sign-In — no browser redirect needed
       console.log('Using native Capacitor Google Sign-In...');
       try {
         // Diagnostic: Check the runtime Capacitor config seen by the plugin
-        const { Capacitor } = await import('@capacitor/core');
         const runtimeConfig = (Capacitor as any).config;
         console.log('Capacitor runtime config plugins:', JSON.stringify(runtimeConfig?.plugins));
         if (runtimeConfig?.plugins?.FirebaseAuthentication) {
@@ -154,7 +161,15 @@ export async function signInWithGoogle(): Promise<AppUser> {
       }
     }
 
-    // Web: popup flow (unchanged)
+    // Check if we're in a WebView context where popup won't work
+    if (isCapacitorApp) {
+      const msg = 'Capacitor app detected but native platform check failed. Cannot use popup auth in WebView due to COOP restrictions. Native Firebase plugin may not be available.';
+      console.error(msg);
+      throw new Error(msg);
+    }
+
+    // Web browser: popup flow is safe
+    console.log('Using web popup flow for authentication...');
     const result = await signInWithPopup(auth, provider);
     const user = buildUser(result.user);
 
