@@ -1,5 +1,5 @@
 import { initializeApp, type FirebaseApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithCredential, getRedirectResult, signOut, onAuthStateChanged, type User, type Auth } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithRedirect, signInWithCredential, getRedirectResult, signOut, onAuthStateChanged, type User, type Auth } from 'firebase/auth';
 import { getFirestore, doc, setDoc, type Firestore } from 'firebase/firestore';
 import { writeLog } from './logService';
 
@@ -161,24 +161,14 @@ export async function signInWithGoogle(): Promise<AppUser> {
       }
     }
 
-    // If Capacitor is present but not a native platform, we're likely on web
-    // Use popup auth (should work fine on browsers)
-    if (isCapacitorApp && !isNativePlatform) {
-      console.log('Capacitor detected but not native platform. Using web popup auth...');
-    } else if (!isCapacitorApp) {
-      console.log('Using web popup flow for authentication...');
-    }
-
-    // Web browser or Capacitor web context: popup flow is the fallback
-    const result = await signInWithPopup(auth, provider);
-    const user = buildUser(result.user);
-
-    // Save user to Firestore (merge: true = upsert)
-    if (db) {
-      await setDoc(doc(db, 'users', user.uid), user, { merge: true });
-    }
-    writeLog('info', `authService: User signed in: ${user.email}`);
-    return user;
+    // Web/browser: use redirect auth instead of popup
+    // Redirect auth doesn't poll window.closed, so it works with COOP headers
+    console.log('Using redirect-based authentication (handles COOP headers)...');
+    console.log('Redirecting to Google OAuth...');
+    await signInWithRedirect(auth, provider);
+    // Note: This function will not return after redirect is initiated
+    // User is signed in on redirect back, and handleRedirectResult() processes it in App.tsx
+    throw new Error('Auth redirect in progress'); // This should not be reached
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     writeLog('error', `authService: Sign in failed: ${msg}`);
