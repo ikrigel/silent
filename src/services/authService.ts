@@ -164,13 +164,24 @@ export async function signInWithGoogle(): Promise<AppUser> {
     // Web/browser: use redirect auth instead of popup
     // Redirect auth doesn't poll window.closed, so it works with COOP headers
     console.log('Using redirect-based authentication (handles COOP headers)...');
-    console.log('Redirecting to Google OAuth...');
+    console.log('Provider config:', {
+      providerId: provider.providerId,
+      clientId: (provider as any).clientId,
+    });
+    console.log('Current URL:', window.location.href);
+    console.log('Auth object:', { authDomain: auth?.config?.authDomain });
+
+    console.log('Calling signInWithRedirect...');
     await signInWithRedirect(auth, provider);
+
     // Note: This function will not return after redirect is initiated
     // User is signed in on redirect back, and handleRedirectResult() processes it in App.tsx
-    throw new Error('Auth redirect in progress'); // This should not be reached
+    // If code reaches here, signInWithRedirect failed silently
+    console.error('signInWithRedirect returned without redirect (unexpected)');
+    throw new Error('OAuth redirect failed - no redirect occurred');
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
+    console.error('signInWithGoogle catch block:', err);
     writeLog('error', `authService: Sign in failed: ${msg}`);
     throw err;
   }
@@ -182,21 +193,34 @@ export async function signInWithGoogle(): Promise<AppUser> {
  * Returns the signed-in user, or null if no redirect was in progress.
  */
 export async function handleRedirectResult(): Promise<AppUser | null> {
-  if (!auth) return null;
+  if (!auth) {
+    console.log('handleRedirectResult: auth not initialized, returning null');
+    return null;
+  }
   try {
+    console.log('handleRedirectResult: calling getRedirectResult...');
     const result = await getRedirectResult(auth);
-    if (!result) return null;
+    console.log('handleRedirectResult: result =', { hasResult: !!result, hasUser: !!result?.user });
 
+    if (!result) {
+      console.log('handleRedirectResult: no redirect in progress (normal on first load)');
+      return null;
+    }
+
+    console.log('handleRedirectResult: processing user from redirect');
     const user = buildUser(result.user);
 
     // Save user to Firestore (merge: true = upsert)
     if (db) {
+      console.log('handleRedirectResult: saving user to Firestore');
       await setDoc(doc(db, 'users', user.uid), user, { merge: true });
     }
+    console.log('handleRedirectResult: user signed in successfully:', user.email);
     writeLog('info', `authService: User signed in via redirect: ${user.email}`);
     return user;
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
+    console.error('handleRedirectResult: error:', err);
     writeLog('error', `authService: Redirect sign-in failed: ${msg}`);
     return null;
   }
