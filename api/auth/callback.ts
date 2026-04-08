@@ -64,7 +64,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         code,
         client_id: process.env.GOOGLE_CLIENT_ID,
         client_secret: process.env.GOOGLE_CLIENT_SECRET,
-        redirect_uri: `${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'https://silent-eight.vercel.app'}/api/auth/callback`,
+        redirect_uri: 'https://silent-eight.vercel.app/api/auth/callback',
         grant_type: 'authorization_code',
       }).toString(),
     });
