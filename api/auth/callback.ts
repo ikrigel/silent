@@ -31,7 +31,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { code, state, error: googleError } = req.query;
+  const { code, error: googleError } = req.query;
 
   // Handle user denying consent
   if (googleError) {
