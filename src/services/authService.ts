@@ -108,24 +108,18 @@ export async function signInWithGoogle(): Promise<AppUser> {
   });
 
   try {
-    // Detect if running on native Android — be explicit about detection
-    // IMPORTANT: Only use native auth if truly on native platform (Android/iOS)
-    // Not when running in web browser (even if Capacitor is present)
+    // Try native Firebase auth first (will only succeed on native platforms)
+    // If native auth fails or isn't available, fall back to web OAuth
     const Capacitor = (window as any).Capacitor;
-    const isCapacitorApp = !!Capacitor && typeof Capacitor.isNativePlatform === 'function';
-    // Fix: Don't use native auth on web, only on actual native platforms
-    const isNativePlatform = isCapacitorApp && Capacitor.isNativePlatform() && window.location.protocol === 'capacitor://';
 
     console.log('Auth environment detection:', {
       hasCapacitor: !!Capacitor,
-      isCapacitorApp,
-      isNativePlatform,
       windowProtocol: window.location.protocol,
     });
 
-    if (isNativePlatform) {
-      // Native Google Sign-In — no browser redirect needed
-      console.log('Using native Capacitor Google Sign-In...');
+    // Attempt native Firebase authentication
+    let nativeAuthError: unknown = null;
+    if (Capacitor) {
       try {
         // Diagnostic: Check the runtime Capacitor config seen by the plugin
         const runtimeConfig = (Capacitor as any).config;
@@ -163,12 +157,18 @@ export async function signInWithGoogle(): Promise<AppUser> {
         return user;
       } catch (nativeErr: unknown) {
         const nativeMsg = nativeErr instanceof Error ? nativeErr.message : String(nativeErr);
-        console.error('Native Google Sign-In failed:', nativeMsg);
+        console.error('Native Google Sign-In failed, falling back to web OAuth:', nativeMsg);
         if (nativeErr instanceof Error) {
-          console.error('Stack:', nativeErr.stack);
+          console.error('Native error stack:', nativeErr.stack);
         }
-        throw nativeErr;
+        nativeAuthError = nativeErr;
+        // Don't re-throw — fall through to web OAuth instead
       }
+    }
+
+    // If native auth failed or wasn't available, use web OAuth
+    if (nativeAuthError || !Capacitor) {
+      console.log('Using web OAuth fallback...');
     }
 
     // Web/browser: use server-side OAuth callback flow
