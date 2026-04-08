@@ -1,0 +1,2 @@
+# Only include the platforms you actually use
+custom: ["https://my.israelgives.org/en/fundme/silent", "https://my.israelgives.org/he/fundme/silent"]
