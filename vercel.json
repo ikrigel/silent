@@ -1,6 +1,6 @@
 {
   "rewrites": [
     { "source": "/downloads/:path*", "destination": "/downloads/:path*" },
-    { "source": "^/(?!api/).*", "destination": "/" }
+    { "source": "/(.*)", "destination": "/" }
   ]
 }
