@@ -230,9 +230,43 @@ export async function handleCustomToken(): Promise<AppUser | null> {
     // Strip token from URL immediately for security
     window.history.replaceState({}, document.title, window.location.pathname);
 
+    // Decode custom token to extract claims
+    const tokenParts = customToken.split('.');
+    if (tokenParts.length !== 3) {
+      throw new Error('Invalid custom token format');
+    }
+    const payload = tokenParts[1];
+    const padded = payload + '='.repeat((4 - (payload.length % 4)) % 4);
+    const decoded = decodeURIComponent(atob(padded).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+    interface CustomTokenPayload {
+      claims?: {
+        email?: string;
+        name?: string;
+        picture?: string;
+      };
+      uid?: string;
+    }
+    const tokenPayload = JSON.parse(decoded) as CustomTokenPayload;
+    const claims = tokenPayload.claims || {};
+
     console.log('handleCustomToken: signing in with custom token...');
     const userCredential = await signInWithCustomToken(auth, customToken);
-    const user = buildUser(userCredential.user);
+    const firebaseUser = userCredential.user;
+
+    // Build AppUser from claims extracted from custom token
+    // (Firebase User object doesn't populate email/displayName from custom token claims)
+    const user: AppUser = {
+      uid: firebaseUser.uid,
+      email: claims.email || firebaseUser.email || '',
+      displayName: claims.name || firebaseUser.displayName || '',
+      photoURL: claims.picture || firebaseUser.photoURL || '',
+      registeredAt: new Date().toISOString(),
+      lastLoginAt: new Date().toISOString(),
+    };
+
+    if (!user.email || !user.displayName) {
+      throw new Error('Email or display name missing from custom token');
+    }
 
     // Save user to Firestore (merge: true = upsert)
     if (db) {
