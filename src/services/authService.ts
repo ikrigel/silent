@@ -100,11 +100,21 @@ export async function signInWithGoogle(): Promise<AppUser> {
     throw new Error(msg);
   }
   const provider = new GoogleAuthProvider();
+
+  // Set Web Client ID for OAuth provider
+  // This is required for Firebase redirect auth to work properly
+  provider.setCustomParameters({
+    'client_id': '93806788136-c64jqa2sand25r4kteoeivucpgmfl1ol.apps.googleusercontent.com'
+  });
+
   try {
     // Detect if running on native Android — be explicit about detection
+    // IMPORTANT: Only use native auth if truly on native platform (Android/iOS)
+    // Not when running in web browser (even if Capacitor is present)
     const Capacitor = (window as any).Capacitor;
     const isCapacitorApp = !!Capacitor && typeof Capacitor.isNativePlatform === 'function';
-    const isNativePlatform = isCapacitorApp && Capacitor.isNativePlatform();
+    // Fix: Don't use native auth on web, only on actual native platforms
+    const isNativePlatform = isCapacitorApp && Capacitor.isNativePlatform() && window.location.protocol === 'capacitor://';
 
     console.log('Auth environment detection:', {
       hasCapacitor: !!Capacitor,
