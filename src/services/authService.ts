@@ -121,23 +121,39 @@ export async function signInWithGoogle(): Promise<AppUser> {
     let nativeAuthError: unknown = null;
     if (Capacitor) {
       try {
-        // Diagnostic: Check the runtime Capacitor config seen by the plugin
+        // ULTRA VERBOSE LOGGING FOR APK DEBUG
+        console.log('=== APK NATIVE AUTH DEBUG START ===');
+        console.log('Step 1: Capacitor object exists:', !!Capacitor);
+        console.log('Step 2: Capacitor.isNativePlatform:', Capacitor.isNativePlatform?.());
+
+        // Check runtime config
         const runtimeConfig = (Capacitor as any).config;
-        console.log('Capacitor runtime config plugins:', JSON.stringify(runtimeConfig?.plugins));
+        console.log('Step 3: Capacitor.config exists:', !!runtimeConfig);
+        console.log('Step 4: Full Capacitor config:', JSON.stringify(runtimeConfig, null, 2));
+        console.log('Step 5: Plugins in config:', JSON.stringify(runtimeConfig?.plugins, null, 2));
+
         if (runtimeConfig?.plugins?.FirebaseAuthentication) {
-          console.log('  - FirebaseAuthentication.skipNativeAuth:', runtimeConfig.plugins.FirebaseAuthentication.skipNativeAuth);
-          console.log('  - FirebaseAuthentication.providers:', runtimeConfig.plugins.FirebaseAuthentication.providers);
+          console.log('Step 6: FirebaseAuthentication config found!');
+          console.log('  - skipNativeAuth:', runtimeConfig.plugins.FirebaseAuthentication.skipNativeAuth);
+          console.log('  - providers:', runtimeConfig.plugins.FirebaseAuthentication.providers);
+          console.log('  - Full config:', JSON.stringify(runtimeConfig.plugins.FirebaseAuthentication, null, 2));
         } else {
-          console.warn('FirebaseAuthentication plugin config not found in runtime config!');
+          console.error('Step 6: FirebaseAuthentication config NOT found in runtime config!');
+          console.error('  Available plugins:', Object.keys(runtimeConfig?.plugins || {}));
         }
 
+        console.log('Step 7: Attempting to import @capacitor-firebase/authentication...');
         const { FirebaseAuthentication } = await import('@capacitor-firebase/authentication');
-        console.log('Capacitor FirebaseAuthentication plugin loaded');
+        console.log('Step 8: FirebaseAuthentication plugin imported successfully');
+        console.log('Step 9: FirebaseAuthentication methods:', Object.getOwnPropertyNames(FirebaseAuthentication));
 
+        console.log('Step 10: Calling FirebaseAuthentication.signInWithGoogle()...');
         const result = await FirebaseAuthentication.signInWithGoogle();
-        console.log('Native sign-in result:', {
+        console.log('Step 11: Sign-in succeeded!');
+        console.log('Step 12: Native sign-in result:', {
           hasCredential: !!result.credential,
           hasIdToken: !!result.credential?.idToken,
+          credential: result.credential,
         });
 
         if (!result.credential?.idToken) {
@@ -157,10 +173,17 @@ export async function signInWithGoogle(): Promise<AppUser> {
         return user;
       } catch (nativeErr: unknown) {
         const nativeMsg = nativeErr instanceof Error ? nativeErr.message : String(nativeErr);
-        console.error('Native Google Sign-In failed, falling back to web OAuth:', nativeMsg);
+        console.error('=== NATIVE AUTH ERROR ===');
+        console.error('Error message:', nativeMsg);
+        console.error('Full error object:', nativeErr);
         if (nativeErr instanceof Error) {
-          console.error('Native error stack:', nativeErr.stack);
+          console.error('Error name:', nativeErr.name);
+          console.error('Error stack:', nativeErr.stack);
+          console.error('Error keys:', Object.keys(nativeErr));
+          console.error('Error toString():', nativeErr.toString());
         }
+        console.error('Error type:', typeof nativeErr);
+        console.error('=== FALLING BACK TO WEB OAUTH ===');
         nativeAuthError = nativeErr;
         // Don't re-throw — fall through to web OAuth instead
       }
