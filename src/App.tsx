@@ -4,7 +4,6 @@ import { ThemeProvider, CssBaseline, createTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useAppTheme } from '@/hooks/useAppTheme';
 import { useAuthStore } from '@/store/authStore';
-import { handleRedirectResult } from '@/services/authService';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import Dashboard from '@/pages/Dashboard';
 import SchedulerPage from '@/pages/Scheduler';
@@ -27,14 +26,8 @@ const App: React.FC = () => {
   const { subscribeToAuth } = useAuthStore();
   const isRTL = i18n.language === 'he';
 
-  // Initialize Firebase auth listener and handle OAuth redirects on app mount
+  // Initialize Firebase auth listener on app mount
   useEffect(() => {
-    handleRedirectResult().then(user => {
-      if (user) {
-        // Use the store's internal setState (from Zustand) to update the user
-        useAuthStore.setState({ user });
-      }
-    });
     subscribeToAuth();
   }, [subscribeToAuth]);
 

@@ -270,7 +270,9 @@
     "signOut": "Sign out",
     "signedInAs": "Signed in as {{name}}",
     "loginRequired": "Sign in with Google to download the APK and receive updates.",
-    "login": "Login"
+    "login": "Login",
+    "oauthError": "Sign-in failed ({{reason}}). Please try again.",
+    "oauthDenied": "Sign-in cancelled."
   },
   "common": {
     "loading": "Loading..."

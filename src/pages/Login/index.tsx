@@ -4,7 +4,7 @@ import { Google as GoogleIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/store/authStore';
-import { handleRedirectResult } from '@/services/authService';
+import { handleCustomToken } from '@/services/authService';
 
 /** Login page — Google OAuth sign-in */
 const LoginPage: React.FC = () => {
@@ -12,17 +12,41 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { user, loading, error, signIn, clearError } = useAuthStore();
 
-  // Check for OAuth redirect result when page loads
-  // signInWithRedirect() redirects back to /login, so we need to call
-  // getRedirectResult() here to retrieve the authenticated user
+  // Check for OAuth callback result when page loads
+  // Server-side OAuth callback redirects back to /login?token=<customToken>
   useEffect(() => {
-    handleRedirectResult().then(redirectUser => {
-      if (redirectUser) {
-        useAuthStore.setState({ user: redirectUser });
+    handleCustomToken().then(tokenUser => {
+      if (tokenUser) {
+        useAuthStore.setState({ user: tokenUser });
         navigate('/');
       }
     });
   }, [navigate]);
+
+  // Check for OAuth errors in URL
+  // Server-side OAuth callback redirects to /login?error=<reason> on failure
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const errorParam = params.get('error');
+    if (errorParam) {
+      // Strip error from URL for security
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+      // Map error codes to user-facing messages
+      const errorMessages: Record<string, string> = {
+        'denied': t('auth.oauthDenied'),
+        'access_denied': t('auth.oauthDenied'),
+        'missing_code': t('auth.oauthError', { reason: 'missing_code' }),
+        'server_misconfigured': t('auth.oauthError', { reason: 'server_misconfigured' }),
+        'token_exchange_failed': t('auth.oauthError', { reason: 'token_exchange_failed' }),
+        'malformed_token': t('auth.oauthError', { reason: 'malformed_token' }),
+        'internal_error': t('auth.oauthError', { reason: 'internal_error' }),
+      };
+
+      const message = errorMessages[errorParam] || t('auth.oauthError', { reason: errorParam });
+      useAuthStore.setState({ error: message });
+    }
+  }, [t]);
 
   // If already logged in, redirect to home
   useEffect(() => {

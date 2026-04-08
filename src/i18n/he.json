@@ -272,6 +272,8 @@
     "signOut": "התנתק",
     "signedInAs": "מחובר בתור {{name}}",
     "loginRequired": "התחבר עם Google כדי להוריד את ה-APK ולקבל עדכונים.",
-    "login": "התחברות"
+    "login": "התחברות",
+    "oauthError": "ההתחברות נכשלה ({{reason}}). אנא נסה שוב.",
+    "oauthDenied": "ההתחברות בוטלה."
   }
 }

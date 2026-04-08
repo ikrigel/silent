@@ -1,5 +1,5 @@
 import { initializeApp, type FirebaseApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithRedirect, signInWithCredential, getRedirectResult, signOut, onAuthStateChanged, type User, type Auth } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithCredential, signInWithCustomToken, signOut, onAuthStateChanged, type User, type Auth } from 'firebase/auth';
 import { getFirestore, doc, setDoc, type Firestore } from 'firebase/firestore';
 import { writeLog } from './logService';
 
@@ -171,24 +171,31 @@ export async function signInWithGoogle(): Promise<AppUser> {
       }
     }
 
-    // Web/browser: use redirect auth instead of popup
-    // Redirect auth doesn't poll window.closed, so it works with COOP headers
-    console.log('Using redirect-based authentication (handles COOP headers)...');
-    console.log('Provider config:', {
-      providerId: provider.providerId,
-      clientId: (provider as any).clientId,
+    // Web/browser: use server-side OAuth callback flow
+    // This avoids COOP header blocking and provides better error handling
+    console.log('Using server-side OAuth callback...');
+
+    const googleClientId = '93806788136-c64jqa2sand25r4kteoeivucpgmfl1ol.apps.googleusercontent.com';
+    const redirectUri = `${window.location.origin}/api/auth/callback`;
+
+    const params = new URLSearchParams({
+      client_id: googleClientId,
+      redirect_uri: redirectUri,
+      response_type: 'code',
+      scope: 'openid email profile',
+      prompt: 'select_account',
     });
-    console.log('Current URL:', window.location.href);
-    console.log('Auth object:', { authDomain: auth?.config?.authDomain });
 
-    console.log('Calling signInWithRedirect...');
-    await signInWithRedirect(auth, provider);
+    console.log('Redirecting to Google OAuth:', {
+      clientId: googleClientId,
+      redirectUri,
+    });
 
-    // Note: This function will not return after redirect is initiated
-    // User is signed in on redirect back, and handleRedirectResult() processes it in App.tsx
-    // If code reaches here, signInWithRedirect failed silently
-    console.error('signInWithRedirect returned without redirect (unexpected)');
-    throw new Error('OAuth redirect failed - no redirect occurred');
+    // Redirect to Google OAuth — this page will navigate away
+    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+
+    // Return a promise that never resolves (page navigates away)
+    return new Promise<AppUser>(() => {});
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error('signInWithGoogle catch block:', err);
@@ -198,40 +205,48 @@ export async function signInWithGoogle(): Promise<AppUser> {
 }
 
 /**
- * Handle OAuth redirect result after page reloads.
- * Call this once on app startup (e.g., in App.tsx useEffect).
- * Returns the signed-in user, or null if no redirect was in progress.
+ * Handle custom token from OAuth callback.
+ * Call this once on app startup (e.g., in Login.tsx useEffect).
+ * Reads ?token= from URL, strips it immediately, and signs in user.
+ * Returns the signed-in user, or null if no token was present.
  */
-export async function handleRedirectResult(): Promise<AppUser | null> {
+export async function handleCustomToken(): Promise<AppUser | null> {
   if (!auth) {
-    console.log('handleRedirectResult: auth not initialized, returning null');
+    console.log('handleCustomToken: auth not initialized, returning null');
     return null;
   }
-  try {
-    console.log('handleRedirectResult: calling getRedirectResult...');
-    const result = await getRedirectResult(auth);
-    console.log('handleRedirectResult: result =', { hasResult: !!result, hasUser: !!result?.user });
 
-    if (!result) {
-      console.log('handleRedirectResult: no redirect in progress (normal on first load)');
+  try {
+    // Read token from URL query parameter
+    const params = new URLSearchParams(window.location.search);
+    const customToken = params.get('token');
+
+    if (!customToken) {
+      console.log('handleCustomToken: no token in URL');
       return null;
     }
 
-    console.log('handleRedirectResult: processing user from redirect');
-    const user = buildUser(result.user);
+    console.log('handleCustomToken: found custom token, stripping from URL...');
+    // Strip token from URL immediately for security
+    window.history.replaceState({}, document.title, window.location.pathname);
+
+    console.log('handleCustomToken: signing in with custom token...');
+    const userCredential = await signInWithCustomToken(auth, customToken);
+    const user = buildUser(userCredential.user);
 
     // Save user to Firestore (merge: true = upsert)
     if (db) {
-      console.log('handleRedirectResult: saving user to Firestore');
+      console.log('handleCustomToken: saving user to Firestore');
       await setDoc(doc(db, 'users', user.uid), user, { merge: true });
     }
-    console.log('handleRedirectResult: user signed in successfully:', user.email);
-    writeLog('info', `authService: User signed in via redirect: ${user.email}`);
+
+    console.log('handleCustomToken: user signed in successfully:', user.email);
+    writeLog('info', `authService: User signed in via custom token: ${user.email}`);
     return user;
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
-    console.error('handleRedirectResult: error:', err);
-    writeLog('error', `authService: Redirect sign-in failed: ${msg}`);
+    console.error('handleCustomToken: error:', err);
+    writeLog('error', `authService: Custom token sign-in failed: ${msg}`);
     return null;
   }
 }
