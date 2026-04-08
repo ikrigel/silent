@@ -42,7 +42,7 @@ export interface ScheduleEntry {
   unsilenceWEAOnEnd?: boolean;   // explicitly call unsilenceWEA when schedule ends
 }
 
-export type LogLevel = 'verbose' | 'info' | 'error' | 'none';
+export type LogLevel = 'ultraverbose' | 'verbose' | 'info' | 'error' | 'none';
 
 export interface LogEntry {
   id: string;

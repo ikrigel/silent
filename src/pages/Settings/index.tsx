@@ -59,6 +59,7 @@ const SettingsPage: React.FC = () => {
                 <MenuItem value="error">{t('settings.logError')}</MenuItem>
                 <MenuItem value="info">{t('settings.logInfo')}</MenuItem>
                 <MenuItem value="verbose">{t('settings.logVerbose')}</MenuItem>
+                <MenuItem value="ultraverbose">{t('settings.logUltraVerbose')}</MenuItem>
               </Select>
             </FormControl>
           </CardContent>

@@ -156,6 +156,7 @@
     "logError": "Error only",
     "logInfo": "Info + Error",
     "logVerbose": "Verbose (all)",
+    "logUltraVerbose": "Ultra Verbose (APK debug)",
     "notifications": "Browser Notifications",
     "notificationsLabel": "Enable schedule change notifications",
     "showUpdateNotifications": "Show new version notifications",

@@ -17,8 +17,8 @@ export function writeLog(
   // none = no logging at all
   if (logLevel === 'none') return;
 
-  // Filter by severity: verbose < info < error
-  const order: LogLevel[] = ['verbose', 'info', 'error', 'none'];
+  // Filter by severity: ultraverbose < verbose < info < error
+  const order: LogLevel[] = ['ultraverbose', 'verbose', 'info', 'error', 'none'];
   if (order.indexOf(level) < order.indexOf(logLevel)) return;
 
   const entry: LogEntry = {

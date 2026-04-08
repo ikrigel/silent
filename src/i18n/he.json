@@ -82,6 +82,7 @@
     "logError": "שגיאות בלבד",
     "logInfo": "מידע + שגיאות",
     "logVerbose": "מפורט (הכל)",
+    "logUltraVerbose": "אולטרה מפורט (ניפוי APK)",
     "notifications": "התראות דפדפן",
     "notificationsLabel": "אפשר התראות על שינויי לוח זמנים",
     "showUpdateNotifications": "הצג התראות גרסה חדשה",

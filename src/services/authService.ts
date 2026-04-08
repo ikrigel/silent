@@ -112,7 +112,7 @@ export async function signInWithGoogle(): Promise<AppUser> {
     // If native auth fails or isn't available, fall back to web OAuth
     const Capacitor = (window as any).Capacitor;
 
-    console.log('Auth environment detection:', {
+    writeLog('ultraverbose', 'Auth environment detection', {
       hasCapacitor: !!Capacitor,
       windowProtocol: window.location.protocol,
     });
@@ -122,35 +122,46 @@ export async function signInWithGoogle(): Promise<AppUser> {
     if (Capacitor) {
       try {
         // ULTRA VERBOSE LOGGING FOR APK DEBUG
-        console.log('=== APK NATIVE AUTH DEBUG START ===');
-        console.log('Step 1: Capacitor object exists:', !!Capacitor);
-        console.log('Step 2: Capacitor.isNativePlatform:', Capacitor.isNativePlatform?.());
+        writeLog('ultraverbose', '=== APK NATIVE AUTH DEBUG START ===');
+        writeLog('ultraverbose', 'Step 1: Capacitor object exists', { exists: !!Capacitor });
+        writeLog('ultraverbose', 'Step 2: Capacitor.isNativePlatform', {
+          isNativePlatform: Capacitor.isNativePlatform?.(),
+        });
 
         // Check runtime config
         const runtimeConfig = (Capacitor as any).config;
-        console.log('Step 3: Capacitor.config exists:', !!runtimeConfig);
-        console.log('Step 4: Full Capacitor config:', JSON.stringify(runtimeConfig, null, 2));
-        console.log('Step 5: Plugins in config:', JSON.stringify(runtimeConfig?.plugins, null, 2));
+        writeLog('ultraverbose', 'Step 3: Capacitor.config exists', { exists: !!runtimeConfig });
+        writeLog('ultraverbose', 'Step 4: Full Capacitor config', {
+          config: runtimeConfig,
+          configStr: JSON.stringify(runtimeConfig),
+        });
+        writeLog('ultraverbose', 'Step 5: Plugins in config', {
+          plugins: runtimeConfig?.plugins,
+          pluginsStr: JSON.stringify(runtimeConfig?.plugins),
+          pluginKeys: Object.keys(runtimeConfig?.plugins || {}),
+        });
 
         if (runtimeConfig?.plugins?.FirebaseAuthentication) {
-          console.log('Step 6: FirebaseAuthentication config found!');
-          console.log('  - skipNativeAuth:', runtimeConfig.plugins.FirebaseAuthentication.skipNativeAuth);
-          console.log('  - providers:', runtimeConfig.plugins.FirebaseAuthentication.providers);
-          console.log('  - Full config:', JSON.stringify(runtimeConfig.plugins.FirebaseAuthentication, null, 2));
+          writeLog('ultraverbose', 'Step 6: FirebaseAuthentication config FOUND', {
+            skipNativeAuth: runtimeConfig.plugins.FirebaseAuthentication.skipNativeAuth,
+            providers: runtimeConfig.plugins.FirebaseAuthentication.providers,
+            fullConfig: runtimeConfig.plugins.FirebaseAuthentication,
+          });
         } else {
-          console.error('Step 6: FirebaseAuthentication config NOT found in runtime config!');
-          console.error('  Available plugins:', Object.keys(runtimeConfig?.plugins || {}));
+          writeLog('ultraverbose', 'Step 6: FirebaseAuthentication config NOT found', {
+            availablePlugins: Object.keys(runtimeConfig?.plugins || {}),
+          });
         }
 
-        console.log('Step 7: Attempting to import @capacitor-firebase/authentication...');
+        writeLog('ultraverbose', 'Step 7: Attempting to import @capacitor-firebase/authentication');
         const { FirebaseAuthentication } = await import('@capacitor-firebase/authentication');
-        console.log('Step 8: FirebaseAuthentication plugin imported successfully');
-        console.log('Step 9: FirebaseAuthentication methods:', Object.getOwnPropertyNames(FirebaseAuthentication));
+        writeLog('ultraverbose', 'Step 8: FirebaseAuthentication plugin imported successfully', {
+          methodNames: Object.getOwnPropertyNames(FirebaseAuthentication),
+        });
 
-        console.log('Step 10: Calling FirebaseAuthentication.signInWithGoogle()...');
+        writeLog('ultraverbose', 'Step 9: Calling FirebaseAuthentication.signInWithGoogle()');
         const result = await FirebaseAuthentication.signInWithGoogle();
-        console.log('Step 11: Sign-in succeeded!');
-        console.log('Step 12: Native sign-in result:', {
+        writeLog('ultraverbose', 'Step 10: Sign-in succeeded!', {
           hasCredential: !!result.credential,
           hasIdToken: !!result.credential?.idToken,
           credential: result.credential,
@@ -173,17 +184,19 @@ export async function signInWithGoogle(): Promise<AppUser> {
         return user;
       } catch (nativeErr: unknown) {
         const nativeMsg = nativeErr instanceof Error ? nativeErr.message : String(nativeErr);
-        console.error('=== NATIVE AUTH ERROR ===');
-        console.error('Error message:', nativeMsg);
-        console.error('Full error object:', nativeErr);
+        writeLog('ultraverbose', '=== NATIVE AUTH ERROR ===');
+        writeLog('ultraverbose', 'Error message', { message: nativeMsg });
+        writeLog('ultraverbose', 'Full error object', { error: nativeErr });
         if (nativeErr instanceof Error) {
-          console.error('Error name:', nativeErr.name);
-          console.error('Error stack:', nativeErr.stack);
-          console.error('Error keys:', Object.keys(nativeErr));
-          console.error('Error toString():', nativeErr.toString());
+          writeLog('ultraverbose', 'Error details', {
+            name: nativeErr.name,
+            stack: nativeErr.stack,
+            keys: Object.keys(nativeErr),
+            toString: nativeErr.toString(),
+          });
         }
-        console.error('Error type:', typeof nativeErr);
-        console.error('=== FALLING BACK TO WEB OAUTH ===');
+        writeLog('ultraverbose', 'Error type', { type: typeof nativeErr });
+        writeLog('ultraverbose', '=== FALLING BACK TO WEB OAUTH ===');
         nativeAuthError = nativeErr;
         // Don't re-throw — fall through to web OAuth instead
       }
