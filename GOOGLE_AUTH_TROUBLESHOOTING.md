@@ -1,6 +1,91 @@
 # Google Sign-In Troubleshooting Guide
 
-## Problem: "Cross-Origin-Opener-Policy policy would block the window.closed call"
+## Quick Checklist
+
+Before troubleshooting, verify:
+- ✅ **OAuth consent screen configured** in Google Cloud Console (Branding tab)
+- ✅ **App domain** set to `silent-please.firebaseapp.com`
+- ✅ **Authorized domains** include both `silent-please.firebaseapp.com` and `silent-eight.vercel.app`
+- ✅ **Firebase API key** not expired (check Google Cloud Credentials)
+- ✅ **google-services.json** includes Android OAuth clients with correct SHA-1 fingerprints
+- ✅ **Capacitor config** has `providers: ['google']` and `skipNativeAuth: false`
+
+If any are missing, authentication will fail.
+
+---
+
+## Problem 1: "Google sign-in provider is not enabled" (v1.0.60)
+
+### What It Means
+
+Firebase initialization fails because:
+1. OAuth consent screen not configured in Google Cloud
+2. Google-services.json missing Android OAuth clients
+3. SHA-1 fingerprint mismatch in google-services.json
+
+### Where It Happens
+
+- **Android APK:** Native Firebase auth fails
+- **Web (if using test mode):** OAuth redirect fails
+
+### Solution: v1.0.60+
+
+**Step 1: Configure OAuth Consent Screen**
+1. Go to **Google Cloud Console** → **APIs & Services** → **OAuth consent screen**
+2. Click **Branding** tab
+3. Fill in:
+   - **App domain**: `silent-please.firebaseapp.com`
+   - **Application home page**: `https://silent-eight.vercel.app`
+   - **Authorized domains**: 
+     - `silent-please.firebaseapp.com`
+     - `silent-eight.vercel.app`
+4. Add **Developer contact info** with your email
+5. Click **Save and Continue**
+
+**Step 2: Verify google-services.json**
+```json
+{
+  "client": [
+    {
+      "oauth_client": [
+        {
+          "client_type": 1,  // ✅ Android OAuth client (not web)
+          "android_info": {
+            "package_name": "com.ikrigel.silent",
+            "certificate_hash": "97e48dcb3a09c9c97c96903feed3a559b3ce6a5c"  // ✅ Your release SHA-1
+          }
+        },
+        {
+          "client_type": 1,  // ✅ Debug keystore
+          "android_info": {
+            "certificate_hash": "711f2ffca9be00b4edb79466438917a63e4f9e04"  // ✅ Debug SHA-1
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Step 3: Verify SHA-1 Fingerprints**
+```bash
+cd android
+./gradlew signingReport
+```
+
+The SHA-1 must match one of the `certificate_hash` values in `google-services.json`. If it doesn't:
+1. Download fresh `google-services.json` from Firebase Console
+2. Make sure it includes both release and debug Android OAuth clients
+
+**Step 4: Rebuild**
+```bash
+npx cap sync android
+cd android && ./gradlew clean assembleRelease
+```
+
+---
+
+## Problem 2: "Cross-Origin-Opener-Policy policy would block the window.closed call"
 
 ### What It Means
 

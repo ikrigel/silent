@@ -106,18 +106,45 @@ tests/
 - Run: `npm test` (headless) | `npm run test:ui` (interactive)
 
 ## Firebase Integration
+
+### Authentication Flow
 - **Authentication**: Google OAuth via Firebase Auth (`src/services/authService.ts`)
 - **User Storage**: Firestore database auto-creates `users` collection on first sign-in
 - **Security Rules**: Users can only read/write their own documents
 - **Zustand Store**: `useAuthStore` manages authentication state globally
 - **Protected Routes**: Login page at `/login`, APK download gated to authenticated users
 - **Vercel Functions**: `/api/download-apk` verifies Firebase tokens server-side
-- **Capacitor Firebase Auth Plugin**: 
-  - Configured in `capacitor.config.ts` with `providers: ['google']`
-  - Enables native Google Sign-In on Android (via @capacitor-firebase/authentication@8.2.0)
-  - `google-services.json` required in `android/app/` for native Firebase initialization
-  - **Critical**: `google-services.json` must include Android OAuth client (type 1) with SHA-1 fingerprints
-  - See [ANDROID_OAUTH_SETUP.md](ANDROID_OAUTH_SETUP.md) for configuration instructions
+
+### Web Authentication (Vercel)
+- Uses **redirect-based OAuth** (`signInWithRedirect` + `getRedirectResult`) to avoid COOP header blocking
+- Requires environment variable: `VITE_FIREBASE_API_KEY` (set in Vercel Secrets)
+- OAuth consent screen must be configured in Google Cloud Console (see setup instructions below)
+
+### Mobile Authentication (APK)
+- Uses **native Firebase authentication** via `@capacitor-firebase/authentication@8.2.0`
+- Configured in `capacitor.config.ts` with `providers: ['google']` and `skipNativeAuth: false`
+- Requires `google-services.json` in `android/app/` with Android OAuth clients
+- **Critical**: `google-services.json` must include:
+  - Android OAuth client (type 1) with correct SHA-1 fingerprints
+  - API key for Firebase services
+  - Web OAuth client (type 3) for backend calls
+- SHA-1 fingerprints must match release and debug keystores
+
+### OAuth Consent Screen Setup (v1.0.60+)
+**Required for both web and mobile authentication to work:**
+1. **Google Cloud Console** → **APIs & Services** → **OAuth consent screen**
+2. Configure **Branding**:
+   - **App domain**: `silent-please.firebaseapp.com`
+   - **Application home page**: `https://silent-eight.vercel.app`
+   - **Authorized domains**: 
+     - `silent-please.firebaseapp.com` (Firebase)
+     - `silent-eight.vercel.app` (Vercel web app)
+3. Add **Scopes** (if using OAuth consent screen): `openid`, `email`, `profile`
+4. **Developer contact info**: Your email address
+
+**Without OAuth consent screen configured, Firebase authentication will fail with:**
+- Web: `"auth/api-key-expired"` or OAuth redirect errors
+- APK: `"Google sign-in provider is not enabled"`
 
 ## APK Versioning & Distribution
 - **Version Injection**: `vite.config.ts` injects `__APP_VERSION__` from `package.json`
@@ -209,15 +236,35 @@ See [ANDROID_BUILD_DEBUGGING.md](ANDROID_BUILD_DEBUGGING.md) for:
 - Uses **redirect-based OAuth** (`signInWithRedirect` + `getRedirectResult`)
 - Does NOT use popup auth (blocked by COOP headers on Vercel)
 - Flow: Click Sign In → Redirect to Google → User signs in → Redirects back → App handles result
+- **Enhanced Logging** (v1.0.59+): Detailed console logs for debugging redirect flow
+  - Logs provider config, auth domain, and current URL
+  - Traces `handleRedirectResult()` execution step-by-step
 
 ### Mobile (APK)
 - Uses **native Firebase authentication** via `@capacitor-firebase/authentication`
 - Native plugin handles Google Sign-In via Android system
 - Direct credential exchange to Firebase
 - No popup or redirect needed
+- **Requires**: SHA-1 fingerprints in `google-services.json` matching APK signing key
 
-### Critical Issue Resolved (v1.0.59)
+### Critical Issues Resolved
+
+#### Issue 1: COOP Headers Blocking Web Auth (v1.0.59)
 - **Problem**: Vercel's COOP header blocks `window.closed` checks used by popup auth
 - **Symptoms**: Console error "Cross-Origin-Opener-Policy policy would block the window.closed call"
 - **Solution**: Switch to redirect-based OAuth which avoids `window.closed` polling
 - **Fix**: Changed `signInWithPopup(auth, provider)` → `signInWithRedirect(auth, provider)`
+
+#### Issue 2: OAuth Consent Screen Missing (v1.0.60)
+- **Problem**: Firebase OAuth fails when consent screen not configured in Google Cloud
+- **Symptoms**: 
+  - Web: `"auth/api-key-expired"` or redirect loops
+  - APK: `"Google sign-in provider is not enabled"`
+- **Solution**: Configure OAuth consent screen with app domains and authorized domains in Google Cloud Console
+- **Fix**: Added setup instructions to Firebase Integration section
+
+#### Issue 3: Firebase API Key Expiration (v1.0.60)
+- **Problem**: Firebase API key expired, blocking all authentication
+- **Symptoms**: Console error `"auth/api-key-expired.-please-renew-the-api-key."`
+- **Solution**: Updated Vercel environment secret with new Firebase API key
+- **Fix**: Used Vercel Secrets for API key management instead of `.env.local`
