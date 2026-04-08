@@ -4,12 +4,25 @@ import { Google as GoogleIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/store/authStore';
+import { handleRedirectResult } from '@/services/authService';
 
 /** Login page — Google OAuth sign-in */
 const LoginPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { user, loading, error, signIn, clearError } = useAuthStore();
+
+  // Check for OAuth redirect result when page loads
+  // signInWithRedirect() redirects back to /login, so we need to call
+  // getRedirectResult() here to retrieve the authenticated user
+  useEffect(() => {
+    handleRedirectResult().then(redirectUser => {
+      if (redirectUser) {
+        useAuthStore.setState({ user: redirectUser });
+        navigate('/');
+      }
+    });
+  }, [navigate]);
 
   // If already logged in, redirect to home
   useEffect(() => {
