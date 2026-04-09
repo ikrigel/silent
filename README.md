@@ -202,9 +202,12 @@ git push origin v1.0.54
 | **Force Kotlin resolution harmful** | Force block doesn't fix metadata compatibility, only forces runtime | Remove entire resolutionStrategy block | `android/build.gradle` |
 | **Conflicting kotlin-stdlib** | Direct dependency in app module overrides BOM selection | Remove explicit version, let BOM/force block manage | `app/build.gradle` |
 
-### Debugging Guide
+### Debugging Guides
 
-For complete build debugging commands and techniques, see [ANDROID_BUILD_DEBUGGING.md](ANDROID_BUILD_DEBUGGING.md)
+- **Build Issues**: [ANDROID_BUILD_DEBUGGING.md](ANDROID_BUILD_DEBUGGING.md) — Gradle errors, Kotlin compilation, JVM issues
+- **Robot Automation Issues**: [ANDROID_ROBOT_DEBUG.md](ANDROID_ROBOT_DEBUG.md) — UI element detection, accessibility service, custom sequences
+- **OAuth Setup**: [GOOGLE_AUTH_TROUBLESHOOTING.md](GOOGLE_AUTH_TROUBLESHOOTING.md) — Firebase auth configuration
+- **Robot Accessibility Setup**: [ROBOT_ACCESSIBILITY_SETUP.md](ROBOT_ACCESSIBILITY_SETUP.md) — Enable accessibility service on Android 13+
 
 ---
 
