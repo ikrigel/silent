@@ -1,6 +1,6 @@
 import { initializeApp, type FirebaseApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithCredential, signInWithCustomToken, signOut, onAuthStateChanged, type User, type Auth } from 'firebase/auth';
-import { getFirestore, doc, setDoc, type Firestore } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDoc, type Firestore } from 'firebase/firestore';
 import { writeLog } from './logService';
 
 /** Firebase configuration from environment variables */
@@ -371,6 +371,8 @@ export async function signOutUser(): Promise<void> {
 /**
  * Subscribe to auth state changes.
  * Callback fires immediately with current user (or null if not signed in).
+ * Also fetches user profile from Firestore to restore email/displayName/photoURL
+ * (which may not be populated in the Firebase User object for custom token logins).
  */
 export function onUserChanged(callback: (user: AppUser | null) => void): () => void {
   if (!auth) {
@@ -380,6 +382,7 @@ export function onUserChanged(callback: (user: AppUser | null) => void): () => v
   }
   return onAuthStateChanged(auth, (firebaseUser: User | null) => {
     if (firebaseUser) {
+      // Build user from Firebase User object first (synchronous)
       const user: AppUser = {
         uid: firebaseUser.uid,
         email: firebaseUser.email || '',
@@ -389,6 +392,23 @@ export function onUserChanged(callback: (user: AppUser | null) => void): () => v
         lastLoginAt: new Date().toISOString(),
       };
       callback(user);
+
+      // Asynchronously fetch full profile from Firestore to restore custom token claims
+      // This ensures email/displayName/photoURL are populated for custom token logins
+      if (db) {
+        getDoc(doc(db, 'users', firebaseUser.uid))
+          .then(userDoc => {
+            if (userDoc.exists()) {
+              const userData = userDoc.data() as AppUser;
+              // Update callback with full Firestore data
+              callback(userData);
+            }
+          })
+          .catch(err => {
+            const msg = err instanceof Error ? err.message : String(err);
+            writeLog('error', `onUserChanged: Failed to fetch user from Firestore: ${msg}`);
+          });
+      }
     } else {
       callback(null);
     }
