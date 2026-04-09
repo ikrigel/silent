@@ -8,6 +8,7 @@ import type { LogEntry, LogLevel } from '@/types';
 import { format } from 'date-fns';
 
 const LEVEL_COLORS: Record<Exclude<LogLevel, 'none'>, 'default' | 'info' | 'error' | 'success'> = {
+  ultraverbose: 'success',
   verbose: 'default',
   info: 'info',
   error: 'error',
