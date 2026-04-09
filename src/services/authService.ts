@@ -209,10 +209,12 @@ export async function signInWithGoogle(): Promise<AppUser> {
 
     // Web/browser: use server-side OAuth callback flow
     // This avoids COOP header blocking and provides better error handling
-    console.log('Using server-side OAuth callback...');
+    writeLog('ultraverbose', 'Using server-side OAuth callback...');
 
     const googleClientId = '93806788136-c64jqa2sand25r4kteoeivucpgmfl1ol.apps.googleusercontent.com';
-    const redirectUri = `${window.location.origin}/api/auth/callback`;
+    // CRITICAL: Hardcode production domain instead of using window.location.origin
+    // On APK WebView, window.location.origin resolves to https://localhost
+    const redirectUri = 'https://silent-eight.vercel.app/api/auth/callback';
 
     const params = new URLSearchParams({
       client_id: googleClientId,
@@ -222,13 +224,25 @@ export async function signInWithGoogle(): Promise<AppUser> {
       prompt: 'select_account',
     });
 
-    console.log('Redirecting to Google OAuth:', {
+    const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+
+    writeLog('ultraverbose', 'Redirecting to Google OAuth', {
       clientId: googleClientId,
       redirectUri,
+      windowOrigin: window.location.origin,
+      windowProtocol: window.location.protocol,
+      paramsObject: {
+        client_id: googleClientId,
+        redirect_uri: redirectUri,
+        response_type: 'code',
+        scope: 'openid email profile',
+        prompt: 'select_account',
+      },
+      oauthUrl: oauthUrl.substring(0, 200) + '...',
     });
 
     // Redirect to Google OAuth — this page will navigate away
-    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+    window.location.href = oauthUrl;
 
     // Return a promise that never resolves (page navigates away)
     return new Promise<AppUser>(() => {});
@@ -262,7 +276,7 @@ export async function handleCustomToken(): Promise<AppUser | null> {
       return null;
     }
 
-    console.log('handleCustomToken: found custom token, stripping from URL...');
+    writeLog('ultraverbose', 'handleCustomToken: found custom token, stripping from URL...');
     // Strip token from URL immediately for security
     window.history.replaceState({}, document.title, window.location.pathname);
 
@@ -285,8 +299,22 @@ export async function handleCustomToken(): Promise<AppUser | null> {
     const tokenPayload = JSON.parse(decoded) as CustomTokenPayload;
     const claims = tokenPayload.claims || {};
 
-    console.log('handleCustomToken: signing in with custom token...');
+    writeLog('ultraverbose', 'handleCustomToken: decoded token payload', {
+      tokenLength: customToken.length,
+      payloadKeys: Object.keys(tokenPayload),
+      claims: claims,
+      uid: tokenPayload.uid,
+    });
+
+    writeLog('ultraverbose', 'handleCustomToken: signing in with custom token...');
     const userCredential = await signInWithCustomToken(auth, customToken);
+
+    writeLog('ultraverbose', 'handleCustomToken: signInWithCustomToken response', {
+      userUid: userCredential.user.uid,
+      userEmail: userCredential.user.email,
+      userDisplayName: userCredential.user.displayName,
+      providerData: userCredential.user.providerData,
+    });
     const firebaseUser = userCredential.user;
 
     // Build AppUser from claims extracted from custom token
