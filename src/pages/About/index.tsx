@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/store/authStore';
 import { getIdToken } from '@/services/authService';
 import { useNavigate } from 'react-router-dom';
-import { getLatestApkVersion } from '@/services/apkVersionService';
+import { getLatestApkVersion, isNewerVersion } from '@/services/apkVersionService';
 
 const SKILLS_PRIMARY = ['React', 'TypeScript', 'Node.js', 'Claude API', 'Gemini API', 'N8N', 'PostgreSQL', 'Vercel'];
 const SKILLS_OSS = ['JavaScript', 'TypeScript', 'Python', 'Git', 'GitHub'];
@@ -21,12 +21,19 @@ const AboutPage: React.FC = () => {
   const [downloadLoading, setDownloadLoading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [latestApkVersion, setLatestApkVersion] = useState<string | null>(null);
+  const [isApk] = useState(() => !!(window as any).Capacitor);
+  const [hasNewVersion, setHasNewVersion] = useState(false);
+  const [dismissedVersion, setDismissedVersion] = useState<string | null>(null);
 
   // Fetch latest APK version on mount
   useEffect(() => {
     const fetchLatestApk = async () => {
       const version = await getLatestApkVersion();
       setLatestApkVersion(version);
+      // Check if there's a new version using semantic versioning comparison
+      if (version && isNewerVersion(__APP_VERSION__, version)) {
+        setHasNewVersion(true);
+      }
     };
     fetchLatestApk();
   }, []);
@@ -160,30 +167,56 @@ const AboutPage: React.FC = () => {
 
             {/* Version and Download */}
             <Stack spacing={2}>
-              {/* Web and APK Versions */}
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} alignItems={{ xs: 'flex-start', sm: 'center' }} flexWrap="wrap" useFlexGap>
-                <Chip
-                  label={`${t('about.webVersion')}: v${__APP_VERSION__}`}
-                  variant="outlined"
-                  size="small"
-                  color="primary"
-                />
-                {latestApkVersion ? (
+              {/* New Version Alert */}
+              {hasNewVersion && latestApkVersion && latestApkVersion !== dismissedVersion && (
+                <Alert
+                  severity="info"
+                  onClose={() => setDismissedVersion(latestApkVersion)}
+                  sx={{ display: 'flex', alignItems: 'center' }}
+                >
+                  <Typography variant="body2">
+                    {t('about.newApkAvailable')}: <strong>{latestApkVersion}</strong>
+                  </Typography>
+                </Alert>
+              )}
+
+              {/* Current Versions */}
+              <Box>
+                <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                  {t('about.version')}:
+                </Typography>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} alignItems={{ xs: 'flex-start', sm: 'center' }} flexWrap="wrap" useFlexGap>
                   <Chip
-                    label={`${t('about.apkAvailableVersion')}: ${latestApkVersion}`}
+                    label={`Web App: v${__APP_VERSION__}`}
+                    variant="filled"
+                    size="small"
+                    color="primary"
+                  />
+                  {isApk && (
+                    <Chip
+                      label={`APK App: v${__APP_VERSION__}`}
+                      variant="filled"
+                      size="small"
+                      color="primary"
+                    />
+                  )}
+                </Stack>
+              </Box>
+
+              {/* Latest Available */}
+              {latestApkVersion && (
+                <Box>
+                  <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                    {t('about.apkAvailableVersion')}:
+                  </Typography>
+                  <Chip
+                    label={latestApkVersion}
                     variant="outlined"
                     size="small"
-                    color="success"
+                    color={hasNewVersion ? 'warning' : 'default'}
                   />
-                ) : (
-                  <Chip
-                    label={`${t('about.apkAvailableVersion')}: ${t('about.loading')}`}
-                    variant="outlined"
-                    size="small"
-                    disabled
-                  />
-                )}
-              </Stack>
+                </Box>
+              )}
 
               {/* Download Button */}
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="flex-start">
