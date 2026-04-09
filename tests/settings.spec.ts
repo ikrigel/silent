@@ -47,7 +47,8 @@ test.describe('Settings', () => {
     await expect(page.getByRole('option', { name: /none/i })).toBeVisible();
     await expect(page.getByRole('option', { name: /error only/i })).toBeVisible();
     await expect(page.getByRole('option', { name: /info/i })).toBeVisible();
-    await expect(page.getByRole('option', { name: /verbose/i })).toBeVisible();
+    await expect(page.getByRole('option', { name: /verbose \(all\)/i })).toBeVisible();
+    await expect(page.getByRole('option', { name: /ultra verbose/i })).toBeVisible();
     await page.keyboard.press('Escape');
   });
 
