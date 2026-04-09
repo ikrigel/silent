@@ -263,6 +263,7 @@ export async function signInWithGoogle(): Promise<AppUser> {
 export async function handleCustomToken(): Promise<AppUser | null> {
   if (!auth) {
     console.log('handleCustomToken: auth not initialized, returning null');
+    writeLog('info', 'handleCustomToken: auth not initialized');
     return null;
   }
 
@@ -273,6 +274,7 @@ export async function handleCustomToken(): Promise<AppUser | null> {
 
     if (!customToken) {
       console.log('handleCustomToken: no token in URL');
+      writeLog('info', 'handleCustomToken: no token in URL', { url: window.location.href });
       return null;
     }
 

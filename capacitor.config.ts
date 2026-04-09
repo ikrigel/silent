@@ -11,6 +11,7 @@ const config: CapacitorConfig = {
   server: {
     androidScheme: 'https',  // Allow Firebase OAuth redirects to return to the WebView
     allowNavigation: [
+      'silent-eight.vercel.app',  // Allow OAuth callback redirects to return to app
       'accounts.google.com',
       '*.googleapis.com',
       '*.firebaseapp.com',

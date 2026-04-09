@@ -17,9 +17,14 @@ const LoginPage: React.FC = () => {
   useEffect(() => {
     handleCustomToken().then(tokenUser => {
       if (tokenUser) {
-        useAuthStore.setState({ user: tokenUser });
-        navigate('/');
+        console.log('handleCustomToken succeeded:', tokenUser);
+        useAuthStore.setState({ user: tokenUser, loading: false });
+        setTimeout(() => {
+          navigate('/');
+        }, 100);
       }
+    }).catch(err => {
+      console.error('handleCustomToken failed:', err);
     });
   }, [navigate]);
 
