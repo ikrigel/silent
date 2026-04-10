@@ -41,6 +41,8 @@ object BuiltInRecordings {
     private val safetyLabels  = listOf(
         "Safety & emergency", "Safety and emergency", "Emergency alerts", "Safety",
         "Safety,&,emergency", "Safety,and,emergency",  // Samsung comma format
+        // Newline variants (some devices split text across lines)
+        "Safety\n&\nemergency", "Safety\nand\nemergency",
         "התרעות"  // Hebrew: Alerts/Warnings section
     )
     private val weaLabels     = listOf(
@@ -86,6 +88,8 @@ object BuiltInRecordings {
         "Airplane mode", "Airplane", "Flight mode", "Plane mode",
         // Samsung uses commas in accessibility labels instead of spaces
         "Airplane,mode",
+        // Newline variants (some devices split text across lines)
+        "Airplane\nmode", "Airplane\nMode",
         // Hebrew
         "טיסה", "מצב טיסה",
         // Arabic
