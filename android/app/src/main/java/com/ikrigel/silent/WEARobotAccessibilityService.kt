@@ -30,9 +30,41 @@ class WEARobotAccessibilityService : AccessibilityService() {
         var recordedSteps: MutableList<RobotStep> = mutableListOf()
         /** Callback invoked by service after each step (success / error) */
         var onStepResult: ((ok: Boolean, msg: String) -> Unit)? = null
+        /** Timeout job to reset stuck state */
+        private var stateTimeoutJob: Job? = null
+        private var globalServiceScope: CoroutineScope? = null
+
+        fun setServiceScope(scope: CoroutineScope) {
+            globalServiceScope = scope
+        }
+
+        /** Reset state to IDLE if stuck for 15 seconds */
+        fun scheduleStateTimeout() {
+            stateTimeoutJob?.cancel()
+            stateTimeoutJob = globalServiceScope?.launch {
+                delay(15000) // 15 second timeout
+                if (state != RobotState.IDLE) {
+                    android.util.Log.w("WEARobotAccessibilityService", "State timeout: resetting from $state to IDLE")
+                    state = RobotState.IDLE
+            cancelStateTimeout()
+                    onStepResult?.invoke(false, "Timeout: robot was stuck, reset to idle")
+                }
+            }
+        }
+
+        /** Cancel timeout when state returns to IDLE */
+        fun cancelStateTimeout() {
+            stateTimeoutJob?.cancel()
+            stateTimeoutJob = null
+        }
     }
 
     private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
+    override fun onServiceConnected() {
+        super.onServiceConnected()
+        WEARobotAccessibilityService.setServiceScope(serviceScope)
+    }
 
     override fun onServiceConnected() {
         super.onServiceConnected()
@@ -67,6 +99,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
         if (event.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) return
         if (pendingSteps.isEmpty()) {
             state = RobotState.IDLE
+            cancelStateTimeout()
             onStepResult?.invoke(true, "Playback complete")
             return
         }
@@ -80,6 +113,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
     private fun executeNextStep() {
         val step = pendingSteps.removeFirstOrNull() ?: run {
             state = RobotState.IDLE
+            cancelStateTimeout()
             onStepResult?.invoke(true, "Done")
             return
         }
@@ -114,6 +148,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
         } else {
             onStepResult?.invoke(false, "Node not found: $text")
             state = RobotState.IDLE
+            cancelStateTimeout()
         }
     }
 
@@ -190,6 +225,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
         val root = rootInActiveWindow ?: run {
             onStepResult?.invoke(false, "No active window for scrolling")
             state = RobotState.IDLE
+            cancelStateTimeout()
             return
         }
         // Try to scroll the root window or the first scrollable container found
@@ -198,6 +234,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
         } else {
             onStepResult?.invoke(false, "Could not scroll")
             state = RobotState.IDLE
+            cancelStateTimeout()
         }
     }
 

@@ -52,11 +52,13 @@ class WEARobotPlugin : Plugin() {
         }
         WEARobotAccessibilityService.recordedSteps.clear()
         WEARobotAccessibilityService.state = RobotState.RECORDING
+        WEARobotAccessibilityService.scheduleStateTimeout()
         call.resolve()
     }
 
     @PluginMethod
     fun stopRecording(call: PluginCall) {
+        WEARobotAccessibilityService.cancelStateTimeout()
         WEARobotAccessibilityService.state = RobotState.IDLE
         val steps = JSArray()
         WEARobotAccessibilityService.recordedSteps.forEach { step ->
@@ -142,7 +144,9 @@ class WEARobotPlugin : Plugin() {
         WEARobotAccessibilityService.pendingSteps.clear()
         WEARobotAccessibilityService.pendingSteps.addAll(recording.steps)
         WEARobotAccessibilityService.state = RobotState.PLAYING
+        WEARobotAccessibilityService.scheduleStateTimeout()
         WEARobotAccessibilityService.onStepResult = { ok, msg ->
+            WEARobotAccessibilityService.cancelStateTimeout()
             WEARobotAccessibilityService.onStepResult = null
             if (ok) call.resolve(JSObject().put("message", msg))
             else    call.reject(msg)
