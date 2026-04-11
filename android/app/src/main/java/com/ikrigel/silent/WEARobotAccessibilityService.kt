@@ -46,7 +46,6 @@ class WEARobotAccessibilityService : AccessibilityService() {
                 if (state != RobotState.IDLE) {
                     android.util.Log.w("WEARobotAccessibilityService", "State timeout: resetting from $state to IDLE")
                     state = RobotState.IDLE
-            cancelStateTimeout()
                     onStepResult?.invoke(false, "Timeout: robot was stuck, reset to idle")
                 }
             }
@@ -64,10 +63,6 @@ class WEARobotAccessibilityService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         WEARobotAccessibilityService.setServiceScope(serviceScope)
-    }
-
-    override fun onServiceConnected() {
-        super.onServiceConnected()
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -99,7 +94,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
         if (event.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) return
         if (pendingSteps.isEmpty()) {
             state = RobotState.IDLE
-            cancelStateTimeout()
+            WEARobotAccessibilityService.cancelStateTimeout()
             onStepResult?.invoke(true, "Playback complete")
             return
         }
@@ -113,7 +108,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
     private fun executeNextStep() {
         val step = pendingSteps.removeFirstOrNull() ?: run {
             state = RobotState.IDLE
-            cancelStateTimeout()
+            WEARobotAccessibilityService.cancelStateTimeout()
             onStepResult?.invoke(true, "Done")
             return
         }
@@ -148,7 +143,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
         } else {
             onStepResult?.invoke(false, "Node not found: $text")
             state = RobotState.IDLE
-            cancelStateTimeout()
+            WEARobotAccessibilityService.cancelStateTimeout()
         }
     }
 
@@ -225,7 +220,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
         val root = rootInActiveWindow ?: run {
             onStepResult?.invoke(false, "No active window for scrolling")
             state = RobotState.IDLE
-            cancelStateTimeout()
+            WEARobotAccessibilityService.cancelStateTimeout()
             return
         }
         // Try to scroll the root window or the first scrollable container found
@@ -234,7 +229,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
         } else {
             onStepResult?.invoke(false, "Could not scroll")
             state = RobotState.IDLE
-            cancelStateTimeout()
+            WEARobotAccessibilityService.cancelStateTimeout()
         }
     }
 
