@@ -366,3 +366,10 @@ See [ANDROID_BUILD_DEBUGGING.md](ANDROID_BUILD_DEBUGGING.md) for:
 - **Symptoms**: "Toggle not found" or "Element not found" errors even when manually toggling works
 - **Solution**: Implement comprehensive accessibility label logging to discover device-specific text
 - **Fix**: Enhanced `WEARobotAccessibilityService.kt` with `collectAllLabels()` and detailed logcat output for label discovery
+
+#### Issue 8: Airplane Mode Label Extraction (v1.0.74)
+- **Problem**: Need to verify exact accessibility label for airplane mode toggle on target devices
+- **Symptoms**: Robot automation would fail if predefined labels didn't match device-specific variants
+- **Solution**: Extract accessibility labels directly from device using ADB uiautomator dump
+- **Fix**: Verified "Airplane mode" label via XML accessibility dump; documented label variants and extraction process
+- **Documentation**: See [AIRPLANE_MODE_LABEL_DISCOVERY.md](AIRPLANE_MODE_LABEL_DISCOVERY.md)
