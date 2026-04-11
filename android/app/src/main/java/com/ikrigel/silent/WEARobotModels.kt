@@ -63,6 +63,7 @@ object BuiltInRecordings {
         createdAt = "built-in",
         steps     = listOf(
             RobotStep("open_settings",  ""),
+            RobotStep("scroll_down",    ""),  // Scroll to find Safety & Emergency section
             RobotStep("click_any",      safetyLabels.joinToString("|")),
             RobotStep("click_any",      weaLabels.joinToString("|")),
             RobotStep("toggle_off_any", extremeLabels.joinToString("|")),
@@ -76,6 +77,7 @@ object BuiltInRecordings {
         createdAt = "built-in",
         steps     = listOf(
             RobotStep("open_settings",  ""),
+            RobotStep("scroll_down",    ""),  // Scroll to find Safety & Emergency section
             RobotStep("click_any",      safetyLabels.joinToString("|")),
             RobotStep("click_any",      weaLabels.joinToString("|")),
             RobotStep("toggle_on_any",  extremeLabels.joinToString("|")),
