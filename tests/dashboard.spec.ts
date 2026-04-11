@@ -91,7 +91,8 @@ test.describe('Dashboard', () => {
       localStorage.setItem('schedules', JSON.stringify([s]));
     }, schedule);
 
-    await page.reload();
+    // Use goto instead of reload to ensure Zustand store reinitializes with new localStorage data
+    await page.goto('/');
 
     // Schedules should load without crashing
     await expect(page.getByRole('heading', { name: /dashboard/i })).toBeVisible();
