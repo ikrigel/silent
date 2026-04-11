@@ -116,7 +116,8 @@ object BuiltInRecordings {
         isBuiltIn = true,
         createdAt = "built-in",
         steps     = listOf(
-            RobotStep("quick_settings", ""),
+            RobotStep("open_settings", ""),
+            RobotStep("click_any",     "Connections|Connection|Network"),  // Find Connections section
             RobotStep("toggle_on_any", airplaneLabels.joinToString("|")),
         ),
     )
@@ -127,7 +128,8 @@ object BuiltInRecordings {
         isBuiltIn = true,
         createdAt = "built-in",
         steps     = listOf(
-            RobotStep("quick_settings", ""),
+            RobotStep("open_settings", ""),
+            RobotStep("click_any",     "Connections|Connection|Network"),  // Find Connections section
             RobotStep("toggle_off_any", airplaneLabels.joinToString("|")),
         ),
     )
