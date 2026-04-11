@@ -80,10 +80,20 @@ tests/
 - Language switcher: `src/components/LanguageSwitcher.tsx` (EN / עב button group in header)
 
 ## Logging
-- 4 levels: `none`, `error`, `info`, `verbose`
+- **5 levels**: `none`, `error`, `info`, `verbose`, `ultraverbose`
+  - `none` — no logging
+  - `error` — errors only
+  - `info` — info + errors (default)
+  - `verbose` — all levels
+  - `ultraverbose` — ultra-detailed APK debugging (native auth, robot automation)
 - Configured in Settings page
 - All logs stored in localStorage (max 500 entries)
 - Exportable as JSON from Logs page
+- **Ultraverbose logs** (v1.0.70+):
+  - Capture every step of native Firebase auth in APK
+  - Full Capacitor config dump for troubleshooting
+  - Complete error objects with stack traces
+  - Robot automation label discovery and matching logs
 
 ## Email & Version Services
 ### EmailJS Config
@@ -161,14 +171,78 @@ tests/
   - `showUpdateNotifications: boolean` (default true) — controls visibility of update notifications
   - `dismissedUpdateVersion: string | undefined` — tracks dismissed version for per-version dismiss functionality
 
-## Android Accessibility Service Setup
+## Android Accessibility Service & Robot Automation
 
-### Sideloaded APK Restriction (Android 13+)
+### Accessibility Service Setup (Android 13+)
 - **Samsung and Android 13+ devices** require explicit "Allow restricted settings" permission before accessibility services can be used
 - This is a system security measure for sideloaded apps
 - Users must go to **Settings → Apps → Silent → Allow restricted settings** before enabling Silent Robot
 - See [ROBOT_ACCESSIBILITY_SETUP.md](ROBOT_ACCESSIBILITY_SETUP.md) for the complete setup guide
 - **Important:** The app's `SetupGuide.tsx` component walks users through this 4-step process
+
+### Robot Automation Debugging (v1.0.71+)
+**Challenge**: Device-specific accessibility labels prevent cross-device UI automation
+
+The robot automation uses **text-based element search** (not pixel coordinates) by matching accessibility labels. Samsung devices and different locales have different label text, causing automation failures.
+
+**Debugging Process**:
+
+1. **Enable Ultra Verbose Logging** (v1.0.70+):
+   - **Settings → Log Level → Ultra Verbose (APK debug)**
+   - This enables comprehensive logging of:
+     - Every accessibility node encountered during navigation
+     - All discovered labels on the current screen
+     - Window changes with package/class names
+     - Step execution with remaining steps count
+
+2. **Run Robot Actions**:
+   - Robot page → Quick Actions → Silence WEA / Enable Airplane Mode / etc.
+   - Watch logcat: `adb logcat | grep WEARobotAccessibilityService`
+
+3. **Analyze Logcat Output**:
+   ```
+   Searching node: text='טיסה' desc='מצב טיסה' class='android.widget.TextView'
+   clickByAnyLabel: Looking for any of 5 labels. Discovered 47 total labels on screen.
+   All discovered labels: [text:טיסה, desc:מצב טיסה, text:..., ...]
+   ```
+
+4. **Extract Device-Specific Labels**:
+   - Copy all discovered labels from logcat
+   - Identify which ones correspond to the missing UI element
+   - Example: Device shows "טיסה" (Hebrew for "airplane") instead of English "Airplane mode"
+
+5. **Add Missing Labels** to `android/app/src/main/java/com/ikrigel/silent/WEARobotModels.kt`:
+   ```kotlin
+   private val airplaneLabels = listOf(
+       "Airplane mode", "Airplane", "Flight mode",  // English
+       "טיסה", "מצב טיסה",  // Hebrew (discovered from logcat)
+       // ... other variants
+   )
+   ```
+
+6. **Rebuild APK** and test
+
+**Common Issues & Solutions**:
+
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| "Toggle not found" after opening Settings | UI element label not in predefined list | Extract actual label from logcat, add to list |
+| Robot can find element but toggle fails | Element is not Switch/CheckBox or Quick Settings tile | Check accessibility class hierarchy in logcat |
+| Settings page never opens | `open_settings` Intent not working | Ensure accessibility service has proper permissions |
+| Window change detected but no elements found | Page still loading or crashed | Increase delay in `handlePlaybackEvent` (currently 600ms) |
+
+**Label Files** (v1.0.71+):
+- `WEARobotModels.kt` — predefined label lists for WEA, airplane mode, safety sections
+- Supports multiple languages: English, Hebrew, Arabic, Russian, French, German, Spanish, Chinese, Korean
+- Samsung devices use comma separators in accessibility text (e.g., "Airplane,mode" instead of "Airplane mode")
+- Some devices split labels across lines (e.g., "Airplane\nmode")
+
+**Accessibility Service Logging** (`WEARobotAccessibilityService.kt`):
+- `findNodeByText()` — logs every node's text and contentDescription
+- `collectAllLabels()` — recursively gathers all labels on current screen for debugging
+- `toggleByAnyLabel()` / `clickByAnyLabel()` — log match attempts and discovered alternatives
+- `handlePlaybackEvent()` — logs window changes with package/class for navigation tracking
+- `executeNextStep()` — logs step action and remaining steps count
 
 ---
 
@@ -268,3 +342,27 @@ See [ANDROID_BUILD_DEBUGGING.md](ANDROID_BUILD_DEBUGGING.md) for:
 - **Symptoms**: Console error `"auth/api-key-expired.-please-renew-the-api-key."`
 - **Solution**: Updated Vercel environment secret with new Firebase API key
 - **Fix**: Used Vercel Secrets for API key management instead of `.env.local`
+
+#### Issue 4: Robot Automation Service Stuck (v1.0.67)
+- **Problem**: Robot service got stuck in RECORDING/PLAYING state, blocking all further automation
+- **Symptoms**: "Robot is busy" errors on every attempt to run actions
+- **Solution**: Added 15-second timeout to auto-reset state if no activity detected
+- **Fix**: Implemented `scheduleStateTimeout()` and `cancelStateTimeout()` in `WEARobotAccessibilityService.kt`
+
+#### Issue 5: WebView User-Agent Rejection (v1.0.62)
+- **Problem**: APK native OAuth was rejected with "Error 403: disallowed_useragent"
+- **Symptoms**: Google rejected OAuth request from WebView with non-Chrome User-Agent
+- **Solution**: Hardcode Chrome User-Agent in WebView to pass Google's security policy
+- **Fix**: Modified `MainActivity.java` to set User-Agent: `"Mozilla/5.0 (Linux; Android 14; ...) Chrome/..."`
+
+#### Issue 6: Session Persistence on App Close (v1.0.61)
+- **Problem**: User was logged out after closing and reopening the APK
+- **Symptoms**: Custom token login didn't populate email/displayName in Firebase User object
+- **Solution**: Asynchronously fetch full user profile from Firestore on auth state change
+- **Fix**: Modified `onUserChanged()` in `authService.ts` to call `getDoc()` and restore user data
+
+#### Issue 7: Device-Specific Accessibility Labels (v1.0.71)
+- **Problem**: Robot automation couldn't find UI elements on device with non-English labels
+- **Symptoms**: "Toggle not found" or "Element not found" errors even when manually toggling works
+- **Solution**: Implement comprehensive accessibility label logging to discover device-specific text
+- **Fix**: Enhanced `WEARobotAccessibilityService.kt` with `collectAllLabels()` and detailed logcat output for label discovery
