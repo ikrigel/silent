@@ -170,8 +170,37 @@ npm test -- tests/robot.spec.ts
 - [ANDROID_ROBOT_DEBUG.md](ANDROID_ROBOT_DEBUG.md) — Low-level robot service architecture
 - [CLAUDE.md](CLAUDE.md) — Project overview and constraints
 
+## Samsung Galaxy A51 (SM-A515F) Fixes (v1.0.75)
+
+The following issues were identified and fixed for Hebrew-language Samsung devices:
+
+### Issues Resolved
+1. **Scroll Failure** — Robot couldn't find scrollable containers in Settings
+   - **Fix**: Enhanced `scrollDown()` to search for scrollable child nodes (RecyclerView, ListView, etc.)
+
+2. **Missing Connections Labels** — "Connections" not found in Hebrew locale
+   - **Fix**: Added Hebrew and Samsung-comma-format labels: "חיבורים", "הגדרות חיבורים", "Connections,settings"
+
+3. **Airplane Mode Sequence** — Added scroll step before searching for airplane toggle
+   - **Fix**: Updated AIRPLANE_ON/OFF sequences to scroll before clicking Connections
+
+4. **Hebrew Label Variants** — Device sends different Hebrew text formats
+   - **Fix**: Added expanded Hebrew label list with status variants
+
+### Implementation Details
+
+**WEARobotAccessibilityService.kt:**
+- Added `findScrollableNode()` method to recursively search for scrollable containers
+- Enhanced `scrollDown()` with fallback logic for child scrollables
+
+**WEARobotModels.kt:**
+- Added `connectionsLabels` list with Hebrew, Arabic, Russian, and Chinese variants
+- Updated AIRPLANE_ON/OFF to include `scroll_down` step
+- Expanded `airplaneLabels` with Hebrew variants: "טיסה", "מצב טיסה", "מצב טיסה מושבת", "מצב טיסה מופעל"
+
 ## Version History
 
+- **v1.0.75** (2026-04-12): Fixed scroll failures and Hebrew locale support for Samsung Galaxy A51
 - **v1.0.74** (2026-04-11): Added "Airplane mode" label discovered from Samsung device accessibility dump
 - **v1.0.71**: Added comprehensive accessibility label logging in robot service
 - **v1.0.69**: Added newline label variants for airplane mode

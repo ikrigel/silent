@@ -297,14 +297,36 @@ class WEARobotAccessibilityService : AccessibilityService() {
             WEARobotAccessibilityService.cancelStateTimeout()
             return
         }
-        // Try to scroll the root window or the first scrollable container found
+
+        // Try to scroll the root window first
         if (root.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)) {
-            // Successfully scrolled; next step will be triggered by window event
-        } else {
-            onStepResult?.invoke(false, "Could not scroll")
-            state = RobotState.IDLE
-            WEARobotAccessibilityService.cancelStateTimeout()
+            android.util.Log.d("WEARobotAccessibilityService", "Scrolled root window successfully")
+            return
         }
+
+        // If root scroll failed, search for scrollable children (RecyclerView, ListView, etc.)
+        val scrollableChild = findScrollableNode(root)
+        if (scrollableChild != null && scrollableChild.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)) {
+            android.util.Log.d("WEARobotAccessibilityService", "Scrolled child container successfully: ${scrollableChild.className}")
+            return
+        }
+
+        // Scroll failed completely
+        android.util.Log.w("WEARobotAccessibilityService", "Could not scroll: no scrollable container found")
+        onStepResult?.invoke(false, "Could not scroll")
+        state = RobotState.IDLE
+        WEARobotAccessibilityService.cancelStateTimeout()
+    }
+
+    /** Find the first scrollable node (RecyclerView, ListView, ScrollView, etc.) */
+    private fun findScrollableNode(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
+        if (node.isScrollable) return node
+        for (i in 0 until node.childCount) {
+            val child = node.getChild(i) ?: continue
+            val result = findScrollableNode(child)
+            if (result != null) return result
+        }
+        return null
     }
 
     private fun findToggleAncestor(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {

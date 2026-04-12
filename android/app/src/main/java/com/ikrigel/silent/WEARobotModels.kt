@@ -89,11 +89,13 @@ object BuiltInRecordings {
         // English: Stock Android, Samsung, OnePlus, Pixel
         "Airplane mode", "Airplane", "Flight mode", "Plane mode",
         // Samsung uses commas in accessibility labels instead of spaces
-        "Airplane,mode",
+        "Airplane,mode", "Airplane,Mode",
         // Newline variants (some devices split text across lines)
         "Airplane\nmode", "Airplane\nMode",
-        // Hebrew
-        "טיסה", "מצב טיסה",
+        // Hebrew - multiple variants (device sends various formats)
+        "טיסה", "מצב טיסה", "מצב טיסה מושבת", "מצב טיסה מופעל",
+        // Hebrew with commas (Samsung Hebrew)
+        "טיסה,מצב",
         // Arabic
         "وضع الطائرة",
         // Russian (Huawei, some Xiaomi)
@@ -110,6 +112,22 @@ object BuiltInRecordings {
         "비행기 모드", "비행기"
     )
 
+    // Connections section labels across different manufacturers and languages
+    private val connectionsLabels = listOf(
+        // English
+        "Connections", "Connection", "Network", "Wireless",
+        // Samsung uses commas
+        "Connections,settings",
+        // Hebrew
+        "חיבורים", "הגדרות חיבורים",
+        // Arabic
+        "الاتصالات",
+        // Russian
+        "Подключение",
+        // Chinese
+        "连接",
+    )
+
     val AIRPLANE_ON = RobotRecording(
         id        = "builtin_airplane_on",
         name      = "Enable Airplane Mode",
@@ -117,8 +135,9 @@ object BuiltInRecordings {
         createdAt = "built-in",
         steps     = listOf(
             RobotStep("open_settings", ""),
-            RobotStep("click_any",     "Connections|Connection|Network"),  // Find Connections section
-            RobotStep("toggle_on_any", airplaneLabels.joinToString("|")),
+            RobotStep("scroll_down",   ""),  // Scroll to find Connections section if not visible
+            RobotStep("click_any",     connectionsLabels.joinToString("|")),  // Navigate to Connections
+            RobotStep("toggle_on_any", airplaneLabels.joinToString("|")),     // Enable airplane mode
         ),
     )
 
@@ -129,8 +148,9 @@ object BuiltInRecordings {
         createdAt = "built-in",
         steps     = listOf(
             RobotStep("open_settings", ""),
-            RobotStep("click_any",     "Connections|Connection|Network"),  // Find Connections section
-            RobotStep("toggle_off_any", airplaneLabels.joinToString("|")),
+            RobotStep("scroll_down",   ""),  // Scroll to find Connections section if not visible
+            RobotStep("click_any",     connectionsLabels.joinToString("|")),  // Navigate to Connections
+            RobotStep("toggle_off_any", airplaneLabels.joinToString("|")),    // Disable airplane mode
         ),
     )
 
