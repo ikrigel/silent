@@ -99,6 +99,14 @@ class WEARobotAccessibilityService : AccessibilityService() {
         val className = source?.className?.toString() ?: "unknown"
         android.util.Log.d("WEARobotAccessibilityService", "Window changed: package=$pkgName className=$className")
 
+        // Small delay to ensure UI is fully rendered before executing next step
+        // This is especially important on Samsung devices which have slower rendering
+        try {
+            Thread.sleep(300)
+        } catch (e: InterruptedException) {
+            // Ignore
+        }
+
         if (pendingSteps.isEmpty()) {
             state = RobotState.IDLE
             WEARobotAccessibilityService.cancelStateTimeout()
@@ -211,10 +219,21 @@ class WEARobotAccessibilityService : AccessibilityService() {
             // First try traditional Switch/CheckBox (Settings app)
             val switchAncestor = findToggleAncestor(node)
             if (switchAncestor != null) {
-                android.util.Log.d("WEARobotAccessibilityService", "Found Switch/CheckBox ancestor, state=${switchAncestor.isChecked}, target=$targetState")
-                if (switchAncestor.isChecked != targetState) {
+                val currentState = switchAncestor.isChecked
+                android.util.Log.d("WEARobotAccessibilityService", "Found toggle ancestor, currentState=$currentState, targetState=$targetState")
+
+                // Always attempt to click if states don't match
+                if (currentState != targetState) {
+                    android.util.Log.d("WEARobotAccessibilityService", "Clicking toggle to change state from $currentState to $targetState")
                     clickNode(switchAncestor)
+                    // Small delay to allow state change
+                    Thread.sleep(200)
+                } else {
+                    android.util.Log.d("WEARobotAccessibilityService", "Toggle already in correct state ($targetState), no click needed")
                 }
+                state = RobotState.IDLE
+                WEARobotAccessibilityService.cancelStateTimeout()
+                onStepResult?.invoke(true, "Toggled successfully")
                 return
             }
 
@@ -223,15 +242,24 @@ class WEARobotAccessibilityService : AccessibilityService() {
             val desc = node.contentDescription?.toString() ?: ""
             val isOn = desc.contains(",On,", ignoreCase = true)
             val isOff = desc.contains(",Off,", ignoreCase = true)
+            val hasQSFormat = isOn || isOff
 
             android.util.Log.d("WEARobotAccessibilityService", "Quick Settings tile check: desc='$desc' isOn=$isOn isOff=$isOff")
 
-            if ((isOn && !targetState) || (isOff && targetState)) {
-                // State mismatch — click to toggle
-                android.util.Log.d("WEARobotAccessibilityService", "Toggling Quick Settings tile")
-                clickNode(node)
+            if (hasQSFormat) {
+                if ((isOn && !targetState) || (isOff && targetState)) {
+                    // State mismatch — click to toggle
+                    android.util.Log.d("WEARobotAccessibilityService", "Toggling Quick Settings tile from ${if (isOn) "ON" else "OFF"} to ${if (targetState) "ON" else "OFF"}")
+                    clickNode(node)
+                    Thread.sleep(200)
+                } else {
+                    android.util.Log.d("WEARobotAccessibilityService", "Quick Settings tile already in correct state")
+                }
+                state = RobotState.IDLE
+                WEARobotAccessibilityService.cancelStateTimeout()
+                onStepResult?.invoke(true, "Toggled successfully")
+                return
             }
-            return
         }
 
         // Failed to find any label — log all discovered for user debugging
@@ -331,11 +359,38 @@ class WEARobotAccessibilityService : AccessibilityService() {
 
     private fun findToggleAncestor(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
         var current: AccessibilityNodeInfo? = node.parent
-        while (current != null) {
+        var depth = 0
+        while (current != null && depth < 5) {
             val cls = current.className?.toString() ?: ""
-            if (cls.contains("Switch") || cls.contains("CheckBox")) return current
+            val isCheckable = current.isCheckable
+
+            // Standard Android toggle components
+            if (cls.contains("Switch") || cls.contains("CheckBox")) {
+                android.util.Log.d("WEARobotAccessibilityService", "Found toggle at depth $depth: class=$cls")
+                return current
+            }
+
+            // Samsung custom toggles - look for checkable containers
+            // Often wrapped in LinearLayout or RelativeLayout with isCheckable=true
+            if (isCheckable && (cls.contains("LinearLayout") || cls.contains("RelativeLayout") || cls.contains("FrameLayout"))) {
+                android.util.Log.d("WEARobotAccessibilityService", "Found checkable container at depth $depth: class=$cls isCheckable=$isCheckable")
+                return current
+            }
+
+            current = current.parent
+            depth++
+        }
+
+        // Last resort: look for any checkable parent (Samsung Quick Settings style)
+        current = node.parent
+        while (current != null) {
+            if (current.isCheckable) {
+                android.util.Log.d("WEARobotAccessibilityService", "Found checkable parent (fallback)")
+                return current
+            }
             current = current.parent
         }
+
         return null
     }
 
