@@ -216,21 +216,35 @@ class WEARobotAccessibilityService : AccessibilityService() {
             val node = findNodeByText(root, label.trim()) ?: continue
             android.util.Log.d("WEARobotAccessibilityService", "Found match for label: '$label'")
 
-            // First try traditional Switch/CheckBox (Settings app)
-            val switchAncestor = findToggleAncestor(node)
-            if (switchAncestor != null) {
-                val currentState = switchAncestor.isChecked
-                android.util.Log.d("WEARobotAccessibilityService", "Found toggle ancestor, currentState=$currentState, targetState=$targetState")
+            // Strategy 1: Search UP the parent chain for Switch/CheckBox ancestor
+            var switchAncestor = findToggleAncestor(node)
 
-                // Always attempt to click if states don't match
-                if (currentState != targetState) {
-                    android.util.Log.d("WEARobotAccessibilityService", "Clicking toggle to change state from $currentState to $targetState")
-                    clickNode(switchAncestor)
-                    // Small delay to allow state change
-                    Thread.sleep(200)
-                } else {
-                    android.util.Log.d("WEARobotAccessibilityService", "Toggle already in correct state ($targetState), no click needed")
+            // Strategy 2: If not found in parents, search siblings of ancestors
+            // (Samsung Settings puts text in sibling container, switch in widget_frame sibling)
+            if (switchAncestor == null) {
+                switchAncestor = findToggleSibling(node)
+            }
+
+            // Strategy 3: Direct click if node itself is a switch
+            if (switchAncestor == null && node.className?.toString()?.contains("Switch") == true) {
+                switchAncestor = node
+            }
+
+            if (switchAncestor != null) {
+                android.util.Log.d("WEARobotAccessibilityService", "Found toggle, attempting to click for targetState=$targetState")
+
+                // Click regardless of current state - accessibility tree might be out of sync
+                // Samsung devices often show stale isChecked values
+                android.util.Log.d("WEARobotAccessibilityService", "Clicking toggle (current state may be stale)")
+                clickNode(switchAncestor)
+
+                // Wait for state change to propagate
+                try {
+                    Thread.sleep(300)
+                } catch (e: InterruptedException) {
+                    // Ignore
                 }
+
                 state = RobotState.IDLE
                 WEARobotAccessibilityService.cancelStateTimeout()
                 onStepResult?.invoke(true, "Toggled successfully")
@@ -389,6 +403,48 @@ class WEARobotAccessibilityService : AccessibilityService() {
                 return current
             }
             current = current.parent
+        }
+
+        return null
+    }
+
+    /** Find Switch in sibling containers (Samsung Settings separates text and toggle into different branches) */
+    private fun findToggleSibling(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
+        // Walk up to find a common parent with multiple children (usually LinearLayout with title_frame and widget_frame)
+        var current: AccessibilityNodeInfo? = node.parent
+        var depth = 0
+
+        while (current != null && depth < 5) {
+            // Search all children of this node for a Switch/CheckBox
+            for (i in 0 until current.childCount) {
+                val child = current.getChild(i) ?: continue
+                val result = findSwitchInSubtree(child)
+                if (result != null) {
+                    android.util.Log.d("WEARobotAccessibilityService", "Found switch in sibling at depth $depth")
+                    return result
+                }
+            }
+            current = current.parent
+            depth++
+        }
+
+        return null
+    }
+
+    /** Recursively search for Switch in a subtree */
+    private fun findSwitchInSubtree(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
+        val cls = node.className?.toString() ?: ""
+
+        // Found a switch
+        if (cls.contains("Switch") || cls.contains("CheckBox")) {
+            if (node.isCheckable) return node
+        }
+
+        // Recurse to children
+        for (i in 0 until node.childCount) {
+            val child = node.getChild(i) ?: continue
+            val result = findSwitchInSubtree(child)
+            if (result != null) return result
         }
 
         return null
