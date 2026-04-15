@@ -38,6 +38,55 @@ code window_dump.xml
 
 #---
 
+## Windows Command Prompt (cmd.exe) Reference
+
+### Most Common Commands
+
+```cmd
+REM Dump screen and pull file
+adb shell uiautomator dump /sdcard/window_dump.xml && adb pull /sdcard/window_dump.xml
+
+REM Search for text (uses findstr)
+findstr /I "airplane" window_dump.xml
+
+REM Open in Notepad
+notepad window_dump.xml
+
+REM Open in VS Code
+code window_dump.xml
+
+REM Count matches
+findstr /I /C:"airplane" window_dump.xml | find /C "airplane"
+
+REM Search with line numbers
+findstr /N /I "airplane" window_dump.xml
+
+REM Multiple search criteria (AND - both must match)
+findstr /I "Airplane" window_dump.xml | findstr "Switch"
+
+REM Extract bounds for specific element
+findstr /I "Airplane mode" window_dump.xml
+REM Look for: bounds="[880,1199][1017,1346]"
+REM Calculate center: X=(880+1017)/2=948, Y=(1199+1346)/2=1272
+REM Then: adb shell input tap 948 1272
+```
+
+### cmd.exe vs PowerShell vs Bash
+
+| Task | Bash | PowerShell | cmd.exe |
+|------|------|-----------|---------|
+| **Search** | `grep -i "text"` | `Select-String -Pattern "text"` | `findstr /I "text"` |
+| **Case-insensitive** | `grep -i` | `-CaseSensitive:$false` | `findstr /I` |
+| **With line numbers** | `grep -n` | `Select-String` (default) | `findstr /N` |
+| **Count matches** | `grep -c` | `@(...).Count` | `findstr ... \| find /C` |
+| **Show context** | `grep -B5 -A5` | `-Context 5,5` | Limited (use separate searches) |
+| **Read file** | `cat file.xml` | `Get-Content file.xml` | `type file.xml` |
+| **Write to file** | `command > out.txt` | `command \| Out-File out.txt` | `command > out.txt` |
+| **Pipe results** | `grep \| grep` | `Select-String \| Select-String` | `findstr ... \| findstr` |
+| **Open editor** | `nano file.xml` | `code file.xml` | `notepad file.xml` |
+
+---
+
 ## PowerShell Quick Reference (Windows Users)
 
 ### Most Common Commands
@@ -460,6 +509,36 @@ adb shell input tap 948 1272
 
 ### Example 1: Find Airplane Mode Toggle
 
+**cmd.exe (Windows Command Prompt):**
+```cmd
+REM 1. Navigate to Settings
+adb shell am start -n com.android.settings/com.android.settings.Settings
+
+REM 2. Wait a moment
+timeout /t 2
+
+REM 3. Dump hierarchy
+adb shell uiautomator dump /sdcard/window_dump.xml
+adb pull /sdcard/window_dump.xml
+
+REM 4. Search for airplane (case-insensitive)
+findstr /I "airplane" window_dump.xml
+
+REM 5. Look for the Switch element with context
+findstr /I "Airplane mode" window_dump.xml
+
+REM 6. Extract bounds line
+REM Search output should show: bounds="[880,1199][1017,1346]"
+REM Calculate center: X=(880+1017)/2=948, Y=(1199+1346)/2=1272
+
+REM 7. Test tap
+adb shell input tap 948 1272
+
+REM 8. Wait and verify
+timeout /t 1
+adb logcat | findstr /I "airplane"
+```
+
 **Bash:**
 ```bash
 # 1. Navigate to Settings → Connections
@@ -600,6 +679,29 @@ grep "Airplane mode" window_dump.xml
 ## Tips & Tricks
 
 ### Faster Dumping Script
+
+**cmd.exe (Windows Command Prompt):**
+```batch
+@echo off
+REM save as dump.bat
+REM Usage: dump.bat or dump.bat airplane
+
+adb shell uiautomator dump /sdcard/window_dump.xml
+adb pull /sdcard/window_dump.xml
+
+if "%1"=="" (
+  type window_dump.xml
+) else (
+  REM Search for pattern if provided
+  findstr /I "%1" window_dump.xml
+)
+
+REM Usage examples:
+REM dump.bat                  - show entire dump
+REM dump.bat airplane         - search for "airplane"
+REM dump.bat bounds           - search for "bounds"
+REM dump.bat class            - search for "class"
+```
 
 **Bash (macOS/Linux):**
 ```bash
