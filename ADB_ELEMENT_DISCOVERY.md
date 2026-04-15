@@ -5,6 +5,8 @@ Complete guide to finding and inspecting Android UI elements using ADB and comma
 ## Quick Start
 
 ### Method 1: UI Hierarchy Dump (Fastest)
+
+**Bash/Linux/Mac:**
 ```bash
 # Capture current screen hierarchy
 adb shell uiautomator dump /sdcard/window_dump.xml
@@ -16,7 +18,82 @@ adb pull /sdcard/window_dump.xml
 grep -i "airplane" window_dump.xml
 ```
 
-### Method 2: Live Inspection (Interactive)
+**PowerShell (Windows):**
+```powershell
+# Capture current screen hierarchy
+adb shell uiautomator dump /sdcard/window_dump.xml
+
+# Pull to your computer
+adb pull /sdcard/window_dump.xml
+
+# View in text editor or search for elements
+Select-String -Path window_dump.xml -Pattern "airplane" -CaseSensitive:$false
+
+# Or open in default text editor
+notepad window_dump.xml
+
+# Or open in VS Code
+code window_dump.xml
+```
+
+#---
+
+## PowerShell Quick Reference (Windows Users)
+
+### Most Common Commands
+
+```powershell
+# Dump screen and pull file
+adb shell uiautomator dump /sdcard/window_dump.xml; adb pull /sdcard/window_dump.xml
+
+# Search for text (case-insensitive)
+Select-String -Path window_dump.xml -Pattern "airplane" -CaseSensitive:$false
+
+# Shortcut alias
+Set-Alias ss Select-String
+ss window_dump.xml -Pattern "airplane"
+
+# View in Notepad
+notepad window_dump.xml
+
+# View in VS Code
+code window_dump.xml
+
+# Calculate tap coordinates from bounds
+$bounds = "[880,1199][1017,1346]"
+if ($bounds -match '\[(\d+),(\d+)\]\[(\d+),(\d+)\]') {
+  $centerX = ([int]$matches[1] + [int]$matches[3]) / 2
+  $centerY = ([int]$matches[2] + [int]$matches[4]) / 2
+  "adb shell input tap $centerX $centerY"
+}
+
+# Watch for changes (refresh every 2 seconds)
+while($true) { 
+  Clear-Host
+  "Updated: $(Get-Date)"
+  adb shell uiautomator dump /sdcard/window_dump.xml | Out-Null
+  adb pull /sdcard/window_dump.xml | Out-Null
+  Select-String -Path window_dump.xml -Pattern "airplane"
+  Start-Sleep -Seconds 2
+}
+```
+
+### PowerShell vs Bash Equivalents
+
+| Task | Bash | PowerShell |
+|------|------|-----------|
+| **Search** | `grep -i "text"` | `Select-String -Pattern "text" -CaseSensitive:$false` |
+| **Search with context** | `grep -B5 -A5 "text"` | `Select-String -Pattern "text" -Context 5,5` |
+| **Extract groups** | `sed 's/.*text="\([^"]*\)".*/\1/'` | `Matches.Groups[1].Value` |
+| **Pipe results** | `grep "x" \| grep "y"` | `Select-String "x" \| Select-String "y"` |
+| **Count matches** | `grep -c "pattern"` | `@(Select-String -Pattern "pattern").Count` |
+| **Open file** | `cat file.xml` | `Get-Content file.xml` |
+| **Append to file** | `echo "text" >> file.txt` | `"text" >> file.txt` |
+| **Save output** | `command > output.txt` | `command | Out-File output.txt` |
+
+---
+
+## Method 2: Live Inspection (Interactive)
 ```bash
 # Open Android Device Monitor
 android studio → Tools → Device Manager → Device Explorer
@@ -49,6 +126,7 @@ code window_dump.xml
 
 #### Search for Elements
 
+**Bash/Linux/Mac:**
 ```bash
 # Find all nodes with "Airplane" text
 grep -i "airplane" window_dump.xml
@@ -66,8 +144,31 @@ grep "checkable=\"true\"" window_dump.xml
 grep "content-desc=\"Airplane mode\"" window_dump.xml
 ```
 
+**PowerShell (Windows):**
+```powershell
+# Find all nodes with "Airplane" text (case-insensitive)
+Select-String -Path window_dump.xml -Pattern "airplane" -CaseSensitive:$false
+
+# Find by class type
+Select-String -Path window_dump.xml -Pattern 'class="android.widget.Switch"'
+
+# Find by resource ID
+Select-String -Path window_dump.xml -Pattern 'resource-id="android:id/title"'
+
+# Find all checkable elements
+Select-String -Path window_dump.xml -Pattern 'checkable="true"'
+
+# Find by content description
+Select-String -Path window_dump.xml -Pattern 'content-desc="Airplane mode"'
+
+# Quick alias - shorten Select-String to ss
+Set-Alias ss Select-String
+ss -Path window_dump.xml -Pattern "airplane"
+```
+
 #### Parse Specific Attributes
 
+**Bash/Linux/Mac:**
 ```bash
 # Extract all text labels
 grep "text=\"" window_dump.xml | sed 's/.*text="\([^"]*\)".*/\1/'
@@ -77,6 +178,42 @@ grep -A5 "text=\"Airplane mode\"" window_dump.xml | grep "bounds"
 
 # Get class name
 grep -A2 "text=\"Airplane mode\"" window_dump.xml | grep "class"
+```
+
+**PowerShell (Windows):**
+```powershell
+# Extract all text labels
+Select-String -Path window_dump.xml -Pattern 'text="([^"]*)"' | ForEach-Object { 
+  $_.Matches.Groups[1].Value 
+}
+
+# Find bounds of element (with context)
+Select-String -Path window_dump.xml -Pattern "Airplane mode" -Context 5,5 | 
+  Select-String -Pattern 'bounds'
+
+# Get class name for Airplane mode
+Select-String -Path window_dump.xml -Pattern "Airplane mode" -Context 2 | 
+  Select-String -Pattern 'class'
+
+# Find all resource IDs
+Select-String -Path window_dump.xml -Pattern 'resource-id="([^"]*)"' | ForEach-Object {
+  $_.Matches.Groups[1].Value
+}
+
+# Extract bounds and calculate center coordinates
+$line = Select-String -Path window_dump.xml -Pattern "Airplane mode"
+if ($line -match 'bounds="(\[\d+,\d+\]\[\d+,\d+\])"') {
+  $bounds = $matches[1]
+  Write-Host "Bounds: $bounds"
+  # Parse and calculate center: bounds="[880,1199][1017,1346]"
+  if ($bounds -match '\[(\d+),(\d+)\]\[(\d+),(\d+)\]') {
+    $x1, $y1, $x2, $y2 = [int]$matches[1], [int]$matches[2], [int]$matches[3], [int]$matches[4]
+    $centerX = ($x1 + $x2) / 2
+    $centerY = ($y1 + $y2) / 2
+    Write-Host "Center coordinates: ($centerX, $centerY)"
+    Write-Host "For tap: adb shell input tap $centerX $centerY"
+  }
+}
 ```
 
 #### Format Output for Readability
@@ -323,6 +460,7 @@ adb shell input tap 948 1272
 
 ### Example 1: Find Airplane Mode Toggle
 
+**Bash:**
 ```bash
 # 1. Navigate to Settings → Connections
 adb shell am start -n com.android.settings/com.android.settings.Settings
@@ -345,6 +483,50 @@ adb shell input tap 948 1272
 
 # 7. Verify in logcat
 adb logcat | grep -i "airplane"
+```
+
+**PowerShell:**
+```powershell
+# 1. Navigate to Settings
+adb shell am start -n com.android.settings/com.android.settings.Settings
+
+# Wait a moment for Settings to open
+Start-Sleep -Seconds 2
+
+# 2. Dump hierarchy
+adb shell uiautomator dump /sdcard/window_dump.xml
+adb pull /sdcard/window_dump.xml
+
+# 3. Search for airplane (case-insensitive)
+Select-String -Path window_dump.xml -Pattern "airplane" -CaseSensitive:$false
+
+# 4. Look for the Switch element with context
+Select-String -Path window_dump.xml -Pattern "Airplane mode" -Context 5
+
+# 5. Extract bounds and calculate center
+$content = Get-Content window_dump.xml | Select-String -Pattern "Airplane mode" -Context 2
+$bounds = ($content | Select-String -Pattern 'bounds="([^"]*)"' | 
+  ForEach-Object { $_.Matches.Groups[1].Value })[0]
+
+Write-Host "Bounds: $bounds"
+
+# Parse coordinates: bounds="[880,1199][1017,1346]"
+if ($bounds -match '\[(\d+),(\d+)\]\[(\d+),(\d+)\]') {
+  $x1, $y1, $x2, $y2 = [int]$matches[1], [int]$matches[2], [int]$matches[3], [int]$matches[4]
+  $centerX = ($x1 + $x2) / 2
+  $centerY = ($y1 + $y2) / 2
+  Write-Host "Center: ($centerX, $centerY)"
+  
+  # 6. Test tap
+  Write-Host "Tapping at ($centerX, $centerY)..."
+  adb shell input tap $centerX $centerY
+  
+  Start-Sleep -Seconds 1
+}
+
+# 7. Verify in logcat
+Write-Host "Checking logcat..."
+adb logcat -e "airplane" | Select-String -Pattern "airplane"
 ```
 
 ### Example 2: Find Hebrew Labels
@@ -419,6 +601,7 @@ grep "Airplane mode" window_dump.xml
 
 ### Faster Dumping Script
 
+**Bash (macOS/Linux):**
 ```bash
 #!/bin/bash
 # save as dump.sh
@@ -430,6 +613,34 @@ cat window_dump.xml
 # Usage
 chmod +x dump.sh
 ./dump.sh | grep -i "airplane"
+```
+
+**PowerShell (Windows):**
+```powershell
+# Save as dump.ps1
+adb shell uiautomator dump /sdcard/window_dump.xml
+adb pull /sdcard/window_dump.xml
+
+# Display results
+Get-Content window_dump.xml | Select-String -Pattern "airplane" -CaseSensitive:$false
+
+# Usage in PowerShell
+.\dump.ps1
+
+# Or create a function for quick access
+function Dump-Screen {
+  param([string]$SearchPattern = "")
+  adb shell uiautomator dump /sdcard/window_dump.xml
+  adb pull /sdcard/window_dump.xml
+  if ($SearchPattern) {
+    Get-Content window_dump.xml | Select-String -Pattern $SearchPattern -CaseSensitive:$false
+  } else {
+    Get-Content window_dump.xml
+  }
+}
+
+# Usage
+Dump-Screen "airplane"
 ```
 
 ### Watch Hierarchy in Real-time
