@@ -1,7 +1,8 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import type { DeviceStateSnapshot } from '../types';
 
-/** In-memory store for device state snapshots taken at schedule start */
+/** Store for device state snapshots taken at schedule start, persisted to localStorage */
 interface RobotStateStore {
   snapshots: Record<string, DeviceStateSnapshot>;
   captureSnapshot: (scheduleId: string, airplaneModeWasActive: boolean, weaWasSilenced: boolean) => void;
@@ -9,7 +10,9 @@ interface RobotStateStore {
   clearSnapshot: (scheduleId: string) => void;
 }
 
-export const useRobotStateStore = create<RobotStateStore>((set, get) => ({
+export const useRobotStateStore = create<RobotStateStore>()(
+  persist(
+    (set, get) => ({
   snapshots: {},
 
   captureSnapshot: (scheduleId: string, airplaneModeWasActive: boolean, weaWasSilenced: boolean) => {
@@ -36,4 +39,7 @@ export const useRobotStateStore = create<RobotStateStore>((set, get) => ({
       return { snapshots: newSnapshots };
     });
   },
-}));
+    }),
+    { name: 'robot_state_snapshots' }
+  )
+);

@@ -96,11 +96,26 @@ const Dashboard: React.FC = () => {
             const snapshot = getSnapshot(id);
 
             if (entry.useAirplaneMode && robotService.isAndroid() && shouldRestore) {
-              if (!snapshot?.airplaneModeWasActive) {
-                robotService.disableAirplaneMode().catch((err: unknown) => {
-                  const msg = err instanceof Error ? err.message : String(err);
-                  writeLog('error',`Dashboard: Failed to disable airplane mode on end: ${msg}`);
-                });
+              if (!snapshot) {
+                writeLog('info', `Dashboard: No snapshot for schedule ${id}, skipping airplane mode restore`);
+              } else if (!snapshot.airplaneModeWasActive) {
+                // Airplane mode was OFF before schedule started — restore only if it's still ON now
+                robotService.getAirplaneModeState()
+                  .then((isCurrentlyOn) => {
+                    if (isCurrentlyOn) {
+                      robotService.disableAirplaneMode().catch((err: unknown) => {
+                        const msg = err instanceof Error ? err.message : String(err);
+                        writeLog('error',`Dashboard: Failed to disable airplane mode on end: ${msg}`);
+                      });
+                    }
+                  })
+                  .catch(() => {
+                    // Can't determine current state → fall back to explicit disable
+                    robotService.disableAirplaneMode().catch((err: unknown) => {
+                      const msg = err instanceof Error ? err.message : String(err);
+                      writeLog('error',`Dashboard: Failed to disable airplane mode on end: ${msg}`);
+                    });
+                  });
               }
               clearSnapshot(id);
             }
