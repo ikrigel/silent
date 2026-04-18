@@ -1,0 +1,24 @@
+{
+  "name": "silent-element-tracker",
+  "version": "1.0.0",
+  "description": "Track UI element selections and state changes for macro recording/playback",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [
+    "ui-automation",
+    "element-tracking",
+    "macro-recording",
+    "accessibility"
+  ],
+  "author": "Igal Krigel",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}

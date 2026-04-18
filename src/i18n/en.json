@@ -104,6 +104,7 @@
     "noSchedules": "No schedules yet. Create one to get started.",
     "browserNote": "⚠️ This app cannot silence alerts automatically — WEA messages bypass all software. Schedules remind you when to go to your device Settings and toggle off alerts manually.",
     "name": "Schedule Name",
+    "nameRequired": "Schedule name is required",
     "startTime": "Start Time",
     "endTime": "End Time",
     "repeat": "Repeat",

@@ -57,6 +57,25 @@ const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, 
   const useAirplaneMode = watch('useAirplaneMode');
   const robotRecordingId = watch('robotRecordingId');
 
+  // Re-sync form values when dialog opens or entry changes
+  useEffect(() => {
+    if (open) {
+      reset({
+        name:              initial?.name              ?? '',
+        startTime:         initial?.startTime         ?? '22:00',
+        endTime:           initial?.endTime           ?? '07:00',
+        repeatMode:        initial?.repeatMode        ?? 'daily',
+        daysOfWeek:        initial?.daysOfWeek        ?? [],
+        startDate:         initial?.startDate         ?? '',
+        endDate:           initial?.endDate           ?? '',
+        robotRecordingId:  initial?.robotRecordingId  ?? '',
+        useAirplaneMode:   initial?.useAirplaneMode   ?? false,
+        restoreOnEnd:      initial?.restoreOnEnd      !== false,
+        unsilenceWEAOnEnd: initial?.unsilenceWEAOnEnd ?? false,
+      });
+    }
+  }, [open, initial, reset]);
+
   useEffect(() => {
     if (open && robotService.isAndroid()) {
       robotService.getRecordings().then(setRobotRecordings);
@@ -86,8 +105,17 @@ const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, 
         <Box component="form" sx={{ pt: 1 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Controller name="name" control={control} rules={{ required: true }}
-                render={({ field }) => <TextField {...field} label={t('scheduler.name')} fullWidth required />}
+              <Controller name="name" control={control} rules={{ required: t('scheduler.nameRequired') }}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label={t('scheduler.name')}
+                    fullWidth
+                    required
+                    error={!!fieldState.error}
+                    helperText={fieldState.error?.message}
+                  />
+                )}
               />
             </Grid>
             <Grid item xs={6}>
