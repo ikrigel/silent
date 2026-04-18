@@ -4,35 +4,35 @@
     android:viewportHeight="108"
     android:viewportWidth="108">
 
-    <!-- Large Z (bottom-center) - represents main sleep indicator -->
+    <!-- Large Z (bottom-center) -->
     <path
         android:fillColor="#FFFFFF"
         android:fillType="nonZero"
-        android:pathData="M22,80 L56,80 L28,62 L56,62 L22,44 L56,44 L22,26 L56,26 L22,8 Z"
+        android:pathData="M20,88 L54,88 L54,82 L26,82 L54,56 L54,50 L20,50 L20,56 L48,56 L20,82 L20,88 Z"
         android:strokeColor="#00000000"
         android:strokeWidth="1" />
 
-    <!-- Medium Z (middle-right) - middle sleep indicator -->
+    <!-- Medium Z (middle-right) -->
     <path
         android:fillColor="#FFFFFF"
         android:fillType="nonZero"
-        android:pathData="M52,68 L78,68 L60,54 L78,54 L52,40 L78,40 Z"
+        android:pathData="M52,70 L80,70 L80,65 L58,65 L80,48 L80,43 L52,43 L52,48 L76,48 L52,65 L52,70 Z"
         android:strokeColor="#00000000"
         android:strokeWidth="1" />
 
-    <!-- Small Z (top-right) - small sleep indicator -->
+    <!-- Small Z (top-right) -->
     <path
         android:fillColor="#FFFFFF"
         android:fillType="nonZero"
-        android:pathData="M68,48 L88,48 L76,38 L88,38 Z"
+        android:pathData="M68,52 L90,52 L90,48 L72,48 L90,37 L90,33 L68,33 L68,37 L86,37 L68,48 L68,52 Z"
         android:strokeColor="#00000000"
         android:strokeWidth="1" />
 
-    <!-- Phone handset icon (bottom-left corner) - 20x24dp approximate size -->
+    <!-- Phone handset icon (bottom-left corner) -->
     <path
         android:fillColor="#FFFFFF"
         android:fillType="nonZero"
-        android:pathData="M14,82 C12,82 10.5,83.5 10.5,85.5 L10.5,100 C10.5,102 12,103.5 14,103.5 L28,103.5 C30,103.5 31.5,102 31.5,100 L31.5,85.5 C31.5,83.5 30,82 28,82 L14,82 Z M14,86 L28,86 L28,100 L14,100 L14,86 Z"
+        android:pathData="M14,82 C12,82 10.5,83.5 10.5,85.5 L10.5,102 C10.5,104 12,105.5 14,105.5 L30,105.5 C32,105.5 33.5,104 33.5,102 L33.5,85.5 C33.5,83.5 32,82 30,82 L14,82 Z M14,87 L30,87 L30,101 L14,101 L14,87 Z"
         android:strokeColor="#00000000"
         android:strokeWidth="1" />
 
