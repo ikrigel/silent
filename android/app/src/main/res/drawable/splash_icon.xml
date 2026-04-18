@@ -1,0 +1,36 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="192dp"
+    android:height="192dp"
+    android:viewportHeight="192"
+    android:viewportWidth="192">
+
+    <!-- Background: teal circle (matching MUI primary color) -->
+    <path
+        android:fillColor="#26A69A"
+        android:pathData="M96,96 m-96,0 a96,96 0 1,1 192,0 a96,96 0 1,1 -192,0" />
+
+    <!-- Large Z (sleep emoji representation) - white, center-left -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="nonZero"
+        android:pathData="M30,130 L80,130 L45,100 L80,100 L30,70 L80,70 L30,40 L80,40 Z" />
+
+    <!-- Medium Z (sleep indicator) - white, middle-right -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="nonZero"
+        android:pathData="M95,110 L140,110 L110,85 L140,85 L95,60 L140,60 Z" />
+
+    <!-- Small Z (sleep indicator) - white, top-right -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="nonZero"
+        android:pathData="M120,65 L160,65 L135,48 L160,48 Z" />
+
+    <!-- Phone outline (bottom-left) - white, simple rectangular phone shape -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="nonZero"
+        android:pathData="M20,140 C17,140 15,142 15,145 L15,175 C15,178 17,180 20,180 L45,180 C48,180 50,178 50,175 L50,145 C50,142 48,140 45,140 L20,140 Z M20,145 L45,145 L45,170 L20,170 L20,145 Z" />
+
+</vector>
