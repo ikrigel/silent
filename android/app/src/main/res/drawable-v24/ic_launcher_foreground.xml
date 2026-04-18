@@ -4,36 +4,36 @@
     android:viewportHeight="108"
     android:viewportWidth="108">
 
-    <!-- Large Z (bottom-center) -->
+    <!-- Large Z (bottom-center, ~30x18) -->
     <path
         android:fillColor="#FFFFFF"
         android:fillType="nonZero"
-        android:pathData="M20,88 L54,88 L54,82 L26,82 L54,56 L54,50 L20,50 L20,56 L48,56 L20,82 L20,88 Z"
-        android:strokeColor="#00000000"
-        android:strokeWidth="1" />
+        android:pathData="M18,95 L18,78 L42,78 L18,61 L42,61 L42,44 L18,44 Z"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3" />
 
-    <!-- Medium Z (middle-right) -->
+    <!-- Medium Z (middle-right, ~22x14) -->
     <path
         android:fillColor="#FFFFFF"
         android:fillType="nonZero"
-        android:pathData="M52,70 L80,70 L80,65 L58,65 L80,48 L80,43 L52,43 L52,48 L76,48 L52,65 L52,70 Z"
-        android:strokeColor="#00000000"
-        android:strokeWidth="1" />
+        android:pathData="M50,72 L50,60 L68,60 L50,48 L68,48 L68,36 L50,36 Z"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5" />
 
-    <!-- Small Z (top-right) -->
+    <!-- Small Z (top-right, ~18x10) -->
     <path
         android:fillColor="#FFFFFF"
         android:fillType="nonZero"
-        android:pathData="M68,52 L90,52 L90,48 L72,48 L90,37 L90,33 L68,33 L68,37 L86,37 L68,48 L68,52 Z"
-        android:strokeColor="#00000000"
-        android:strokeWidth="1" />
+        android:pathData="M72,50 L72,41 L84,41 L72,33 L84,33 L84,24 Z"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2" />
 
-    <!-- Phone handset icon (bottom-left corner) -->
+    <!-- Phone handset (bottom-left, ~18x20) -->
     <path
         android:fillColor="#FFFFFF"
         android:fillType="nonZero"
-        android:pathData="M14,82 C12,82 10.5,83.5 10.5,85.5 L10.5,102 C10.5,104 12,105.5 14,105.5 L30,105.5 C32,105.5 33.5,104 33.5,102 L33.5,85.5 C33.5,83.5 32,82 30,82 L14,82 Z M14,87 L30,87 L30,101 L14,101 L14,87 Z"
-        android:strokeColor="#00000000"
+        android:pathData="M12,86 L12,104 C12,105.1 12.9,106 14,106 L28,106 C29.1,106 30,105.1 30,104 L30,86 C30,84.9 29.1,84 28,84 L14,84 C12.9,84 12,84.9 12,86 Z M14,88 L28,88 L28,102 L14,102 Z"
+        android:strokeColor="#FFFFFF"
         android:strokeWidth="1" />
 
 </vector>
