@@ -38,8 +38,8 @@ android {
         release {
             signingConfig signingConfigs.release
             minifyEnabled false
-            // Use non-optimized ProGuard rules to avoid syntax errors in R8 parser
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // Use optimized ProGuard rules (proguard-android.txt is deprecated since AGP 7.0)
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
