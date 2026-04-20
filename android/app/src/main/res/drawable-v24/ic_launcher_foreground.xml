@@ -33,7 +33,6 @@
 
     <!-- Phone handset (bottom-left) - simple outline -->
     <path
-        android:fillColor="none"
         android:pathData="M 12,88 L 12,104 Q 12,106 14,106 L 28,106 Q 30,106 30,104 L 30,88 Q 30,86 28,86 L 14,86 Q 12,86 12,88 Z"
         android:strokeColor="#FFFFFF"
         android:strokeWidth="2.5"
