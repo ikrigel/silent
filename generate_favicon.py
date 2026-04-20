@@ -18,7 +18,7 @@ PUBLIC_DIR = Path("public")
 
 
 def create_favicon():
-    """Create favicon with teal background and sleep emoji"""
+    """Create favicon with teal background and ZZZ design"""
     print("Creating favicon (256x256)...")
 
     img = Image.new("RGBA", (SIZE, SIZE), TEAL)
@@ -71,13 +71,13 @@ def create_favicon():
 
 
 def main():
-    print("🎨 Generating favicon for Silent app...\n")
+    print("Generating favicon for Silent app...\n")
 
     # Check if PIL is installed
     try:
         from PIL import Image, ImageDraw
     except ImportError:
-        print("❌ ERROR: Pillow not installed!")
+        print("[ERROR] Pillow not installed!")
         print("\nInstall with: pip install pillow")
         return 1
 
@@ -89,9 +89,9 @@ def main():
     favicon_path = PUBLIC_DIR / "favicon.png"
     favicon.save(favicon_path, "PNG", optimize=True)
     size = favicon_path.stat().st_size / 1024
-    print(f"✓ {favicon_path} ({size:.1f} KB)")
+    print(f"[OK] {favicon_path} ({size:.1f} KB)")
 
-    print("\n✅ Favicon generated successfully!")
+    print("\n[SUCCESS] Favicon generated successfully!")
     print("\nNext steps:")
     print("1. Update index.html line 5:")
     print('   <link rel="icon" href="/favicon.png" />')
