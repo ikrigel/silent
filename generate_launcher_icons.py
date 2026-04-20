@@ -9,9 +9,9 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 # Configuration
-WHITE_BG = (240, 240, 245)  # Light background
-BLUE = (66, 133, 244)  # Google blue for ZZZ letters
-BLUE_DARK = (52, 99, 199)  # Darker blue for phone
+WHITE_BG = (255, 255, 255)  # White background
+TEAL = (38, 166, 154)  # Teal #26A69A for ZZZ and phone swoosh
+PHONE_COLOR = (60, 60, 60)  # Dark gray for phone
 
 # Base size (xxxhdpi - 192x192)
 BASE_SIZE = 192
@@ -56,27 +56,27 @@ def draw_icon_elements(draw, size):
     z1_y = int((center + 40) * z1_scale)
     offset = int(30 * z1_scale)
     height = int(40 * z1_scale)
-    draw.line([(z1_x - offset, z1_y - height), (z1_x + offset, z1_y - height)], fill=BLUE, width=z1_width)
-    draw.line([(z1_x + offset, z1_y - height), (z1_x - offset, z1_y)], fill=BLUE, width=z1_width)
-    draw.line([(z1_x - offset, z1_y), (z1_x + offset, z1_y)], fill=BLUE, width=z1_width)
+    draw.line([(z1_x - offset, z1_y - height), (z1_x + offset, z1_y - height)], fill=TEAL, width=z1_width)
+    draw.line([(z1_x + offset, z1_y - height), (z1_x - offset, z1_y)], fill=TEAL, width=z1_width)
+    draw.line([(z1_x - offset, z1_y), (z1_x + offset, z1_y)], fill=TEAL, width=z1_width)
 
     # Medium Z (center)
     z2_x = int((center + 10) * z2_scale)
     z2_y = int(center * z2_scale)
     offset = int(25 * z2_scale)
     height = int(30 * z2_scale)
-    draw.line([(z2_x - offset, z2_y - height), (z2_x + offset, z2_y - height)], fill=BLUE, width=z2_width)
-    draw.line([(z2_x + offset, z2_y - height), (z2_x - offset, z2_y)], fill=BLUE, width=z2_width)
-    draw.line([(z2_x - offset, z2_y), (z2_x + offset, z2_y)], fill=BLUE, width=z2_width)
+    draw.line([(z2_x - offset, z2_y - height), (z2_x + offset, z2_y - height)], fill=TEAL, width=z2_width)
+    draw.line([(z2_x + offset, z2_y - height), (z2_x - offset, z2_y)], fill=TEAL, width=z2_width)
+    draw.line([(z2_x - offset, z2_y), (z2_x + offset, z2_y)], fill=TEAL, width=z2_width)
 
     # Small Z (top-right)
     z3_x = int((center + 70) * z3_scale)
     z3_y = int((center - 50) * z3_scale)
     offset = int(18 * z3_scale)
     height = int(20 * z3_scale)
-    draw.line([(z3_x - offset, z3_y - height), (z3_x + offset, z3_y - height)], fill=BLUE, width=z3_width)
-    draw.line([(z3_x + offset, z3_y - height), (z3_x - offset, z3_y)], fill=BLUE, width=z3_width)
-    draw.line([(z3_x - offset, z3_y), (z3_x + offset, z3_y)], fill=BLUE, width=z3_width)
+    draw.line([(z3_x - offset, z3_y - height), (z3_x + offset, z3_y - height)], fill=TEAL, width=z3_width)
+    draw.line([(z3_x + offset, z3_y - height), (z3_x - offset, z3_y)], fill=TEAL, width=z3_width)
+    draw.line([(z3_x - offset, z3_y), (z3_x + offset, z3_y)], fill=TEAL, width=z3_width)
 
     # Phone handset (bottom-left corner)
     phone_x = margin
@@ -86,31 +86,36 @@ def draw_icon_elements(draw, size):
 
     # Only draw phone if it's large enough
     if phone_w > 8 and phone_h > 8:
-        # Filled rounded phone icon with gradient effect
+        radius = max(1, int(2 * (size / 384)))
+
+        # Draw dark phone
         draw.rounded_rectangle(
-            [(phone_x, phone_y), (phone_x + phone_w, phone_y + phone_h)],
-            radius=max(1, int(3 * (size / 384))),
-            fill=BLUE,
+            [(phone_x + 1, phone_y + 1), (phone_x + phone_w - 1, phone_y + phone_h - 1)],
+            radius=radius,
+            fill=PHONE_COLOR,
         )
 
-        # Add purple gradient accent
-        accent_offset = max(2, int(8 * (size / 384)))
-        draw.rounded_rectangle(
-            [(phone_x + accent_offset, phone_y + accent_offset),
-             (phone_x + phone_w - 2, phone_y + phone_h - 2)],
-            radius=max(1, int(2 * (size / 384))),
-            fill=BLUE_DARK,
-        )
-
-        # Phone screen indicator (light blue)
-        screen_padding = max(1, int(3 * (size / 384)))
+        # Phone screen/display
+        screen_padding = max(1, int(2 * (size / 384)))
         if phone_w > screen_padding * 2 and phone_h > screen_padding * 2:
             draw.rounded_rectangle(
                 [(phone_x + screen_padding, phone_y + screen_padding),
                  (phone_x + phone_w - screen_padding, phone_y + phone_h - screen_padding)],
                 radius=max(1, int(1 * (size / 384))),
-                fill=(200, 200, 255),
+                fill=(30, 30, 30),
             )
+
+        # Teal curved swoosh around phone
+        arc_width = max(2, int(6 * (size / 384)))
+        swoosh_offset = max(5, int(10 * (size / 384)))
+        draw.arc(
+            [(phone_x - swoosh_offset, phone_y - swoosh_offset),
+             (phone_x + phone_w + swoosh_offset, phone_y + phone_h + swoosh_offset)],
+            start=45,
+            end=315,
+            fill=TEAL,
+            width=arc_width,
+        )
 
 
 def create_foreground_icon(size):

@@ -100,30 +100,30 @@ def generate_variant(base_img, scale, density):
         # Save image
         output_path = dir_path / "splash.png"
         resized.save(output_path, "PNG", optimize=True, quality=90)
-        print(f"  ✓ {output_path}")
+        print(f"  [OK] {output_path}")
 
 
 def main():
-    print("🎨 Generating splash screen PNGs for Silent app...\n")
+    print("Generating Generating splash screen PNGs for Silent app...\n")
 
     # Check if PIL is installed
     try:
         from PIL import Image, ImageDraw, ImageFont
     except ImportError:
-        print("❌ ERROR: Pillow not installed!")
+        print("[ERROR] ERROR: Pillow not installed!")
         print("\nInstall with: pip install pillow")
         print("Or: python -m pip install pillow")
         return 1
 
     # Create base image
     base_img = create_base_image()
-    print("✓ Base image created\n")
+    print("[OK] Base image created\n")
 
     # Generate variants for each DPI
     for density, scale in VARIANTS.items():
         generate_variant(base_img, scale, density)
 
-    print("\n✅ All splash PNGs generated successfully!")
+    print("\n[SUCCESS] All splash PNGs generated successfully!")
     print("\nGenerated files:")
     for path in sorted(SRC_DIR.glob("drawable*/splash.png")):
         size = path.stat().st_size / 1024

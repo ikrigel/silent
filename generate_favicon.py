@@ -8,9 +8,9 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 # Configuration
-WHITE_BG = (240, 240, 245)  # Light white background
-BLUE = (66, 133, 244)  # Google blue for Z letters
-BLUE_DARK = (52, 99, 199)  # Darker blue for phone
+WHITE_BG = (255, 255, 255)  # White background
+TEAL = (38, 166, 154)  # Teal #26A69A for ZZZ and phone swoosh
+PHONE_COLOR = (60, 60, 60)  # Dark gray for phone
 
 # Favicon size
 SIZE = 256
@@ -32,50 +32,52 @@ def create_favicon():
     # Large Z (left)
     z1_x = center - 40
     z1_y = center + 20
-    draw.line([(z1_x - 20, z1_y - 25), (z1_x + 20, z1_y - 25)], fill=BLUE, width=8)
-    draw.line([(z1_x + 20, z1_y - 25), (z1_x - 20, z1_y)], fill=BLUE, width=8)
-    draw.line([(z1_x - 20, z1_y), (z1_x + 20, z1_y)], fill=BLUE, width=8)
+    draw.line([(z1_x - 20, z1_y - 25), (z1_x + 20, z1_y - 25)], fill=TEAL, width=8)
+    draw.line([(z1_x + 20, z1_y - 25), (z1_x - 20, z1_y)], fill=TEAL, width=8)
+    draw.line([(z1_x - 20, z1_y), (z1_x + 20, z1_y)], fill=TEAL, width=8)
 
     # Medium Z (center)
     z2_x = center
     z2_y = center
-    draw.line([(z2_x - 16, z2_y - 20), (z2_x + 16, z2_y - 20)], fill=BLUE, width=7)
-    draw.line([(z2_x + 16, z2_y - 20), (z2_x - 16, z2_y)], fill=BLUE, width=7)
-    draw.line([(z2_x - 16, z2_y), (z2_x + 16, z2_y)], fill=BLUE, width=7)
+    draw.line([(z2_x - 16, z2_y - 20), (z2_x + 16, z2_y - 20)], fill=TEAL, width=7)
+    draw.line([(z2_x + 16, z2_y - 20), (z2_x - 16, z2_y)], fill=TEAL, width=7)
+    draw.line([(z2_x - 16, z2_y), (z2_x + 16, z2_y)], fill=TEAL, width=7)
 
     # Small Z (right)
     z3_x = center + 40
     z3_y = center - 20
-    draw.line([(z3_x - 12, z3_y - 15), (z3_x + 12, z3_y - 15)], fill=BLUE, width=6)
-    draw.line([(z3_x + 12, z3_y - 15), (z3_x - 12, z3_y)], fill=BLUE, width=6)
-    draw.line([(z3_x - 12, z3_y), (z3_x + 12, z3_y)], fill=BLUE, width=6)
+    draw.line([(z3_x - 12, z3_y - 15), (z3_x + 12, z3_y - 15)], fill=TEAL, width=6)
+    draw.line([(z3_x + 12, z3_y - 15), (z3_x - 12, z3_y)], fill=TEAL, width=6)
+    draw.line([(z3_x - 12, z3_y), (z3_x + 12, z3_y)], fill=TEAL, width=6)
 
-    # Phone handset (bottom-right) with gradient fill
+    # Phone handset (bottom-right) with teal swoosh
     phone_x = SIZE - margin - 28
     phone_y = SIZE - margin - 35
     phone_w = 28
     phone_h = 35
 
-    # Create gradient phone icon using ellipse/rounded shape
-    # Filled rounded rectangle
+    # Draw dark phone
     draw.rounded_rectangle(
-        [(phone_x, phone_y), (phone_x + phone_w, phone_y + phone_h)],
-        radius=3,
-        fill=(66, 133, 244),  # Blue
-    )
-
-    # Add gradient effect by layering with purple
-    draw.rounded_rectangle(
-        [(phone_x + 8, phone_y + 8), (phone_x + phone_w - 2, phone_y + phone_h - 2)],
+        [(phone_x + 2, phone_y + 2), (phone_x + phone_w - 2, phone_y + phone_h - 2)],
         radius=2,
-        fill=(124, 77, 255),  # Purple accent
+        fill=PHONE_COLOR,
     )
 
-    # Phone screen indicator
+    # Phone screen/display
     draw.rounded_rectangle(
-        [(phone_x + 3, phone_y + 5), (phone_x + phone_w - 3, phone_y + phone_h - 5)],
+        [(phone_x + 4, phone_y + 5), (phone_x + phone_w - 4, phone_y + phone_h - 5)],
         radius=1,
-        fill=(200, 200, 255),  # Light blue for screen
+        fill=(30, 30, 30),
+    )
+
+    # Teal curved swoosh around phone (large curved line)
+    # Draw thick curved line using arc
+    draw.arc(
+        [(phone_x - 10, phone_y - 10), (phone_x + phone_w + 10, phone_y + phone_h + 10)],
+        start=45,
+        end=315,
+        fill=TEAL,
+        width=6,
     )
 
     return img
