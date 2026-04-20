@@ -86,20 +86,30 @@ def draw_icon_elements(draw, size):
 
     # Only draw phone if it's large enough
     if phone_w > 8 and phone_h > 8:
-        draw.rectangle(
+        # Filled rounded phone icon with gradient effect
+        draw.rounded_rectangle(
             [(phone_x, phone_y), (phone_x + phone_w, phone_y + phone_h)],
-            outline=BLUE_DARK,
-            width=phone_width,
+            radius=max(1, int(3 * (size / 384))),
+            fill=BLUE,
         )
 
-        # Only draw phone screen if there's enough space
-        screen_padding = max(2, int(4 * (size / 384)))
+        # Add purple gradient accent
+        accent_offset = max(2, int(8 * (size / 384)))
+        draw.rounded_rectangle(
+            [(phone_x + accent_offset, phone_y + accent_offset),
+             (phone_x + phone_w - 2, phone_y + phone_h - 2)],
+            radius=max(1, int(2 * (size / 384))),
+            fill=BLUE_DARK,
+        )
+
+        # Phone screen indicator (light blue)
+        screen_padding = max(1, int(3 * (size / 384)))
         if phone_w > screen_padding * 2 and phone_h > screen_padding * 2:
-            draw.rectangle(
+            draw.rounded_rectangle(
                 [(phone_x + screen_padding, phone_y + screen_padding),
                  (phone_x + phone_w - screen_padding, phone_y + phone_h - screen_padding)],
-                outline=BLUE_DARK,
-                width=screen_width,
+                radius=max(1, int(1 * (size / 384))),
+                fill=(200, 200, 255),
             )
 
 
