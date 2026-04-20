@@ -4,36 +4,40 @@
     android:viewportHeight="108"
     android:viewportWidth="108">
 
-    <!-- Large Z (bottom-center, ~30x18) -->
+    <!-- Large Z (bottom-left) - simple zigzag -->
     <path
         android:fillColor="#FFFFFF"
-        android:fillType="nonZero"
-        android:pathData="M18,95 L18,78 L42,78 L18,61 L42,61 L42,44 L18,44 Z"
+        android:pathData="M 15,85 L 45,85 L 15,65 L 45,65 L 15,45 L 45,45"
         android:strokeColor="#FFFFFF"
-        android:strokeWidth="3" />
+        android:strokeWidth="6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
 
-    <!-- Medium Z (middle-right, ~22x14) -->
+    <!-- Medium Z (center) - simple zigzag -->
     <path
         android:fillColor="#FFFFFF"
-        android:fillType="nonZero"
-        android:pathData="M50,72 L50,60 L68,60 L50,48 L68,48 L68,36 L50,36 Z"
+        android:pathData="M 40,70 L 65,70 L 40,55 L 65,55 L 40,40 L 65,40"
         android:strokeColor="#FFFFFF"
-        android:strokeWidth="2.5" />
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
 
-    <!-- Small Z (top-right, ~18x10) -->
+    <!-- Small Z (top-right) - simple zigzag -->
     <path
         android:fillColor="#FFFFFF"
-        android:fillType="nonZero"
-        android:pathData="M72,50 L72,41 L84,41 L72,33 L84,33 L84,24 Z"
+        android:pathData="M 65,55 L 85,55 L 65,45 L 85,45 L 65,35 L 85,35"
         android:strokeColor="#FFFFFF"
-        android:strokeWidth="2" />
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
 
-    <!-- Phone handset (bottom-left, ~18x20) -->
+    <!-- Phone handset (bottom-left) - simple outline -->
     <path
-        android:fillColor="#FFFFFF"
-        android:fillType="nonZero"
-        android:pathData="M12,86 L12,104 C12,105.1 12.9,106 14,106 L28,106 C29.1,106 30,105.1 30,104 L30,86 C30,84.9 29.1,84 28,84 L14,84 C12.9,84 12,84.9 12,86 Z M14,88 L28,88 L28,102 L14,102 Z"
+        android:fillColor="none"
+        android:pathData="M 12,88 L 12,104 Q 12,106 14,106 L 28,106 Q 30,106 30,104 L 30,88 Q 30,86 28,86 L 14,86 Q 12,86 12,88 Z"
         android:strokeColor="#FFFFFF"
-        android:strokeWidth="1" />
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
 
 </vector>
