@@ -9,8 +9,9 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 # Configuration
-TEAL = (38, 166, 154)  # #26A69A
-WHITE = (255, 255, 255)
+WHITE_BG = (240, 240, 245)  # Light background
+BLUE = (66, 133, 244)  # Google blue for ZZZ letters
+BLUE_DARK = (52, 99, 199)  # Darker blue for phone
 
 # Base size (xxxhdpi - 192x192)
 BASE_SIZE = 192
@@ -28,8 +29,8 @@ SRC_DIR = Path("android/app/src/main/res")
 
 
 def create_icon_with_background(size):
-    """Create icon with teal background"""
-    img = Image.new("RGBA", (size, size), TEAL)
+    """Create icon with white background"""
+    img = Image.new("RGBA", (size, size), WHITE_BG)
     return img
 
 
@@ -55,27 +56,27 @@ def draw_icon_elements(draw, size):
     z1_y = int((center + 40) * z1_scale)
     offset = int(30 * z1_scale)
     height = int(40 * z1_scale)
-    draw.line([(z1_x - offset, z1_y - height), (z1_x + offset, z1_y - height)], fill=WHITE, width=z1_width)
-    draw.line([(z1_x + offset, z1_y - height), (z1_x - offset, z1_y)], fill=WHITE, width=z1_width)
-    draw.line([(z1_x - offset, z1_y), (z1_x + offset, z1_y)], fill=WHITE, width=z1_width)
+    draw.line([(z1_x - offset, z1_y - height), (z1_x + offset, z1_y - height)], fill=BLUE, width=z1_width)
+    draw.line([(z1_x + offset, z1_y - height), (z1_x - offset, z1_y)], fill=BLUE, width=z1_width)
+    draw.line([(z1_x - offset, z1_y), (z1_x + offset, z1_y)], fill=BLUE, width=z1_width)
 
     # Medium Z (center)
     z2_x = int((center + 10) * z2_scale)
     z2_y = int(center * z2_scale)
     offset = int(25 * z2_scale)
     height = int(30 * z2_scale)
-    draw.line([(z2_x - offset, z2_y - height), (z2_x + offset, z2_y - height)], fill=WHITE, width=z2_width)
-    draw.line([(z2_x + offset, z2_y - height), (z2_x - offset, z2_y)], fill=WHITE, width=z2_width)
-    draw.line([(z2_x - offset, z2_y), (z2_x + offset, z2_y)], fill=WHITE, width=z2_width)
+    draw.line([(z2_x - offset, z2_y - height), (z2_x + offset, z2_y - height)], fill=BLUE, width=z2_width)
+    draw.line([(z2_x + offset, z2_y - height), (z2_x - offset, z2_y)], fill=BLUE, width=z2_width)
+    draw.line([(z2_x - offset, z2_y), (z2_x + offset, z2_y)], fill=BLUE, width=z2_width)
 
     # Small Z (top-right)
     z3_x = int((center + 70) * z3_scale)
     z3_y = int((center - 50) * z3_scale)
     offset = int(18 * z3_scale)
     height = int(20 * z3_scale)
-    draw.line([(z3_x - offset, z3_y - height), (z3_x + offset, z3_y - height)], fill=WHITE, width=z3_width)
-    draw.line([(z3_x + offset, z3_y - height), (z3_x - offset, z3_y)], fill=WHITE, width=z3_width)
-    draw.line([(z3_x - offset, z3_y), (z3_x + offset, z3_y)], fill=WHITE, width=z3_width)
+    draw.line([(z3_x - offset, z3_y - height), (z3_x + offset, z3_y - height)], fill=BLUE, width=z3_width)
+    draw.line([(z3_x + offset, z3_y - height), (z3_x - offset, z3_y)], fill=BLUE, width=z3_width)
+    draw.line([(z3_x - offset, z3_y), (z3_x + offset, z3_y)], fill=BLUE, width=z3_width)
 
     # Phone handset (bottom-left corner)
     phone_x = margin
@@ -87,7 +88,7 @@ def draw_icon_elements(draw, size):
     if phone_w > 8 and phone_h > 8:
         draw.rectangle(
             [(phone_x, phone_y), (phone_x + phone_w, phone_y + phone_h)],
-            outline=WHITE,
+            outline=BLUE_DARK,
             width=phone_width,
         )
 
@@ -97,7 +98,7 @@ def draw_icon_elements(draw, size):
             draw.rectangle(
                 [(phone_x + screen_padding, phone_y + screen_padding),
                  (phone_x + phone_w - screen_padding, phone_y + phone_h - screen_padding)],
-                outline=WHITE,
+                outline=BLUE_DARK,
                 width=screen_width,
             )
 
@@ -145,13 +146,13 @@ def generate_variants(scale, density):
     ic_launcher = create_launcher_icon(size)
     launcher_path = dir_path / "ic_launcher.png"
     ic_launcher.save(launcher_path, "PNG", optimize=True)
-    print(f"  ✓ {launcher_path}")
+    print(f"  [OK] {launcher_path}")
 
     # Generate ic_launcher_round (circular mask)
     ic_launcher_round = create_launcher_icon_round(size)
     launcher_round_path = dir_path / "ic_launcher_round.png"
     ic_launcher_round.save(launcher_round_path, "PNG", optimize=True)
-    print(f"  ✓ {launcher_round_path}")
+    print(f"  [OK] {launcher_round_path}")
 
     # Generate ic_launcher_foreground (oversized for safe zone - 108dp in 192dp canvas)
     # Foreground is 4/3 scale of base launcher (108/81 ratio in safe zone system)
@@ -174,11 +175,11 @@ def generate_variants(scale, density):
     )
     launcher_fg_path = dir_path / "ic_launcher_foreground.png"
     ic_launcher_foreground_resized.save(launcher_fg_path, "PNG", optimize=True)
-    print(f"  ✓ {launcher_fg_path}")
+    print(f"  [OK] {launcher_fg_path}")
 
 
 def main():
-    print("🎨 Generating launcher icons for Silent app...\n")
+    print("Generating launcher icons for Silent app...\n")
 
     # Check if PIL is installed
     try:
@@ -192,7 +193,7 @@ def main():
     for density, scale in VARIANTS.items():
         generate_variants(scale, density)
 
-    print("\n✅ All launcher icons generated successfully!")
+    print("\n[SUCCESS] All launcher icons generated successfully!")
     print("\nGenerated files:")
     total_size = 0
     for path in sorted(SRC_DIR.glob("mipmap-*/ic_launcher*.png")):

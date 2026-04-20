@@ -8,8 +8,9 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 # Configuration
-TEAL = (38, 166, 154)  # #26A69A
-WHITE = (255, 255, 255)
+WHITE_BG = (240, 240, 245)  # Light white background
+BLUE = (66, 133, 244)  # Google blue for Z letters
+BLUE_DARK = (52, 99, 199)  # Darker blue for phone
 
 # Favicon size
 SIZE = 256
@@ -18,52 +19,52 @@ PUBLIC_DIR = Path("public")
 
 
 def create_favicon():
-    """Create favicon with teal background and ZZZ design"""
+    """Create favicon with white background and blue ZZZ design"""
     print("Creating favicon (256x256)...")
 
-    img = Image.new("RGBA", (SIZE, SIZE), TEAL)
+    img = Image.new("RGBA", (SIZE, SIZE), WHITE_BG)
     draw = ImageDraw.Draw(img)
 
     center = SIZE // 2
     margin = 20
 
-    # Draw three Z letters (descending size)
+    # Draw three Z letters (descending size) in blue
     # Large Z (left)
     z1_x = center - 40
     z1_y = center + 20
-    draw.line([(z1_x - 20, z1_y - 25), (z1_x + 20, z1_y - 25)], fill=WHITE, width=8)
-    draw.line([(z1_x + 20, z1_y - 25), (z1_x - 20, z1_y)], fill=WHITE, width=8)
-    draw.line([(z1_x - 20, z1_y), (z1_x + 20, z1_y)], fill=WHITE, width=8)
+    draw.line([(z1_x - 20, z1_y - 25), (z1_x + 20, z1_y - 25)], fill=BLUE, width=8)
+    draw.line([(z1_x + 20, z1_y - 25), (z1_x - 20, z1_y)], fill=BLUE, width=8)
+    draw.line([(z1_x - 20, z1_y), (z1_x + 20, z1_y)], fill=BLUE, width=8)
 
     # Medium Z (center)
     z2_x = center
     z2_y = center
-    draw.line([(z2_x - 16, z2_y - 20), (z2_x + 16, z2_y - 20)], fill=WHITE, width=7)
-    draw.line([(z2_x + 16, z2_y - 20), (z2_x - 16, z2_y)], fill=WHITE, width=7)
-    draw.line([(z2_x - 16, z2_y), (z2_x + 16, z2_y)], fill=WHITE, width=7)
+    draw.line([(z2_x - 16, z2_y - 20), (z2_x + 16, z2_y - 20)], fill=BLUE, width=7)
+    draw.line([(z2_x + 16, z2_y - 20), (z2_x - 16, z2_y)], fill=BLUE, width=7)
+    draw.line([(z2_x - 16, z2_y), (z2_x + 16, z2_y)], fill=BLUE, width=7)
 
     # Small Z (right)
     z3_x = center + 40
     z3_y = center - 20
-    draw.line([(z3_x - 12, z3_y - 15), (z3_x + 12, z3_y - 15)], fill=WHITE, width=6)
-    draw.line([(z3_x + 12, z3_y - 15), (z3_x - 12, z3_y)], fill=WHITE, width=6)
-    draw.line([(z3_x - 12, z3_y), (z3_x + 12, z3_y)], fill=WHITE, width=6)
+    draw.line([(z3_x - 12, z3_y - 15), (z3_x + 12, z3_y - 15)], fill=BLUE, width=6)
+    draw.line([(z3_x + 12, z3_y - 15), (z3_x - 12, z3_y)], fill=BLUE, width=6)
+    draw.line([(z3_x - 12, z3_y), (z3_x + 12, z3_y)], fill=BLUE, width=6)
 
-    # Phone handset (bottom-left)
-    phone_x = margin
+    # Phone handset (bottom-right) in darker blue
+    phone_x = SIZE - margin - 28
     phone_y = SIZE - margin - 35
     phone_w = 28
     phone_h = 35
 
     draw.rectangle(
         [(phone_x, phone_y), (phone_x + phone_w, phone_y + phone_h)],
-        outline=WHITE,
+        outline=BLUE_DARK,
         width=2,
     )
 
     draw.rectangle(
         [(phone_x + 3, phone_y + 5), (phone_x + phone_w - 3, phone_y + phone_h - 5)],
-        outline=WHITE,
+        outline=BLUE_DARK,
         width=1,
     )
 
