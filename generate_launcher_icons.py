@@ -4,133 +4,108 @@ Generate launcher icon PNGs for all Android DPI densities.
 Requires: pip install pillow
 """
 
-import os
 from pathlib import Path
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 # Configuration
 WHITE_BG = (255, 255, 255)  # White background
-TEAL = (38, 166, 154)  # Teal #26A69A for ZZZ and phone swoosh
-PHONE_COLOR = (60, 60, 60)  # Dark gray for phone
+TEAL = (38, 166, 154)  # Teal #26A69A
+PHONE_DARK = (60, 60, 60)  # Dark phone body
+PHONE_SCREEN = (30, 30, 30)  # Phone screen
 
-# Base size (xxxhdpi - 192x192)
-BASE_SIZE = 192
+BASE_SIZE = 192  # xxxhdpi base
 
-# DPI variants (scale from base)
 VARIANTS = {
-    "mdpi": 0.5,        # 96x96 (160 DPI)
-    "hdpi": 0.75,       # 144x144 (240 DPI)
-    "xhdpi": 1.0,       # 192x192 (320 DPI)
-    "xxhdpi": 1.5,      # 288x288 (480 DPI)
-    "xxxhdpi": 2.0,     # 384x384 (640 DPI)
+    "mdpi": 0.5,        # 96x96
+    "hdpi": 0.75,       # 144x144
+    "xhdpi": 1.0,       # 192x192
+    "xxhdpi": 1.5,      # 288x288
+    "xxxhdpi": 2.0,     # 384x384
 }
 
 SRC_DIR = Path("android/app/src/main/res")
 
 
-def create_icon_with_background(size):
-    """Create icon with white background"""
-    img = Image.new("RGBA", (size, size), WHITE_BG)
-    return img
-
-
-def draw_icon_elements(draw, size):
-    """Draw ZZZ letters and phone on image"""
-    center = size // 2
-    margin = int(40 * (size / 384))  # Scale margin based on size
-
-    # Scale stroke widths proportionally
-    z1_width = max(2, int(12 * (size / 384)))
-    z2_width = max(2, int(10 * (size / 384)))
-    z3_width = max(2, int(8 * (size / 384)))
-    phone_width = max(1, int(3 * (size / 384)))
-    screen_width = max(1, int(2 * (size / 384)))
-
-    # Scale Z sizes
-    z1_scale = size / 384
-    z2_scale = size / 384
-    z3_scale = size / 384
-
-    # Large Z (bottom-left)
-    z1_x = int((center - 60) * z1_scale)
-    z1_y = int((center + 40) * z1_scale)
-    offset = int(30 * z1_scale)
-    height = int(40 * z1_scale)
-    draw.line([(z1_x - offset, z1_y - height), (z1_x + offset, z1_y - height)], fill=TEAL, width=z1_width)
-    draw.line([(z1_x + offset, z1_y - height), (z1_x - offset, z1_y)], fill=TEAL, width=z1_width)
-    draw.line([(z1_x - offset, z1_y), (z1_x + offset, z1_y)], fill=TEAL, width=z1_width)
-
-    # Medium Z (center)
-    z2_x = int((center + 10) * z2_scale)
-    z2_y = int(center * z2_scale)
-    offset = int(25 * z2_scale)
-    height = int(30 * z2_scale)
-    draw.line([(z2_x - offset, z2_y - height), (z2_x + offset, z2_y - height)], fill=TEAL, width=z2_width)
-    draw.line([(z2_x + offset, z2_y - height), (z2_x - offset, z2_y)], fill=TEAL, width=z2_width)
-    draw.line([(z2_x - offset, z2_y), (z2_x + offset, z2_y)], fill=TEAL, width=z2_width)
-
-    # Small Z (top-right)
-    z3_x = int((center + 70) * z3_scale)
-    z3_y = int((center - 50) * z3_scale)
-    offset = int(18 * z3_scale)
-    height = int(20 * z3_scale)
-    draw.line([(z3_x - offset, z3_y - height), (z3_x + offset, z3_y - height)], fill=TEAL, width=z3_width)
-    draw.line([(z3_x + offset, z3_y - height), (z3_x - offset, z3_y)], fill=TEAL, width=z3_width)
-    draw.line([(z3_x - offset, z3_y), (z3_x + offset, z3_y)], fill=TEAL, width=z3_width)
-
-    # Phone handset (bottom-left corner)
-    phone_x = margin
-    phone_y = size - margin - int(50 * (size / 384))
-    phone_w = int(40 * (size / 384))
-    phone_h = int(50 * (size / 384))
-
-    # Only draw phone if it's large enough
-    if phone_w > 8 and phone_h > 8:
-        radius = max(1, int(2 * (size / 384)))
-
-        # Draw dark phone
-        draw.rounded_rectangle(
-            [(phone_x + 1, phone_y + 1), (phone_x + phone_w - 1, phone_y + phone_h - 1)],
-            radius=radius,
-            fill=PHONE_COLOR,
-        )
-
-        # Phone screen/display
-        screen_padding = max(1, int(2 * (size / 384)))
-        if phone_w > screen_padding * 2 and phone_h > screen_padding * 2:
-            draw.rounded_rectangle(
-                [(phone_x + screen_padding, phone_y + screen_padding),
-                 (phone_x + phone_w - screen_padding, phone_y + phone_h - screen_padding)],
-                radius=max(1, int(1 * (size / 384))),
-                fill=(30, 30, 30),
-            )
-
-        # Teal curved swoosh around phone
-        arc_width = max(2, int(6 * (size / 384)))
-        swoosh_offset = max(5, int(10 * (size / 384)))
-        draw.arc(
-            [(phone_x - swoosh_offset, phone_y - swoosh_offset),
-             (phone_x + phone_w + swoosh_offset, phone_y + phone_h + swoosh_offset)],
-            start=45,
-            end=315,
-            fill=TEAL,
-            width=arc_width,
-        )
-
-
-def create_foreground_icon(size):
-    """Create icon foreground (transparent background, for safe zone)"""
-    img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(img)
-    draw_icon_elements(draw, size)
-    return img
+def load_font(size):
+    """Load system font with fallback"""
+    for path in [
+        "C:/Windows/Fonts/arialbd.ttf",
+        "C:/Windows/Fonts/arial.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+        "/System/Library/Fonts/Helvetica.ttc",
+    ]:
+        try:
+            return ImageFont.truetype(path, size)
+        except:
+            pass
+    return ImageFont.load_default()
 
 
 def create_launcher_icon(size):
-    """Create full launcher icon (teal background + foreground)"""
-    img = create_icon_with_background(size)
+    """Create full launcher icon with white background"""
+    img = Image.new("RGBA", (size, size), WHITE_BG)
     draw = ImageDraw.Draw(img)
-    draw_icon_elements(draw, size)
+
+    center = size // 2
+    scale = size / 384  # scale relative to xxxhdpi
+
+    # Load bold font for Z letters
+    large_z_size = int(220 * scale)
+    medium_z_size = int(160 * scale)
+    small_z_size = int(110 * scale)
+
+    font_large = load_font(large_z_size)
+    font_medium = load_font(medium_z_size)
+    font_small = load_font(small_z_size)
+
+    # Large Z (top-right)
+    z_large_x = int(center + 70 * scale)
+    z_large_y = int(center - 60 * scale)
+    draw.text((z_large_x, z_large_y), "Z", fill=TEAL, font=font_large, anchor="mm")
+
+    # Medium Z (center)
+    z_medium_x = center
+    z_medium_y = center
+    draw.text((z_medium_x, z_medium_y), "Z", fill=TEAL, font=font_medium, anchor="mm")
+
+    # Small Z (bottom-left)
+    z_small_x = int(center - 70 * scale)
+    z_small_y = int(center + 60 * scale)
+    draw.text((z_small_x, z_small_y), "Z", fill=TEAL, font=font_small, anchor="mm")
+
+    # Phone icon (center-right)
+    phone_w = int(40 * scale)
+    phone_h = int(60 * scale)
+    phone_x = int(center + 30 * scale)
+    phone_y = int(center - 10 * scale)
+
+    # Phone body (dark rounded rect)
+    draw.rounded_rectangle(
+        [(phone_x, phone_y), (phone_x + phone_w, phone_y + phone_h)],
+        radius=max(2, int(4 * scale)),
+        fill=PHONE_DARK,
+    )
+
+    # Phone screen
+    screen_margin = max(2, int(3 * scale))
+    draw.rounded_rectangle(
+        [(phone_x + screen_margin, phone_y + screen_margin),
+         (phone_x + phone_w - screen_margin, phone_y + phone_h - screen_margin)],
+        radius=max(1, int(2 * scale)),
+        fill=PHONE_SCREEN,
+    )
+
+    # Orbital ring around phone (teal ellipse, tilted)
+    ring_offset = int(15 * scale)
+    ring_width = max(2, int(6 * scale))
+
+    # Draw ellipse arc for orbital effect
+    bbox = [
+        (phone_x - ring_offset, phone_y - ring_offset),
+        (phone_x + phone_w + ring_offset, phone_y + phone_h + ring_offset)
+    ]
+    draw.ellipse(bbox, outline=TEAL, width=ring_width)
+
     return img
 
 
@@ -143,8 +118,78 @@ def create_launcher_icon_round(size):
     mask_draw = ImageDraw.Draw(mask)
     mask_draw.ellipse([(0, 0), (size, size)], fill=255)
 
-    # Apply mask
     img.putalpha(mask)
+    return img
+
+
+def create_foreground_icon(size):
+    """Create icon foreground (transparent background for safe zone)"""
+    # Scale up for foreground safe zone (108dp baseline)
+    foreground_sizes = {
+        "mdpi": 32,
+        "hdpi": 48,
+        "xhdpi": 64,
+        "xxhdpi": 96,
+        "xxxhdpi": 128,
+    }
+
+    img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+
+    center = size // 2
+    scale = size / 384
+
+    # Load fonts
+    large_z_size = int(220 * scale)
+    medium_z_size = int(160 * scale)
+    small_z_size = int(110 * scale)
+
+    font_large = load_font(large_z_size)
+    font_medium = load_font(medium_z_size)
+    font_small = load_font(small_z_size)
+
+    # Z letters
+    z_large_x = int(center + 70 * scale)
+    z_large_y = int(center - 60 * scale)
+    draw.text((z_large_x, z_large_y), "Z", fill=TEAL, font=font_large, anchor="mm")
+
+    z_medium_x = center
+    z_medium_y = center
+    draw.text((z_medium_x, z_medium_y), "Z", fill=TEAL, font=font_medium, anchor="mm")
+
+    z_small_x = int(center - 70 * scale)
+    z_small_y = int(center + 60 * scale)
+    draw.text((z_small_x, z_small_y), "Z", fill=TEAL, font=font_small, anchor="mm")
+
+    # Phone
+    phone_w = int(40 * scale)
+    phone_h = int(60 * scale)
+    phone_x = int(center + 30 * scale)
+    phone_y = int(center - 10 * scale)
+
+    draw.rounded_rectangle(
+        [(phone_x, phone_y), (phone_x + phone_w, phone_y + phone_h)],
+        radius=max(2, int(4 * scale)),
+        fill=PHONE_DARK,
+    )
+
+    screen_margin = max(2, int(3 * scale))
+    draw.rounded_rectangle(
+        [(phone_x + screen_margin, phone_y + screen_margin),
+         (phone_x + phone_w - screen_margin, phone_y + phone_h - screen_margin)],
+        radius=max(1, int(2 * scale)),
+        fill=PHONE_SCREEN,
+    )
+
+    # Orbital ring
+    ring_offset = int(15 * scale)
+    ring_width = max(2, int(6 * scale))
+    bbox = [
+        (phone_x - ring_offset, phone_y - ring_offset),
+        (phone_x + phone_w + ring_offset, phone_y + phone_h + ring_offset)
+    ]
+    draw.ellipse(bbox, outline=TEAL, width=ring_width)
+
     return img
 
 
@@ -157,54 +202,37 @@ def generate_variants(scale, density):
     dir_path = SRC_DIR / f"mipmap-{density}"
     dir_path.mkdir(parents=True, exist_ok=True)
 
-    # Generate ic_launcher (full icon with teal background)
+    # ic_launcher (full icon)
     ic_launcher = create_launcher_icon(size)
     launcher_path = dir_path / "ic_launcher.png"
     ic_launcher.save(launcher_path, "PNG", optimize=True)
     print(f"  [OK] {launcher_path}")
 
-    # Generate ic_launcher_round (circular mask)
+    # ic_launcher_round (circular)
     ic_launcher_round = create_launcher_icon_round(size)
     launcher_round_path = dir_path / "ic_launcher_round.png"
     ic_launcher_round.save(launcher_round_path, "PNG", optimize=True)
     print(f"  [OK] {launcher_round_path}")
 
-    # Generate ic_launcher_foreground (oversized for safe zone - 108dp in 192dp canvas)
-    # Foreground is 4/3 scale of base launcher (108/81 ratio in safe zone system)
+    # ic_launcher_foreground (for safe zone)
     foreground_size = int(size * 1.33)
     ic_launcher_foreground = create_foreground_icon(foreground_size)
-
-    # Resize to actual foreground density size (foreground is 108dp baseline, varies by density)
-    # Map: mdpi=32dp, hdpi=48dp, xhdpi=64dp, xxhdpi=96dp, xxxhdpi=128dp
-    foreground_sizes = {
-        "mdpi": 32,
-        "hdpi": 48,
-        "xhdpi": 64,
-        "xxhdpi": 96,
-        "xxxhdpi": 128,
-    }
-    actual_foreground_size = foreground_sizes.get(density, 64)
-    ic_launcher_foreground_resized = ic_launcher_foreground.resize(
-        (actual_foreground_size, actual_foreground_size),
-        Image.Resampling.LANCZOS
-    )
     launcher_fg_path = dir_path / "ic_launcher_foreground.png"
-    ic_launcher_foreground_resized.save(launcher_fg_path, "PNG", optimize=True)
+    ic_launcher_foreground.save(launcher_fg_path, "PNG", optimize=True)
     print(f"  [OK] {launcher_fg_path}")
 
 
 def main():
     print("Generating launcher icons for Silent app...\n")
 
-    # Check if PIL is installed
     try:
-        from PIL import Image, ImageDraw
+        from PIL import Image, ImageDraw, ImageFont
     except ImportError:
-        print("❌ ERROR: Pillow not installed!")
+        print("[ERROR] Pillow not installed!")
         print("\nInstall with: pip install pillow")
         return 1
 
-    # Generate variants for each DPI
+    # Generate variants
     for density, scale in VARIANTS.items():
         generate_variants(scale, density)
 
@@ -217,12 +245,6 @@ def main():
         print(f"  {path.relative_to('.')} ({size:.1f} KB)")
 
     print(f"\nTotal size: {total_size:.1f} KB")
-    print("\nNext steps:")
-    print("1. Commit the changes:")
-    print("   git add android/app/src/main/res/mipmap-*/ic_launcher*.png")
-    print('   git commit -m "chore: regenerate launcher icons with ZZZ + phone design"')
-    print("\n2. Push to trigger APK build")
-    print("   git push origin master")
 
     return 0
 
