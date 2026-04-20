@@ -50,22 +50,32 @@ def create_favicon():
     draw.line([(z3_x + 12, z3_y - 15), (z3_x - 12, z3_y)], fill=BLUE, width=6)
     draw.line([(z3_x - 12, z3_y), (z3_x + 12, z3_y)], fill=BLUE, width=6)
 
-    # Phone handset (bottom-right) in darker blue
+    # Phone handset (bottom-right) with gradient fill
     phone_x = SIZE - margin - 28
     phone_y = SIZE - margin - 35
     phone_w = 28
     phone_h = 35
 
-    draw.rectangle(
+    # Create gradient phone icon using ellipse/rounded shape
+    # Filled rounded rectangle
+    draw.rounded_rectangle(
         [(phone_x, phone_y), (phone_x + phone_w, phone_y + phone_h)],
-        outline=BLUE_DARK,
-        width=2,
+        radius=3,
+        fill=(66, 133, 244),  # Blue
     )
 
-    draw.rectangle(
+    # Add gradient effect by layering with purple
+    draw.rounded_rectangle(
+        [(phone_x + 8, phone_y + 8), (phone_x + phone_w - 2, phone_y + phone_h - 2)],
+        radius=2,
+        fill=(124, 77, 255),  # Purple accent
+    )
+
+    # Phone screen indicator
+    draw.rounded_rectangle(
         [(phone_x + 3, phone_y + 5), (phone_x + phone_w - 3, phone_y + phone_h - 5)],
-        outline=BLUE_DARK,
-        width=1,
+        radius=1,
+        fill=(200, 200, 255),  # Light blue for screen
     )
 
     return img
