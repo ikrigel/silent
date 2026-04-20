@@ -72,6 +72,77 @@ tests/
 - Preference persisted in `localStorage` via `settings.themeMode`
 - Parallax background in `AppLayout`: `backgroundAttachment: fixed`, opacity adapts to mode
 
+## Icons & Branding (v1.0.87+)
+
+### Adaptive Icon System (Android 8+)
+
+**Two-Layer Architecture:**
+- **Background layer:** Solid color from `android/app/src/main/res/values/ic_launcher_background.xml`
+  - Current: `#26A69A` (teal)
+  - ⚠️ **CRITICAL:** Changing to `#FFFFFF` (white) breaks icon (white on white is invisible)
+  - Used by: `mipmap-anydpi-v26/ic_launcher.xml` and `mipmap-anydpi-v26/ic_launcher_round.xml`
+- **Foreground layer:** Vector with white ZZZ letters + phone outline
+  - File: `android/app/src/main/res/drawable-v24/ic_launcher_foreground.xml`
+  - Uses stroked paths for clean rendering at all sizes
+  - 3 descending Z letters + phone in bottom-left
+
+### Raster Icon Fallback (Android < 8)
+
+**15 PNG files** across 5 DPI densities (mdpi: 48×48 through xxxhdpi: 192×192):
+- `ic_launcher.png` — Full icon with teal background
+- `ic_launcher_round.png` — Circular masked version
+- `ic_launcher_foreground.png` — Transparent background (safe zone)
+
+**Generate with:**
+```bash
+python generate_launcher_icons.py
+```
+
+### Splash Screens (v1.0.84+)
+
+**Design:** Teal background with white ZZZ + phone outline  
+**Variants:** Landscape & portrait at 5 DPI densities
+
+**Generate with:**
+```bash
+python generate_splash_pngs.py
+```
+
+### Icon Design Reference
+
+| Element | Size | Stroke Width | Color |
+|---------|------|--------------|-------|
+| Large Z | 60×40 | 12 | White |
+| Medium Z | 50×30 | 10 | White |
+| Small Z | 36×20 | 8 | White |
+| Phone outline | 40×50 | 3 | White |
+| Phone screen | 32×34 | 2 | White |
+| Background | — | — | Teal (#26A69A) |
+
+### Regenerating Icons
+
+**When:**
+1. Design changes (colors, shapes, sizes)
+2. After updating generation scripts
+3. Before major version release
+
+**Steps:**
+```bash
+python generate_launcher_icons.py
+git add android/app/src/main/res/mipmap-*/ic_launcher*.png
+git commit -m "chore: regenerate launcher icons"
+npm run build && npx cap sync android && cd android && ./gradlew assembleRelease
+```
+
+### Troubleshooting
+
+| Issue | Cause | Fix |
+|-------|-------|-----|
+| White square icon on home screen | `ic_launcher_background.xml` is white | Change to `#26A69A` |
+| Icon blurry on small screens | Raster PNGs outdated | Run script + rebuild APK |
+| Adaptive icon missing on Android 8+ | Vector file syntax error | Validate `drawable-v24/ic_launcher_foreground.xml` |
+| Old icon after APK update | App cache stale | `adb uninstall com.ikrigel.silent` then reinstall |
+
 ## i18n
 - Languages: `en` (LTR) and `he` (RTL Hebrew)
 - Translation files: `src/i18n/en.json` and `src/i18n/he.json`
