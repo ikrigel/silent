@@ -72,26 +72,36 @@ tests/
 - Preference persisted in `localStorage` via `settings.themeMode`
 - Parallax background in `AppLayout`: `backgroundAttachment: fixed`, opacity adapts to mode
 
-## Icons & Branding (v1.0.87+)
+## Icons & Branding (v1.0.88+)
 
 ### Adaptive Icon System (Android 8+)
 
-**Two-Layer Architecture:**
-- **Background layer:** Solid color from `android/app/src/main/res/values/ic_launcher_background.xml`
-  - Current: `#26A69A` (teal)
-  - ⚠️ **CRITICAL:** Changing to `#FFFFFF` (white) breaks icon (white on white is invisible)
+**Two-Layer Architecture (PNG-based, v1.0.88+):**
+- **Background layer:** Solid white color from `android/app/src/main/res/values/ic_launcher_background.xml`
+  - Current: `#FFFFFF` (white)
+  - Provides the background canvas for the adaptive icon system
   - Used by: `mipmap-anydpi-v26/ic_launcher.xml` and `mipmap-anydpi-v26/ic_launcher_round.xml`
-- **Foreground layer:** Vector with white ZZZ letters + phone outline
-  - File: `android/app/src/main/res/drawable-v24/ic_launcher_foreground.xml`
-  - Uses stroked paths for clean rendering at all sizes
-  - 3 descending Z letters + phone in bottom-left
+- **Foreground layer:** PNG files with custom icon design (teal ZZZ letters + phone)
+  - Files: `mipmap-{dpi}/ic_launcher_foreground.png`
+  - Sized to match safe zone (72×72 dp) for proper adaptive icon display
+  - Custom artwork with transparent background
 
-### Raster Icon Fallback (Android < 8)
+### Raster PNG Files (All Android versions)
 
-**15 PNG files** across 5 DPI densities (mdpi: 48×48 through xxxhdpi: 192×192):
-- `ic_launcher.png` — Full icon with teal background
+**15 PNG files** across 5 DPI densities with correct safe-zone-aligned sizing:
+
+| DPI | File Size | Safe Zone | Files |
+|-----|-----------|-----------|-------|
+| mdpi | 72×72 | 72×72 dp × 1.0x | ic_launcher.png, ic_launcher_round.png, ic_launcher_foreground.png |
+| hdpi | 108×108 | 72×72 dp × 1.5x | ic_launcher.png, ic_launcher_round.png, ic_launcher_foreground.png |
+| xhdpi | 144×144 | 72×72 dp × 2.0x | ic_launcher.png, ic_launcher_round.png, ic_launcher_foreground.png |
+| xxhdpi | 216×216 | 72×72 dp × 3.0x | ic_launcher.png, ic_launcher_round.png, ic_launcher_foreground.png |
+| xxxhdpi | 288×288 | 72×72 dp × 4.0x | ic_launcher.png, ic_launcher_round.png, ic_launcher_foreground.png |
+
+**File descriptions:**
+- `ic_launcher.png` — Full icon with white background
 - `ic_launcher_round.png` — Circular masked version
-- `ic_launcher_foreground.png` — Transparent background (safe zone)
+- `ic_launcher_foreground.png` — Foreground layer for adaptive icons (used on Android 8+)
 
 **Generate with:**
 ```bash
