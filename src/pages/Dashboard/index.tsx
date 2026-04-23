@@ -29,7 +29,7 @@ import { robotService } from '@/services/robotService';
 const Dashboard: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { schedules } = useSchedulerStore();
+  const { schedules, loadSchedules } = useSchedulerStore();
   const { settings } = useSettingsStore();
   const { captureSnapshot, getSnapshot, clearSnapshot } = useRobotStateStore();
   const [activeSchedules, setActiveSchedules] = useState<ScheduleEntry[]>([]);
@@ -38,6 +38,11 @@ const Dashboard: React.FC = () => {
 
   // Track previous active IDs to detect transitions and fire notifications
   const prevActiveIds = useRef<Set<string>>(new Set());
+
+  // Load schedules from localStorage on mount (needed for tests that set localStorage directly)
+  useEffect(() => {
+    loadSchedules();
+  }, [loadSchedules]);
 
   useEffect(() => {
     const tick = async () => {
