@@ -1,51 +1,49 @@
-# APK Installation via ADB
+# Android APK Installation Guide
 
-## Prerequisites
+## Building the APK
 
-1. **ADB installed** — Download from [Android SDK Platform Tools](https://developer.android.com/tools/releases/platform-tools)
-2. **Device connected** — USB cable with USB debugging enabled
-3. **APK built** — Available at `android/app/build/outputs/apk/release/app-release.apk`
-
-## Verify Device Connection
-
-Before installing, ensure your device is detected:
-
-```powershell
-C:\Users\ikrig\Downloads\platform-tools\adb devices
+### Automatic Build (GitHub Actions)
+APK builds are triggered automatically when you push a git tag:
+```bash
+git tag v1.0.89
+git push origin v1.0.89
 ```
 
-**Expected output:**
-```
-List of attached devices
-emulator-5554          device
-```
+The APK is then available in [GitHub Releases](https://github.com/ikrigel/silent/releases).
 
-If your device doesn't appear:
-- Enable USB debugging: Settings → Developer Options → USB Debugging
-- Authorize the computer on the device (trust prompt)
-- Try `adb devices` again
-
----
-
-## Installation Steps
-
-### Step 1: Uninstall Old Version (if present)
-
-```powershell
-C:\Users\ikrig\Downloads\platform-tools\adb uninstall com.ikrigel.silent
+### Local Build
+```bash
+cd C:\silent
+npm run build:android
 ```
 
-**Expected output:**
+This runs:
+1. `npm run build` — builds web assets
+2. `npx cap sync android` — syncs to Android project
+3. `npx cap open android` — opens Android Studio
+
+## Installing the APK
+
+### Using ADB (Command Line)
+
+**Prerequisites:**
+- Android device connected via USB
+- USB debugging enabled on device (Settings → Developer options → USB debugging)
+- ADB installed (Android SDK Platform Tools at `C:\platform-tools`)
+
+**From C:\platform-tools directory:**
+```bash
+C:\platform-tools>adb install C:\silent\android\app\build\outputs\apk\release\app-release.apk
 ```
-Success
+
+**From C:\silent project directory:**
+```bash
+C:\silent>adb install android\app\build\outputs\apk\release\app-release.apk
 ```
 
-**Note:** If the app isn't installed, you'll see `Error while executing: cmd 'package uninstall ...'` — this is safe to ignore.
-
-### Step 2: Install New APK
-
-```powershell
-C:\Users\ikrig\Downloads\platform-tools\adb install "C:\silent\android\app\build\outputs\apk\release\app-release.apk"
+**From anywhere (if adb is in PATH):**
+```bash
+adb install android\app\build\outputs\apk\release\app-release.apk
 ```
 
 **Expected output:**
@@ -54,76 +52,83 @@ Performing Streamed Install
 Success
 ```
 
----
+**Verify installation:**
+```bash
+adb shell pm list packages | grep ikrigel.silent
+```
 
-## Verify Installation
+### Using Android Studio
 
-After installation succeeds, you should see:
-1. **App icon** on home screen (teal circle with ZZZ + phone)
-2. **Silent app** in Settings → Apps → App list
-3. App launches when tapped
+1. Open Android project in Android Studio
+2. Click **Run** (or press Shift+F10)
+3. Select your device from the device list
+4. APK builds and installs automatically
 
----
+### Manual Installation (Drag & Drop)
+
+1. Build APK locally: `npm run build:android`
+2. Locate APK: `android/app/build/outputs/apk/release/app-release.apk`
+3. Drag & drop onto connected Android device
+4. Or use ADB to install (see above)
 
 ## Troubleshooting
 
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `error: device not found` | Device not connected or not detected | Check USB connection, enable USB debugging, run `adb devices` |
-| `INSTALL_FAILED_INVALID_APK` | APK is corrupted or unsigned | Rebuild APK: `cd android && ./gradlew assembleRelease` |
-| `INSTALL_FAILED_APP_INCOMPATIBLE` | Device Android version too old | App requires Android 6.0+ (API 21+) |
-| `INSTALL_FAILED_DUPLICATE_PACKAGE` | Old version still partially installed | Manually uninstall via Settings or use `adb shell pm uninstall -k com.ikrigel.silent` |
-| `Permission denied` | ADB executable not in PATH | Use full path as shown above |
-
----
-
-## Building APK Locally
-
-If the APK doesn't exist at the expected path, build it first:
-
-```powershell
-cd C:\silent
-npm run build
-npx cap sync android
-cd android
-./gradlew assembleRelease
+### "adb command not found"
+Add `C:\android-sdk\platform-tools` to system PATH, or navigate to platform-tools first:
+```bash
+cd C:\platform-tools
+adb devices  # Verify connection
 ```
 
-This creates `android/app/build/outputs/apk/release/app-release.apk` (≈20-30 MB).
+### Device not detected
+```bash
+adb devices
+```
+If device shows "unauthorized":
+- Unlock your phone
+- Tap "Allow USB debugging" when prompted on device
+- Restart ADB: `adb kill-server && adb start-server`
 
----
+### Installation fails: "File not found"
+Ensure you're running the command from the correct directory:
+```bash
+# If in C:\platform-tools, use full path:
+adb install C:\silent\android\app\build\outputs\apk\release\app-release.apk
 
-## Tips
-
-- **Keep adb path handy:** Add `C:\Users\ikrig\Downloads\platform-tools\` to PATH environment variable for shorter commands
-- **Force install:** Use `adb install -r` flag to reinstall over existing version (skips uninstall step)
-  ```powershell
-  C:\Users\ikrig\Downloads\platform-tools\adb install -r "C:\silent\android\app\build\outputs\apk\release\app-release.apk"
-  ```
-- **View install logs:** Use `adb logcat` to monitor installation and app startup
-  ```powershell
-  C:\Users\ikrig\Downloads\platform-tools\adb logcat | grep -i silent
-  ```
-
----
-
-## Quick Reference
-
-**Full installation workflow:**
-```powershell
-# Build APK
-cd C:\silent
-npm run build && npx cap sync android
-cd android && ./gradlew assembleRelease
-
-# Install on device
-C:\Users\ikrig\Downloads\platform-tools\adb uninstall com.ikrigel.silent
-C:\Users\ikrig\Downloads\platform-tools\adb install "C:\silent\android\app\build\outputs\apk\release\app-release.apk"
-
-# Check if running
-C:\Users\ikrig\Downloads\platform-tools\adb logcat | grep -i silent
+# If in C:\silent, use relative path:
+adb install android\app\build\outputs\apk\release\app-release.apk
 ```
 
----
+### Installation fails: "app already exists"
+Clear old version first:
+```bash
+adb uninstall com.ikrigel.silent
+adb install android\app\build\outputs\apk\release\app-release.apk
+```
 
-**Last Updated:** 2026-04-20 (v1.0.87)
+### Check APK exists
+```bash
+ls android\app\build\outputs\apk\release\app-release.apk
+```
+
+## App Signature
+
+- **Package name:** `com.ikrigel.silent`
+- **Release keystore:** `android/app/release-key.jks` (managed by CI/CD)
+- **Debug keystore:** Auto-generated by Gradle
+
+## APK Information
+
+- **Build type:** Release (optimized, signed)
+- **Size:** ~10-15 MB
+- **Min SDK:** 26 (Android 8.0)
+- **Target SDK:** 36 (Android 15)
+- **Architectures:** arm64-v8a, armeabi-v7a
+
+## Post-Installation
+
+1. Grant permissions when prompted (Camera, Notifications, etc.)
+2. Enable accessibility service for Robot automation:
+   - Settings → Apps → Silent → Allow restricted settings
+3. Check home screen — app icon should display at correct size
+4. Open app and sign in with Google account

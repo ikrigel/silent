@@ -331,7 +331,7 @@ The robot automation uses **text-based element search** (not pixel coordinates) 
 
 ### Configuration
 - **Build Config**: `android/app/build.gradle` with versionCode and versionName
-- **Gradle Version**: 8.14.3 (via wrapper), requires Java 11+
+- **Gradle Version**: 9.3.1 (via wrapper), requires Java 11+
 - **Java Toolchain**: 
   - `gradle.jvm.version=21` in `gradle.properties` (Gradle daemon JVM)
   - `JavaVersion.VERSION_21` in `app/build.gradle` (compilation target)
@@ -341,6 +341,7 @@ The robot automation uses **text-based element search** (not pixel coordinates) 
 - **Target SDK**: 36
 - **Android Gradle Plugin**: 8.13.0
 - **Capacitor**: Bridges React web app to native Android via Capacitor plugins
+- **Network Timeout**: 120s for Gradle downloads (configured in `gradle-wrapper.properties`)
 
 ### Critical Dependencies
 - **Firebase Auth**: 24.0.1 (via Firebase BOM, compatible with Kotlin 2.1.0)
@@ -376,14 +377,27 @@ See [ANDROID_BUILD_DEBUGGING.md](ANDROID_BUILD_DEBUGGING.md) for:
 - Common issues and fixes found during v1.0.54 builds
 
 ## Deployment
-- **Web**: Vercel SPA (`.github/workflows/deploy.yml`) at https://silent-eight.vercel.app
-  - Tests must pass before deploy
-  - IMPORTANT: Vercel uses COOP headers that block popup-based OAuth
+
+### Web (Vercel)
+- **SPA**: `.github/workflows/deploy.yml` at https://silent-eight.vercel.app
+- **Triggers**: Automatically on push to master (tests must pass)
+- **Important**: Vercel uses COOP headers that block popup-based OAuth
   - Solution: Use redirect-based auth (`signInWithRedirect`) instead of `signInWithPopup`
-- **APK**: GitHub Actions (`build-apk.yml`) — triggered by `git tag v*`
-- **Build**: `npm run build` → `dist/` folder (web); `./gradlew assembleRelease` → APK (mobile)
-- **Manual web deploy**: `npm run deploy` (runs `vercel --prod`)
-- **Manual APK build**: `cd android && ./gradlew clean assembleRelease`
+- **Manual deploy**: `npm run deploy` (runs `vercel --prod`)
+
+### APK (GitHub Actions)
+- **Build trigger**: `git tag v*` (e.g., `git tag v1.0.89 && git push origin v1.0.89`)
+- **Workflow**: `.github/workflows/build-apk.yml`
+- **Output**: Release APK in [GitHub Releases](https://github.com/ikrigel/silent/releases)
+- **Manual build**: `npm run build:android` (opens Android Studio)
+  - Or: `cd android && ./gradlew assembleRelease`
+
+### APK Installation
+See [APK_INSTALLATION.md](APK_INSTALLATION.md) for detailed instructions on:
+- Building APK locally
+- Installing via ADB: `adb install android\app\build\outputs\apk\release\app-release.apk`
+- Using Android Studio
+- Troubleshooting device connection & installation issues
 
 ## OAuth Authentication Architecture
 
