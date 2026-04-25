@@ -15,7 +15,7 @@ class AirplaneModeService {
    */
   async enable(): Promise<string> {
     if (this.isExecuting) {
-      writeLog('warn', 'airplaneModeService: Enable already in progress, skipping');
+      writeLog('verbose', 'airplaneModeService: Enable already in progress, skipping');
       return 'Already executing';
     }
 
