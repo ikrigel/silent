@@ -10,6 +10,7 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { robotService } from '@/services/robotService';
+import { airplaneModeService } from '@/services/airplaneModeService';
 import { writeLog } from '@/services/logService';
 import { useAuthStore } from '@/store/authStore';
 import { getIdToken } from '@/services/authService';
@@ -92,10 +93,10 @@ const RobotPage: React.FC = () => {
           result = await robotService.unsilenceWEA();
           break;
         case 'airplane_on':
-          result = await robotService.enableAirplaneMode();
+          result = await airplaneModeService.enable();
           break;
         case 'airplane_off':
-          result = await robotService.disableAirplaneMode();
+          result = await airplaneModeService.disable();
           break;
       }
       writeLog('info',`Robot page: Action ${action} succeeded: ${result}`);
