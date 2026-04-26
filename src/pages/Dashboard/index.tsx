@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import type { ScheduleEntry } from '@/types';
 import { useSettingsStore } from '@/store/settingsStore';
 import { robotService } from '@/services/robotService';
-import { airplaneModeService } from '@/services/airplaneModeService';
+import { airplaneModeService, type EnableContext } from '@/services/airplaneModeService';
 
 /**
  * Dashboard page.
@@ -63,17 +63,18 @@ const Dashboard: React.FC = () => {
           }
           if (robotService.isAndroid()) {
             if (s.useAirplaneMode) {
+              const ctx: EnableContext = { scheduleId: s.id, scheduleName: s.name };
               airplaneModeService.getState().then((wasActive) => {
                 captureSnapshot(s.id, wasActive, false);
                 if (!wasActive) {
-                  airplaneModeService.enable().catch((err: unknown) => {
+                  airplaneModeService.enable(ctx).catch((err: unknown) => {
                     const msg = err instanceof Error ? err.message : String(err);
                     writeLog('error',`Dashboard: Failed to enable airplane mode: ${msg}`);
                   });
                 }
               }).catch(() => {
                 captureSnapshot(s.id, false, false);
-                airplaneModeService.enable().catch((err: unknown) => {
+                airplaneModeService.enable(ctx).catch((err: unknown) => {
                   const msg = err instanceof Error ? err.message : String(err);
                   writeLog('error',`Dashboard: Failed to enable airplane mode: ${msg}`);
                 });
