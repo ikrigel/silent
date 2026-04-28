@@ -18,6 +18,7 @@ import SetupGuide from './SetupGuide';
 import RecordingControls from './RecordingControls';
 import RecordingList from './RecordingList';
 import IOSManualSteps from './IOSManualSteps';
+import AirplaneLearningDialog from './AirplaneLearningDialog';
 
 const RobotPage: React.FC = () => {
   const { t } = useTranslation();
@@ -229,6 +230,9 @@ const RobotPage: React.FC = () => {
             </Card>
 
             <Divider />
+
+            {/* Airplane mode learning dialog */}
+            <AirplaneLearningDialog accessibilityEnabled={accessibilityEnabled} />
 
             {/* Recording */}
             <RecordingControls onSaved={handleSaved} />

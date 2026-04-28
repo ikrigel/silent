@@ -1,8 +1,9 @@
 import { robotService } from './robotService';
 import { writeLog } from './logService';
+import { useAirplaneLearningStore } from '@/store/airplaneLearningStore';
 
 /**
- * Airplane mode operations with validation, retry, and failure logging.
+ * Airplane mode operations with learning mode feedback and validation.
  */
 
 export interface EnableContext {
@@ -13,6 +14,13 @@ export interface EnableContext {
 const MAX_ATTEMPTS = 3;
 const RETRY_DELAYS_MS = [0, 3000, 5000];
 const VALIDATION_WAIT_MS = 2500;
+
+let feedbackResolver: ((confirmed: boolean) => void) | null = null;
+
+export function provideFeedback(confirmed: boolean): void {
+  feedbackResolver?.(confirmed);
+  feedbackResolver = null;
+}
 
 interface AttemptRecord {
   attempt: number;
@@ -37,10 +45,57 @@ class AirplaneModeService {
     }
 
     this.isExecuting = true;
-    const overallStart = Date.now();
-    const attempts: AttemptRecord[] = [];
+    const store = useAirplaneLearningStore.getState();
+    const { learned, learnedDelay, isLearning } = store;
 
     try {
+      // Branch A: learned sequence — use saved delay, skip validation
+      if (learned && !isLearning) {
+        await this.delay(learnedDelay);
+        const msg = await robotService.enableAirplaneMode();
+        writeLog('info', `airplaneModeService: used learned delay ${learnedDelay}ms`);
+        return msg;
+      }
+
+      // Branch B: learning mode — retry with user feedback
+      if (isLearning) {
+        for (let i = 0; i < MAX_ATTEMPTS; i++) {
+          if (i > 0) {
+            await this.delay(RETRY_DELAYS_MS[i]);
+          }
+
+          let msg = '';
+          try {
+            msg = await robotService.enableAirplaneMode();
+            await this.delay(VALIDATION_WAIT_MS);
+          } catch (err: unknown) {
+            writeLog('error', `airplaneModeService: enableAirplaneMode attempt ${i + 1} failed: ${String(err)}`);
+            if (i === MAX_ATTEMPTS - 1) throw err;
+            continue;
+          }
+
+          // Show feedback prompt
+          store.setPendingFeedback(i + 1);
+          const confirmed: boolean = await new Promise(resolve => {
+            feedbackResolver = resolve;
+          });
+          store.clearPendingFeedback();
+
+          if (confirmed) {
+            store.saveLearned(RETRY_DELAYS_MS[i]);
+            writeLog('info', `airplaneModeService: learning confirmed on attempt ${i + 1}, delay=${RETRY_DELAYS_MS[i]}ms`);
+            return msg;
+          }
+        }
+
+        writeLog('error', 'airplaneModeService: Learning mode exhausted all attempts, user did not confirm any');
+        throw new Error('No confirmed attempt in learning mode');
+      }
+
+      // Branch C: standard retry with validation (default behavior)
+      const overallStart = Date.now();
+      const attempts: AttemptRecord[] = [];
+
       for (let i = 0; i < MAX_ATTEMPTS; i++) {
         if (i > 0) {
           await this.delay(RETRY_DELAYS_MS[i]);

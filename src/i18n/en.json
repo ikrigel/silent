@@ -88,6 +88,17 @@
       "step3": "Open the downloaded APK file and tap Install",
       "step4": "Open Silent and go to Robot → follow the setup guide"
     },
+    "learning": {
+      "title": "Airplane Mode Calibration",
+      "calibrationDesc": "Calibrate airplane mode by watching each attempt and confirming which one works on your device.",
+      "calibrate": "Calibrate Airplane Mode",
+      "active": "Learning mode active — tap Enable Airplane Mode to begin",
+      "feedbackPrompt": "Attempt {{attempt}}: Did airplane mode turn ON?",
+      "confirmYes": "Yes",
+      "confirmNo": "No",
+      "calibrated": "✓ Calibrated (delay: {{delay}}ms)",
+      "reset": "Reset"
+    },
     "exportLogs": "Export Failure Report",
     "diagnostics": "Robot Diagnostics",
     "lastAction": "Last Action",

@@ -62,30 +62,35 @@ const Dashboard: React.FC = () => {
             fireScheduleReminder(s.name);
           }
           if (robotService.isAndroid()) {
-            if (s.useAirplaneMode) {
-              const ctx: EnableContext = { scheduleId: s.id, scheduleName: s.name };
-              airplaneModeService.getState().then((wasActive) => {
-                captureSnapshot(s.id, wasActive, false);
-                if (!wasActive) {
-                  airplaneModeService.enable(ctx).catch((err: unknown) => {
-                    const msg = err instanceof Error ? err.message : String(err);
-                    writeLog('error',`Dashboard: Failed to enable airplane mode: ${msg}`);
-                  });
-                }
-              }).catch(() => {
-                captureSnapshot(s.id, false, false);
-                airplaneModeService.enable(ctx).catch((err: unknown) => {
+            const runScheduleActions = async () => {
+              if (s.useAirplaneMode) {
+                const ctx: EnableContext = { scheduleId: s.id, scheduleName: s.name };
+                try {
+                  const wasActive = await airplaneModeService.getState();
+                  captureSnapshot(s.id, wasActive, false);
+                  if (!wasActive) {
+                    await airplaneModeService.enable(ctx);
+                  }
+                } catch (err: unknown) {
+                  captureSnapshot(s.id, false, false);
                   const msg = err instanceof Error ? err.message : String(err);
                   writeLog('error',`Dashboard: Failed to enable airplane mode: ${msg}`);
-                });
-              });
-            }
-            if (s.robotRecordingId) {
-              robotService.executeRecording(s.robotRecordingId).catch((err: unknown) => {
-                const msg = err instanceof Error ? err.message : String(err);
-                writeLog('error',`Dashboard: Failed to execute recording ${s.robotRecordingId}: ${msg}`);
-              });
-            }
+                  await airplaneModeService.enable(ctx).catch((err: unknown) => {
+                    const msg2 = err instanceof Error ? err.message : String(err);
+                    writeLog('error',`Dashboard: Failed to enable airplane mode on retry: ${msg2}`);
+                  });
+                }
+              }
+              if (s.robotRecordingId) {
+                try {
+                  await robotService.executeRecording(s.robotRecordingId);
+                } catch (err: unknown) {
+                  const msg = err instanceof Error ? err.message : String(err);
+                  writeLog('error',`Dashboard: Failed to execute recording ${s.robotRecordingId}: ${msg}`);
+                }
+              }
+            };
+            runScheduleActions();
           }
         }
       });

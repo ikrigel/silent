@@ -325,6 +325,59 @@ The robot automation uses **text-based element search** (not pixel coordinates) 
 - `handlePlaybackEvent()` — logs window changes with package/class for navigation tracking
 - `executeNextStep()` — logs step action and remaining steps count
 
+### Airplane Mode Learning Mode (v1.0.93+)
+
+**Problem Solved**: Device-specific timing and state validation issues made airplane mode automation unreliable. The plugin's `getAirplaneModeState()` method returns false negatives on some devices even when airplane mode is ON. Additionally, `enableAirplaneMode()` sometimes navigated to the wrong screen (WEA settings instead of airplane settings) depending on device state and timing.
+
+**Solution**: Learning mode lets users calibrate which attempt timing works on their specific device by watching each retry iteration and confirming when it works. Once confirmed, that timing is saved and reused for all future runs, bypassing unreliable state validation entirely.
+
+**Architecture**:
+
+1. **New Zustand store** (`src/store/airplaneLearningStore.ts`):
+   - Persists: `learned: boolean`, `learnedDelay: number` (0, 3000, or 5000 ms)
+   - Session-only: `isLearning: boolean`, `pendingFeedbackAttempt: number | null`
+   - Actions: `startLearning()`, `resetLearning()`, `setPendingFeedback()`, `saveLearned()`
+
+2. **Modified service** (`src/services/airplaneModeService.ts`):
+   - **Learned mode** (Branch A): Apply saved delay, call once, return — no state validation, no retries
+   - **Learning mode** (Branch B): Retry loop with user feedback prompts after each attempt. When user confirms it worked, save that timing
+   - **Default mode** (Branch C): Original retry + validation logic (unchanged)
+   - Exported `provideFeedback(confirmed: boolean)` function for UI to confirm/deny attempts
+
+3. **New dialog component** (`src/pages/Robot/AirplaneLearningDialog.tsx`):
+   - Shows "Calibrate Airplane Mode" button when not yet learned
+   - Shows feedback dialog on each pending attempt: "Attempt [N]: Did airplane mode turn ON?"
+   - Shows "✓ Calibrated (delay: Xms)" + Reset button once learned
+   - All strings translated in `en.json` and `he.json` under `robot.learning.*`
+
+**User Flow**:
+
+| Step | Action | Result |
+|------|--------|--------|
+| 1 | Tap "Calibrate Airplane Mode" on Robot page | Enters learning mode |
+| 2 | Tap "Enable Airplane Mode" quick action | Attempt #1 runs, pauses for feedback |
+| 3 | Dialog: "Attempt 1: Did airplane mode turn ON?" | User taps YES/NO |
+| 4 (if YES) | Saves learned timing, shows confirmation | Future runs use this timing |
+| 4 (if NO) | Tries attempt #2 (waits 3s first), pauses again | User feedback loop continues |
+| 5 (reset) | Tap "Reset" button | Clears learned data, ready for recalibration |
+
+**Benefits**:
+
+- **Per-device calibration**: Each device learns its own optimal timing based on Accessibility Service response
+- **Eliminates false negatives**: Once calibrated, trusts the first attempt worked (no unreliable state checking)
+- **Eliminates retries**: Learned mode runs once per activation, 1.5–7s faster than 3-attempt fallback
+- **User agency**: Users watch and confirm which attempt actually works, building confidence in the automation
+- **Persistence**: Learned delay persists across app restarts via Zustand `persist` middleware
+
+**Related Files**:
+
+- `src/store/airplaneLearningStore.ts` — learning state + actions
+- `src/services/airplaneModeService.ts` — three-branch enable() logic
+- `src/pages/Robot/AirplaneLearningDialog.tsx` — UI feedback dialog + calibration UI
+- `src/pages/Robot/index.tsx` — integrated dialog into Android flow
+- `src/i18n/en.json`, `src/i18n/he.json` — translation keys under `robot.learning`
+- `src/pages/Dashboard/index.tsx` — fixed parallel execution bug (sequence airplane mode before recording)
+
 ---
 
 ## Android Build
