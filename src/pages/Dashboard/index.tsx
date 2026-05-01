@@ -63,34 +63,53 @@ const Dashboard: React.FC = () => {
           }
           if (robotService.isAndroid()) {
             const runScheduleActions = async () => {
+              writeLog('ultraverbose', `Dashboard: runScheduleActions started for schedule "${s.name}"`, {
+                scheduleId: s.id,
+                useAirplaneMode: s.useAirplaneMode,
+                robotRecordingId: s.robotRecordingId,
+              });
               if (s.useAirplaneMode) {
                 const ctx: EnableContext = { scheduleId: s.id, scheduleName: s.name };
+                writeLog('ultraverbose', `Dashboard: calling airplaneModeService.getState() for schedule "${s.name}"`);
                 try {
                   const wasActive = await airplaneModeService.getState();
+                  writeLog('ultraverbose', `Dashboard: airplaneModeService.getState() returned ${wasActive}`, { scheduleId: s.id });
                   captureSnapshot(s.id, wasActive, false);
                   if (!wasActive) {
+                    writeLog('ultraverbose', `Dashboard: airplane mode not active, calling enable()`, { scheduleId: s.id });
                     await airplaneModeService.enable(ctx);
+                    writeLog('ultraverbose', `Dashboard: enable() completed successfully`, { scheduleId: s.id });
+                  } else {
+                    writeLog('ultraverbose', `Dashboard: airplane mode already active, skipping enable()`, { scheduleId: s.id });
                   }
                 } catch (err: unknown) {
                   captureSnapshot(s.id, false, false);
                   const msg = err instanceof Error ? err.message : String(err);
-                  writeLog('error',`Dashboard: Failed to enable airplane mode: ${msg}`);
+                  writeLog('error',`Dashboard: Failed to enable airplane mode: ${msg}`, { scheduleId: s.id });
+                  writeLog('ultraverbose', `Dashboard: attempting enable() again after getState() error`, { scheduleId: s.id });
                   await airplaneModeService.enable(ctx).catch((err: unknown) => {
                     const msg2 = err instanceof Error ? err.message : String(err);
-                    writeLog('error',`Dashboard: Failed to enable airplane mode on retry: ${msg2}`);
+                    writeLog('error',`Dashboard: Failed to enable airplane mode on retry: ${msg2}`, { scheduleId: s.id });
                   });
                 }
               }
               if (s.robotRecordingId) {
+                writeLog('ultraverbose', `Dashboard: executing recording "${s.robotRecordingId}"`, { scheduleId: s.id });
                 try {
                   await robotService.executeRecording(s.robotRecordingId);
+                  writeLog('ultraverbose', `Dashboard: recording executed successfully`, { scheduleId: s.id });
                 } catch (err: unknown) {
                   const msg = err instanceof Error ? err.message : String(err);
-                  writeLog('error',`Dashboard: Failed to execute recording ${s.robotRecordingId}: ${msg}`);
+                  writeLog('error',`Dashboard: Failed to execute recording ${s.robotRecordingId}: ${msg}`, { scheduleId: s.id });
                 }
               }
+              writeLog('ultraverbose', `Dashboard: runScheduleActions completed for schedule "${s.name}"`, { scheduleId: s.id });
             };
-            runScheduleActions();
+            writeLog('ultraverbose', `Dashboard: firing runScheduleActions for schedule "${s.name}"`, { scheduleId: s.id });
+            runScheduleActions().catch((err: unknown) => {
+              const msg = err instanceof Error ? err.message : String(err);
+              writeLog('error', `Dashboard: runScheduleActions threw uncaught error: ${msg}`, { scheduleId: s.id });
+            });
           }
         }
       });

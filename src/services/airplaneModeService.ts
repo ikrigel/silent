@@ -48,25 +48,42 @@ class AirplaneModeService {
     const store = useAirplaneLearningStore.getState();
     const { learned, learnedDelay, isLearning } = store;
 
+    writeLog('ultraverbose', 'airplaneModeService.enable() called', {
+      learned,
+      learnedDelay,
+      isLearning,
+      scheduleId: ctx?.scheduleId,
+      scheduleName: ctx?.scheduleName,
+    });
+
     try {
       // Branch A: learned sequence — use saved delay, skip validation
       if (learned && !isLearning) {
+        writeLog('ultraverbose', 'airplaneModeService: Branch A (learned mode) - applying learned delay', { learnedDelay });
         await this.delay(learnedDelay);
         const msg = await robotService.enableAirplaneMode();
         writeLog('info', `airplaneModeService: used learned delay ${learnedDelay}ms`);
+        writeLog('ultraverbose', 'airplaneModeService: Branch A completed successfully', { msg });
         return msg;
       }
 
       // Branch B: learning mode — retry with user feedback
       if (isLearning) {
+        writeLog('ultraverbose', 'airplaneModeService: Branch B (learning mode) - entering retry loop with feedback');
         for (let i = 0; i < MAX_ATTEMPTS; i++) {
+          writeLog('ultraverbose', `airplaneModeService: learning mode attempt ${i + 1}/${MAX_ATTEMPTS}`, { attempt: i + 1 });
           if (i > 0) {
-            await this.delay(RETRY_DELAYS_MS[i]);
+            const delayMs = RETRY_DELAYS_MS[i];
+            writeLog('ultraverbose', `airplaneModeService: waiting ${delayMs}ms before attempt ${i + 1}`);
+            await this.delay(delayMs);
           }
 
           let msg = '';
           try {
+            writeLog('ultraverbose', `airplaneModeService: calling robotService.enableAirplaneMode() for attempt ${i + 1}`);
             msg = await robotService.enableAirplaneMode();
+            writeLog('ultraverbose', `airplaneModeService: robotService.enableAirplaneMode() returned: ${msg}`);
+            writeLog('ultraverbose', `airplaneModeService: waiting ${VALIDATION_WAIT_MS}ms before requesting feedback`);
             await this.delay(VALIDATION_WAIT_MS);
           } catch (err: unknown) {
             writeLog('error', `airplaneModeService: enableAirplaneMode attempt ${i + 1} failed: ${String(err)}`);
@@ -75,17 +92,22 @@ class AirplaneModeService {
           }
 
           // Show feedback prompt
+          writeLog('ultraverbose', `airplaneModeService: setting pendingFeedback for attempt ${i + 1}`, { attempt: i + 1 });
           store.setPendingFeedback(i + 1);
+          writeLog('ultraverbose', `airplaneModeService: waiting for user feedback on attempt ${i + 1}`);
           const confirmed: boolean = await new Promise(resolve => {
             feedbackResolver = resolve;
           });
+          writeLog('ultraverbose', `airplaneModeService: user feedback received: ${confirmed}`, { attempt: i + 1, confirmed });
           store.clearPendingFeedback();
 
           if (confirmed) {
             store.saveLearned(RETRY_DELAYS_MS[i]);
             writeLog('info', `airplaneModeService: learning confirmed on attempt ${i + 1}, delay=${RETRY_DELAYS_MS[i]}ms`);
+            writeLog('ultraverbose', 'airplaneModeService: Branch B completed with confirmation', { confirmedAttempt: i + 1, delay: RETRY_DELAYS_MS[i] });
             return msg;
           }
+          writeLog('ultraverbose', `airplaneModeService: user denied attempt ${i + 1}, continuing to next attempt`);
         }
 
         writeLog('error', 'airplaneModeService: Learning mode exhausted all attempts, user did not confirm any');
@@ -93,10 +115,12 @@ class AirplaneModeService {
       }
 
       // Branch C: standard retry with validation (default behavior)
+      writeLog('ultraverbose', 'airplaneModeService: Branch C (default retry mode) - entering retry loop with state validation');
       const overallStart = Date.now();
       const attempts: AttemptRecord[] = [];
 
       for (let i = 0; i < MAX_ATTEMPTS; i++) {
+        writeLog('ultraverbose', `airplaneModeService: Branch C attempt ${i + 1}/${MAX_ATTEMPTS}`, { attempt: i + 1 });
         if (i > 0) {
           await this.delay(RETRY_DELAYS_MS[i]);
         }
@@ -160,6 +184,7 @@ class AirplaneModeService {
       writeLog('error', `airplaneModeService: Failed to enable airplane mode after ${MAX_ATTEMPTS} attempts (${totalElapsed}ms)`);
       throw new Error(`Airplane mode enable failed after ${MAX_ATTEMPTS} attempts`);
     } finally {
+      writeLog('ultraverbose', 'airplaneModeService.enable() exiting', { isExecuting: true });
       this.isExecuting = false;
     }
   }
