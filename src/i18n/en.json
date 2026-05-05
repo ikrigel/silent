@@ -99,6 +99,17 @@
       "calibrated": "✓ Calibrated (delay: {{delay}}ms)",
       "reset": "Reset"
     },
+    "weaLearning": {
+      "title": "WEA Silence Calibration",
+      "calibrationDesc": "Calibrate WEA silence by watching each attempt and confirming which one silences alerts on your device.",
+      "calibrate": "Calibrate WEA Silence",
+      "active": "Learning mode active — tap Silence WEA to begin",
+      "feedbackPrompt": "Attempt {{attempt}}: Are WEA alerts silenced?",
+      "confirmYes": "Yes",
+      "confirmNo": "No",
+      "calibrated": "✓ Calibrated (delay: {{delay}}ms)",
+      "reset": "Reset"
+    },
     "exportLogs": "Export Failure Report",
     "diagnostics": "Robot Diagnostics",
     "lastAction": "Last Action",

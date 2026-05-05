@@ -261,6 +261,17 @@
       "calibrated": "✓ מכויל (השהייה: {{delay}}ms)",
       "reset": "אפס"
     },
+    "weaLearning": {
+      "title": "כיול השתקת WEA",
+      "calibrationDesc": "כייל השתקת WEA על ידי צפייה בכל ניסיון ואישור איזה משתיק התראות בהתקן שלך.",
+      "calibrate": "כייל השתקת WEA",
+      "active": "מצב כיול פעיל — הקש השתק WEA כדי להתחיל",
+      "feedbackPrompt": "ניסיון {{attempt}}: התראות WEA מושתקות?",
+      "confirmYes": "כן",
+      "confirmNo": "לא",
+      "calibrated": "✓ מכויל (השהייה: {{delay}}ms)",
+      "reset": "אפס"
+    },
     "exportLogs": "ייצוא דיווח כישלון",
     "diagnostics": "אבחון רובוט",
     "lastAction": "פעולה אחרונה",

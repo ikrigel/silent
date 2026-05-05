@@ -19,6 +19,8 @@ import RecordingControls from './RecordingControls';
 import RecordingList from './RecordingList';
 import IOSManualSteps from './IOSManualSteps';
 import AirplaneLearningDialog from './AirplaneLearningDialog';
+import WeaLearningDialog from './WeaLearningDialog';
+import { weaSilenceService } from '@/services/weaSilenceService';
 
 const RobotPage: React.FC = () => {
   const { t } = useTranslation();
@@ -88,7 +90,7 @@ const RobotPage: React.FC = () => {
       let result: string;
       switch (action) {
         case 'silence':
-          result = await robotService.silenceWEA();
+          result = await weaSilenceService.silence();
           break;
         case 'unsilence':
           result = await robotService.unsilenceWEA();
@@ -233,6 +235,9 @@ const RobotPage: React.FC = () => {
 
             {/* Airplane mode learning dialog */}
             <AirplaneLearningDialog accessibilityEnabled={accessibilityEnabled} />
+
+            {/* WEA silence learning dialog */}
+            <WeaLearningDialog accessibilityEnabled={accessibilityEnabled} />
 
             {/* Recording */}
             <RecordingControls onSaved={handleSaved} />
