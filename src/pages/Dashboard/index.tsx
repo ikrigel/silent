@@ -41,12 +41,25 @@ const Dashboard: React.FC = () => {
   // Track previous active IDs to detect transitions and fire notifications
   const prevActiveIds = useRef<Set<string>>(new Set());
 
+  writeLog('info', `Dashboard: Component mounted/rendered`);
+  writeLog('ultraverbose', `Dashboard: Component state`, {
+    schedulesCount: schedules.length,
+    settingsNotificationsEnabled: settings.notificationsEnabled,
+  });
+
   // Load schedules from localStorage on mount (needed for tests that set localStorage directly)
   useEffect(() => {
+    writeLog('ultraverbose', `Dashboard: useEffect (loadSchedules) running`);
     loadSchedules();
   }, [loadSchedules]);
 
   useEffect(() => {
+    writeLog('info', `Dashboard: useEffect (scheduler tick) mounting - setting up 5s interval`);
+    writeLog('ultraverbose', `Dashboard: useEffect dependencies`, {
+      schedulesCount: schedules.length,
+      settingsNotificationsEnabled: settings.notificationsEnabled,
+    });
+
     const tick = async () => {
       const nowActive = getActiveSchedules();
       setActiveSchedules(nowActive);
