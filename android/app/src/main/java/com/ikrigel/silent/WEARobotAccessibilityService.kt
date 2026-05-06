@@ -343,6 +343,11 @@ class WEARobotAccessibilityService : AccessibilityService() {
         // Try to scroll the root window first
         if (root.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)) {
             android.util.Log.d("WEARobotAccessibilityService", "Scrolled root window successfully")
+            // Schedule next step after scroll animation completes
+            serviceScope.launch {
+                delay(800) // Wait for scroll to settle
+                executeNextStep()
+            }
             return
         }
 
@@ -350,6 +355,11 @@ class WEARobotAccessibilityService : AccessibilityService() {
         val scrollableChild = findScrollableNode(root)
         if (scrollableChild != null && scrollableChild.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)) {
             android.util.Log.d("WEARobotAccessibilityService", "Scrolled child container successfully: ${scrollableChild.className}")
+            // Schedule next step after scroll animation completes
+            serviceScope.launch {
+                delay(800) // Wait for scroll to settle
+                executeNextStep()
+            }
             return
         }
 
