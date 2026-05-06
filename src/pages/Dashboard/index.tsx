@@ -54,14 +54,49 @@ const Dashboard: React.FC = () => {
 
       const nowIds = new Set(nowActive.map((s) => s.id));
 
+      writeLog('ultraverbose', `Dashboard: tick() called, checking ${schedules.length} schedules, ${nowActive.length} are currently active`, {
+        activeCount: nowActive.length,
+        totalCount: schedules.length,
+        activeIds: Array.from(nowIds),
+      });
+
+      schedules.forEach((s) => {
+        const isActive = getActiveSchedules().some((a) => a.id === s.id);
+        writeLog('ultraverbose', `Dashboard: Checking schedule "${s.name}"`, {
+          id: s.id,
+          enabled: s.enabled,
+          startTime: s.startTime,
+          endTime: s.endTime,
+          isActive,
+          useAirplaneMode: s.useAirplaneMode,
+          silenceWEAOnStart: s.silenceWEAOnStart,
+          robotRecordingId: s.robotRecordingId,
+          unsilenceWEAOnEnd: s.unsilenceWEAOnEnd,
+          restoreOnEnd: s.restoreOnEnd,
+        });
+      });
+
       // Schedules that just became active → fire start reminder + optional robot/airplane
       // NOTE: Robot actions fire REGARDLESS of notificationsEnabled (critical fix)
       nowActive.forEach((s) => {
         if (!prevActiveIds.current.has(s.id)) {
-          writeLog('info',`Dashboard: Schedule "${s.name}" activated`);
+          writeLog('info',`Dashboard: Schedule "${s.name}" JUST ACTIVATED`);
+          writeLog('ultraverbose', `Dashboard: Schedule "${s.name}" transitioning to active state`, {
+            id: s.id,
+            wasActive: prevActiveIds.current.has(s.id),
+          });
+
           if (settings.notificationsEnabled) {
+            writeLog('ultraverbose', `Dashboard: Firing notification for schedule "${s.name}"`);
             fireScheduleReminder(s.name);
+          } else {
+            writeLog('ultraverbose', `Dashboard: Notifications disabled, skipping reminder for "${s.name}"`);
           }
+
+          writeLog('ultraverbose', `Dashboard: Checking if Android for schedule "${s.name}"`, {
+            isAndroid: robotService.isAndroid(),
+          });
+
           if (robotService.isAndroid()) {
             const runScheduleActions = async () => {
               writeLog('ultraverbose', `Dashboard: runScheduleActions started for schedule "${s.name}"`, {
@@ -127,35 +162,65 @@ const Dashboard: React.FC = () => {
 
       // Schedules that just ended → restore state + fire end reminder
       // NOTE: Restore logic decoupled from notifications (critical fix)
+      writeLog('ultraverbose', `Dashboard: Checking for ended schedules`, {
+        previouslyActive: Array.from(prevActiveIds.current),
+        nowActive: Array.from(nowIds),
+        ended: Array.from(prevActiveIds.current).filter((id) => !nowIds.has(id)),
+      });
+
       prevActiveIds.current.forEach((id) => {
         if (!nowIds.has(id)) {
           const entry = schedules.find((s) => s.id === id);
           if (entry) {
-            writeLog('info',`Dashboard: Schedule "${entry.name}" ended`);
+            writeLog('info',`Dashboard: Schedule "${entry.name}" JUST ENDED`);
+            writeLog('ultraverbose', `Dashboard: Schedule "${entry.name}" transitioning to inactive state`, {
+              id,
+              useAirplaneMode: entry.useAirplaneMode,
+              unsilenceWEAOnEnd: entry.unsilenceWEAOnEnd,
+              restoreOnEnd: entry.restoreOnEnd,
+            });
 
             // Restore device state if requested (default: true)
             const shouldRestore = entry.restoreOnEnd !== false;
             const snapshot = getSnapshot(id);
 
+            writeLog('ultraverbose', `Dashboard: Schedule end restore check`, {
+              id,
+              shouldRestore,
+              hasSnapshot: !!snapshot,
+              useAirplaneMode: entry.useAirplaneMode,
+              unsilenceWEAOnEnd: entry.unsilenceWEAOnEnd,
+              isAndroid: robotService.isAndroid(),
+            });
+
             if (entry.useAirplaneMode && robotService.isAndroid() && shouldRestore) {
+              writeLog('ultraverbose', `Dashboard: Restoring airplane mode for schedule "${entry.name}"`, {
+                id,
+                snapshot: snapshot ? { airplaneModeWasActive: snapshot.airplaneModeWasActive } : null,
+              });
+
               if (!snapshot) {
                 writeLog('info', `Dashboard: No snapshot for schedule ${id}, skipping airplane mode restore`);
               } else if (!snapshot.airplaneModeWasActive) {
                 // Airplane mode was OFF before schedule started — restore only if it's still ON now
+                writeLog('ultraverbose', `Dashboard: Checking current airplane mode state before disabling`);
                 airplaneModeService.getState()
                   .then((isCurrentlyOn) => {
+                    writeLog('ultraverbose', `Dashboard: Current airplane mode state: ${isCurrentlyOn}`, { id });
                     if (isCurrentlyOn) {
+                      writeLog('ultraverbose', `Dashboard: Disabling airplane mode`);
                       airplaneModeService.disable().catch((err: unknown) => {
                         const msg = err instanceof Error ? err.message : String(err);
-                        writeLog('error',`Dashboard: Failed to disable airplane mode on end: ${msg}`);
+                        writeLog('error',`Dashboard: Failed to disable airplane mode on end: ${msg}`, { id });
                       });
                     }
                   })
                   .catch(() => {
                     // Can't determine current state → fall back to explicit disable
+                    writeLog('ultraverbose', `Dashboard: Could not get airplane mode state, attempting disable anyway`);
                     airplaneModeService.disable().catch((err: unknown) => {
                       const msg = err instanceof Error ? err.message : String(err);
-                      writeLog('error',`Dashboard: Failed to disable airplane mode on end: ${msg}`);
+                      writeLog('error',`Dashboard: Failed to disable airplane mode on end (fallback): ${msg}`, { id });
                     });
                   });
               }
@@ -163,9 +228,10 @@ const Dashboard: React.FC = () => {
             }
 
             if (entry.unsilenceWEAOnEnd && robotService.isAndroid() && shouldRestore) {
+              writeLog('ultraverbose', `Dashboard: Unsilencing WEA for schedule "${entry.name}"`, { id });
               robotService.unsilenceWEA().catch((err: unknown) => {
                 const msg = err instanceof Error ? err.message : String(err);
-                writeLog('error',`Dashboard: Failed to unsilence WEA on schedule end: ${msg}`);
+                writeLog('error',`Dashboard: Failed to unsilence WEA on schedule end: ${msg}`, { id });
               });
             }
 
@@ -178,11 +244,19 @@ const Dashboard: React.FC = () => {
       });
 
       prevActiveIds.current = nowIds;
+      writeLog('ultraverbose', `Dashboard: tick() completed`, {
+        activeSchedulesCount: nowActive.length,
+        prevActiveIds: Array.from(prevActiveIds.current),
+      });
     };
 
+    writeLog('ultraverbose', `Dashboard: Setting up scheduler tick (5s interval)`);
     tick();
     const interval = setInterval(tick, 5000);
-    return () => clearInterval(interval);
+    return () => {
+      writeLog('ultraverbose', `Dashboard: Cleaning up scheduler tick interval`);
+      clearInterval(interval);
+    };
   }, [schedules, settings.notificationsEnabled, captureSnapshot, getSnapshot, clearSnapshot]);
 
   const isReminderActive = activeSchedules.length > 0;
