@@ -3,6 +3,7 @@ import { Box, Typography, Button, Card, CardContent, Alert } from '@mui/material
 import { Add } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { useSchedulerStore } from '@/store/schedulerStore';
+import { robotService } from '@/services/robotService';
 import SchedulerList from './SchedulerList';
 import SchedulerForm from './SchedulerForm';
 import type { ScheduleEntry } from '@/types';
@@ -13,6 +14,7 @@ const SchedulerPage: React.FC = () => {
   const { schedules, addOrUpdateSchedule, removeSchedule, toggleScheduleEnabled } = useSchedulerStore();
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<ScheduleEntry | null>(null);
+  const isAndroid = robotService.isAndroid();
 
   const handleEdit = (entry: ScheduleEntry) => { setEditing(entry); setFormOpen(true); };
   const handleClose = () => { setEditing(null); setFormOpen(false); };
@@ -26,7 +28,7 @@ const SchedulerPage: React.FC = () => {
           {t('scheduler.newSchedule')}
         </Button>
       </Box>
-      <Alert severity="info" sx={{ mb: 2 }}>{t('scheduler.browserNote')}</Alert>
+      {!isAndroid && <Alert severity="info" sx={{ mb: 2 }}>{t('scheduler.browserNote')}</Alert>}
       <Card>
         <CardContent sx={{ p: 0 }}>
           <SchedulerList schedules={schedules} onEdit={handleEdit} onDelete={removeSchedule} onToggle={toggleScheduleEnabled} />

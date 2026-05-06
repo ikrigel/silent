@@ -51,6 +51,7 @@
     "robotRecording": "הקלטת רובוט (אופציונלי)",
     "noRobotRecording": "ללא",
     "useAirplaneMode": "הפעל במצב טיסה (רובוט אנדרואיד בלבד)",
+    "silenceWEAOnStart": "השתק התראות WEA בתחילת לוח הזמנים (רובוט אנדרואיד בלבד)",
     "unsilenceWEAOnEnd": "הפעל מחדש התראות WEA בסיום לוח הזמנים",
     "restoreOnEnd": "שחזר מצב קודם בסיום (מומלץ)"
   },

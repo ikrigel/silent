@@ -17,6 +17,7 @@ import type { ScheduleEntry } from '@/types';
 import { useSettingsStore } from '@/store/settingsStore';
 import { robotService } from '@/services/robotService';
 import { airplaneModeService, type EnableContext } from '@/services/airplaneModeService';
+import { weaSilenceService } from '@/services/weaSilenceService';
 
 /**
  * Dashboard page.
@@ -91,6 +92,16 @@ const Dashboard: React.FC = () => {
                     const msg2 = err instanceof Error ? err.message : String(err);
                     writeLog('error',`Dashboard: Failed to enable airplane mode on retry: ${msg2}`, { scheduleId: s.id });
                   });
+                }
+              }
+              if (s.silenceWEAOnStart) {
+                writeLog('ultraverbose', `Dashboard: silencing WEA for schedule "${s.name}"`, { scheduleId: s.id });
+                try {
+                  await weaSilenceService.silence();
+                  writeLog('ultraverbose', `Dashboard: WEA silenced successfully`, { scheduleId: s.id });
+                } catch (err: unknown) {
+                  const msg = err instanceof Error ? err.message : String(err);
+                  writeLog('error',`Dashboard: Failed to silence WEA: ${msg}`, { scheduleId: s.id });
                 }
               }
               if (s.robotRecordingId) {

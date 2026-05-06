@@ -22,6 +22,7 @@ interface FormValues {
   endDate: string;
   robotRecordingId: string;
   useAirplaneMode: boolean;
+  silenceWEAOnStart: boolean;
   restoreOnEnd: boolean;
   unsilenceWEAOnEnd: boolean;
 }
@@ -48,6 +49,7 @@ const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, 
       endDate: initial?.endDate ?? '',
       robotRecordingId: initial?.robotRecordingId ?? '',
       useAirplaneMode: initial?.useAirplaneMode ?? false,
+      silenceWEAOnStart: initial?.silenceWEAOnStart ?? false,
       restoreOnEnd: initial?.restoreOnEnd !== false,
       unsilenceWEAOnEnd: initial?.unsilenceWEAOnEnd ?? false,
     },
@@ -70,6 +72,7 @@ const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, 
         endDate:           initial?.endDate           ?? '',
         robotRecordingId:  initial?.robotRecordingId  ?? '',
         useAirplaneMode:   initial?.useAirplaneMode   ?? false,
+        silenceWEAOnStart: initial?.silenceWEAOnStart ?? false,
         restoreOnEnd:      initial?.restoreOnEnd      !== false,
         unsilenceWEAOnEnd: initial?.unsilenceWEAOnEnd ?? false,
       });
@@ -197,7 +200,19 @@ const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, 
                 />
               </Grid>
             )}
-            {robotService.isAndroid() && robotRecordingId && (
+            {robotService.isAndroid() && (
+              <Grid item xs={12}>
+                <Controller name="silenceWEAOnStart" control={control}
+                  render={({ field }) => (
+                    <FormControlLabel
+                      control={<Checkbox {...field} checked={field.value} />}
+                      label={t('scheduler.silenceWEAOnStart')}
+                    />
+                  )}
+                />
+              </Grid>
+            )}
+            {robotService.isAndroid() && (robotRecordingId || useAirplaneMode) && (
               <Grid item xs={12}>
                 <Controller name="unsilenceWEAOnEnd" control={control}
                   render={({ field }) => (

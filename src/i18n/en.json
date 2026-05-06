@@ -147,6 +147,7 @@
     "robotRecording": "Robot Recording (optional)",
     "noRobotRecording": "None",
     "useAirplaneMode": "Use Airplane Mode (Android robot only)",
+    "silenceWEAOnStart": "Silence WEA alerts when schedule starts (Android robot only)",
     "unsilenceWEAOnEnd": "Re-enable WEA alerts when schedule ends",
     "restoreOnEnd": "Restore previous state on end (recommended)"
   },

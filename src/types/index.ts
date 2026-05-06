@@ -38,6 +38,7 @@ export interface ScheduleEntry {
   createdAt: string;
   robotRecordingId?: string;
   useAirplaneMode?: boolean;
+  silenceWEAOnStart?: boolean;   // automatically silence WEA when schedule starts (Android only)
   restoreOnEnd?: boolean;        // restore airplane mode & WEA to pre-schedule state (default: true)
   unsilenceWEAOnEnd?: boolean;   // explicitly call unsilenceWEA when schedule ends
 }
