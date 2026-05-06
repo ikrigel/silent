@@ -59,19 +59,21 @@ class WeaSilenceService {
           }
 
           let msg = '';
+          let attemptError: string | undefined;
           try {
             writeLog('ultraverbose', `weaSilenceService: calling robotService.silenceWEA() for attempt ${i + 1}`);
             msg = await robotService.silenceWEA();
             writeLog('ultraverbose', `weaSilenceService: robotService.silenceWEA() returned: ${msg}`);
-            writeLog('ultraverbose', `weaSilenceService: waiting ${POST_SILENCE_WAIT_MS}ms before requesting feedback`);
-            await this.delay(POST_SILENCE_WAIT_MS);
           } catch (err: unknown) {
-            writeLog('error', `weaSilenceService: silenceWEA attempt ${i + 1} failed: ${String(err)}`);
-            if (i === MAX_ATTEMPTS - 1) throw err;
-            continue;
+            attemptError = String(err);
+            writeLog('error', `weaSilenceService: silenceWEA attempt ${i + 1} failed: ${attemptError}`);
+            msg = 'Operation failed (see logs)';
           }
 
-          // Show feedback prompt
+          writeLog('ultraverbose', `weaSilenceService: waiting ${POST_SILENCE_WAIT_MS}ms before requesting feedback`);
+          await this.delay(POST_SILENCE_WAIT_MS);
+
+          // Show feedback prompt (even if operation failed — user might confirm it worked anyway)
           writeLog('ultraverbose', `weaSilenceService: setting pendingFeedback for attempt ${i + 1}`, { attempt: i + 1 });
           store.setPendingFeedback(i + 1);
           writeLog('ultraverbose', `weaSilenceService: waiting for user feedback on attempt ${i + 1}`);
