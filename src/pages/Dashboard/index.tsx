@@ -100,7 +100,7 @@ const Dashboard: React.FC = () => {
       // NOTE: Robot actions fire REGARDLESS of notificationsEnabled (critical fix)
       nowActive.forEach((s) => {
         if (!prevActiveIds.current.has(s.id)) {
-          writeLog('info',`Dashboard: Schedule "${s.name}" JUST ACTIVATED`);
+          writeLog('info',`Dashboard: ⚡ Schedule "${s.name}" JUST ACTIVATED`);
           writeLog('ultraverbose', `Dashboard: Schedule "${s.name}" transitioning to active state`, {
             id: s.id,
             wasActive: prevActiveIds.current.has(s.id),
@@ -118,76 +118,114 @@ const Dashboard: React.FC = () => {
           });
 
           const isAndroid = robotService.isAndroid();
-          writeLog('info', `Dashboard: Schedule "${s.name}" is ANDROID: ${isAndroid}`);
+          writeLog('info', `Dashboard: ⚙️ ANDROID CHECK: ${isAndroid ? 'YES - Will fire robot actions' : 'NO - Skipping robot actions (browser environment)'}`);
+          writeLog('ultraverbose', `Dashboard: isAndroid() returned: ${isAndroid}`, {
+            scheduleId: s.id,
+            scheduleName: s.name,
+            hasRobotActions: !!(s.useAirplaneMode || s.silenceWEAOnStart || s.robotRecordingId),
+          });
 
           if (isAndroid) {
             const runScheduleActions = async () => {
-              writeLog('info', `Dashboard: 🚀 STARTING ROBOT ACTIONS for schedule "${s.name}"`);
-              writeLog('ultraverbose', `Dashboard: runScheduleActions started for schedule "${s.name}"`, {
-                scheduleId: s.id,
-                useAirplaneMode: s.useAirplaneMode,
-                silenceWEAOnStart: s.silenceWEAOnStart,
-                robotRecordingId: s.robotRecordingId,
-              });
+              try {
+                writeLog('info', `Dashboard: 🚀 STARTING ROBOT ACTIONS for schedule "${s.name}"`);
+                writeLog('ultraverbose', `Dashboard: runScheduleActions started for schedule "${s.name}"`, {
+                  scheduleId: s.id,
+                  useAirplaneMode: s.useAirplaneMode,
+                  silenceWEAOnStart: s.silenceWEAOnStart,
+                  robotRecordingId: s.robotRecordingId,
+                  actions: {
+                    airplane: s.useAirplaneMode ? 'ENABLED' : 'disabled',
+                    wea: s.silenceWEAOnStart ? 'ENABLED' : 'disabled',
+                    recording: s.robotRecordingId ? 'ENABLED' : 'disabled',
+                  },
+                });
 
-              if (s.useAirplaneMode) {
-                writeLog('info', `Dashboard: 📡 AIRPLANE MODE: Enabling for "${s.name}"`);
-                const ctx: EnableContext = { scheduleId: s.id, scheduleName: s.name };
-                writeLog('ultraverbose', `Dashboard: calling airplaneModeService.getState() for schedule "${s.name}"`);
-                try {
-                  const wasActive = await airplaneModeService.getState();
-                  writeLog('ultraverbose', `Dashboard: airplaneModeService.getState() returned ${wasActive}`, { scheduleId: s.id });
-                  captureSnapshot(s.id, wasActive, false);
-                  if (!wasActive) {
-                    writeLog('ultraverbose', `Dashboard: airplane mode not active, calling enable()`, { scheduleId: s.id });
-                    await airplaneModeService.enable(ctx);
-                    writeLog('ultraverbose', `Dashboard: enable() completed successfully`, { scheduleId: s.id });
-                  } else {
-                    writeLog('ultraverbose', `Dashboard: airplane mode already active, skipping enable()`, { scheduleId: s.id });
+                if (s.useAirplaneMode) {
+                  try {
+                    writeLog('info', `Dashboard: 📡 AIRPLANE MODE: Starting enable sequence for "${s.name}"`);
+                    const ctx: EnableContext = { scheduleId: s.id, scheduleName: s.name };
+                    writeLog('ultraverbose', `Dashboard: Calling airplaneModeService.getState()`, { scheduleId: s.id });
+                    const wasActive = await airplaneModeService.getState();
+                    writeLog('info', `Dashboard: 📡 AIRPLANE MODE: Current state = ${wasActive ? 'ON' : 'OFF'}`);
+                    writeLog('ultraverbose', `Dashboard: airplaneModeService.getState() returned ${wasActive}`, { scheduleId: s.id });
+                    captureSnapshot(s.id, wasActive, false);
+                    if (!wasActive) {
+                      writeLog('ultraverbose', `Dashboard: airplane mode not active, calling enable()`, { scheduleId: s.id });
+                      await airplaneModeService.enable(ctx);
+                      writeLog('info', `Dashboard: 📡 AIRPLANE MODE: ✅ Enable sequence completed`);
+                      writeLog('ultraverbose', `Dashboard: enable() completed successfully`, { scheduleId: s.id });
+                    } else {
+                      writeLog('info', `Dashboard: 📡 AIRPLANE MODE: Already ON, skipping enable`);
+                      writeLog('ultraverbose', `Dashboard: airplane mode already active, skipping enable()`, { scheduleId: s.id });
+                    }
+                  } catch (err: unknown) {
+                    captureSnapshot(s.id, false, false);
+                    const msg = err instanceof Error ? err.message : String(err);
+                    const stack = err instanceof Error ? err.stack : '';
+                    writeLog('error',`Dashboard: 📡 AIRPLANE MODE: ❌ FAILED - ${msg}`, { scheduleId: s.id, stack });
+                    writeLog('ultraverbose', `Dashboard: attempting enable() again after getState() error`, { scheduleId: s.id });
+                    await airplaneModeService.enable(ctx).catch((err: unknown) => {
+                      const msg2 = err instanceof Error ? err.message : String(err);
+                      const stack2 = err instanceof Error ? err.stack : '';
+                      writeLog('error',`Dashboard: 📡 AIRPLANE MODE: ❌ RETRY FAILED - ${msg2}`, { scheduleId: s.id, stack: stack2 });
+                    });
                   }
-                } catch (err: unknown) {
-                  captureSnapshot(s.id, false, false);
-                  const msg = err instanceof Error ? err.message : String(err);
-                  writeLog('error',`Dashboard: Failed to enable airplane mode: ${msg}`, { scheduleId: s.id });
-                  writeLog('ultraverbose', `Dashboard: attempting enable() again after getState() error`, { scheduleId: s.id });
-                  await airplaneModeService.enable(ctx).catch((err: unknown) => {
-                    const msg2 = err instanceof Error ? err.message : String(err);
-                    writeLog('error',`Dashboard: Failed to enable airplane mode on retry: ${msg2}`, { scheduleId: s.id });
-                  });
                 }
-              }
-              if (s.silenceWEAOnStart) {
-                writeLog('info', `Dashboard: 🔇 WEA SILENCE: Starting for "${s.name}"`);
-                writeLog('ultraverbose', `Dashboard: silencing WEA for schedule "${s.name}"`, { scheduleId: s.id });
-                try {
-                  await weaSilenceService.silence();
-                  writeLog('info', `Dashboard: 🔇 WEA SILENCE: ✅ SUCCESS for "${s.name}"`);
-                  writeLog('ultraverbose', `Dashboard: WEA silenced successfully`, { scheduleId: s.id });
-                } catch (err: unknown) {
-                  const msg = err instanceof Error ? err.message : String(err);
-                  writeLog('error',`Dashboard: 🔇 WEA SILENCE: ❌ FAILED - ${msg}`, { scheduleId: s.id });
+
+                if (s.silenceWEAOnStart) {
+                  try {
+                    writeLog('info', `Dashboard: 🔇 WEA SILENCE: Starting for "${s.name}"`);
+                    writeLog('ultraverbose', `Dashboard: silencing WEA for schedule "${s.name}"`, { scheduleId: s.id });
+                    await weaSilenceService.silence();
+                    writeLog('info', `Dashboard: 🔇 WEA SILENCE: ✅ SUCCESS`);
+                    writeLog('ultraverbose', `Dashboard: WEA silenced successfully`, { scheduleId: s.id });
+                  } catch (err: unknown) {
+                    const msg = err instanceof Error ? err.message : String(err);
+                    const stack = err instanceof Error ? err.stack : '';
+                    writeLog('error',`Dashboard: 🔇 WEA SILENCE: ❌ FAILED - ${msg}`, { scheduleId: s.id, stack });
+                  }
                 }
-              }
-              if (s.robotRecordingId) {
-                writeLog('info', `Dashboard: 🎬 RECORDING: Starting "${s.robotRecordingId}" for "${s.name}"`);
-                writeLog('ultraverbose', `Dashboard: executing recording "${s.robotRecordingId}"`, { scheduleId: s.id });
-                try {
-                  await robotService.executeRecording(s.robotRecordingId);
-                  writeLog('ultraverbose', `Dashboard: recording executed successfully`, { scheduleId: s.id });
-                } catch (err: unknown) {
-                  const msg = err instanceof Error ? err.message : String(err);
-                  writeLog('error',`Dashboard: Failed to execute recording ${s.robotRecordingId}: ${msg}`, { scheduleId: s.id });
+
+                if (s.robotRecordingId) {
+                  try {
+                    writeLog('info', `Dashboard: 🎬 RECORDING: Starting "${s.robotRecordingId}" for "${s.name}"`);
+                    writeLog('ultraverbose', `Dashboard: executing recording "${s.robotRecordingId}"`, { scheduleId: s.id });
+                    await robotService.executeRecording(s.robotRecordingId);
+                    writeLog('info', `Dashboard: 🎬 RECORDING: ✅ Completed`);
+                    writeLog('ultraverbose', `Dashboard: recording executed successfully`, { scheduleId: s.id });
+                  } catch (err: unknown) {
+                    const msg = err instanceof Error ? err.message : String(err);
+                    const stack = err instanceof Error ? err.stack : '';
+                    writeLog('error',`Dashboard: 🎬 RECORDING: ❌ FAILED - ${msg}`, { scheduleId: s.id, stack });
+                  }
                 }
+
+                writeLog('info', `Dashboard: 🏁 ALL ROBOT ACTIONS COMPLETED for "${s.name}"`);
+                writeLog('ultraverbose', `Dashboard: runScheduleActions completed for schedule "${s.name}"`, { scheduleId: s.id });
+              } catch (outerErr: unknown) {
+                const msg = outerErr instanceof Error ? outerErr.message : String(outerErr);
+                const stack = outerErr instanceof Error ? outerErr.stack : '';
+                writeLog('error', `Dashboard: 💥 OUTER ERROR in runScheduleActions: ${msg}`, { scheduleId: s.id, stack });
               }
-              writeLog('info', `Dashboard: 🏁 ALL ROBOT ACTIONS COMPLETED for "${s.name}"`);
-              writeLog('ultraverbose', `Dashboard: runScheduleActions completed for schedule "${s.name}"`, { scheduleId: s.id });
             };
             writeLog('info', `Dashboard: 🚀 CALLING runScheduleActions for "${s.name}"`);
             writeLog('ultraverbose', `Dashboard: firing runScheduleActions for schedule "${s.name}"`, { scheduleId: s.id });
-            runScheduleActions().catch((err: unknown) => {
-              const msg = err instanceof Error ? err.message : String(err);
-              writeLog('error', `Dashboard: 🚀 runScheduleActions threw uncaught error: ${msg}`, { scheduleId: s.id });
-            });
+
+            // Execute with detailed error tracking
+            try {
+              runScheduleActions().catch((err: unknown) => {
+                const msg = err instanceof Error ? err.message : String(err);
+                const stack = err instanceof Error ? err.stack : '';
+                writeLog('error', `Dashboard: 🚀 runScheduleActions promise rejected: ${msg}`, { scheduleId: s.id, stack });
+              });
+            } catch (syncErr: unknown) {
+              const msg = syncErr instanceof Error ? syncErr.message : String(syncErr);
+              const stack = syncErr instanceof Error ? syncErr.stack : '';
+              writeLog('error', `Dashboard: 🚀 runScheduleActions threw sync error: ${msg}`, { scheduleId: s.id, stack });
+            }
+          } else {
+            writeLog('info', `Dashboard: ⚠️ ROBOT ACTIONS SKIPPED (not on Android): Schedule "${s.name}"`);
           }
         }
       });

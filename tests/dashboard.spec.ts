@@ -170,7 +170,7 @@ test.describe('Dashboard', () => {
     }
   });
 
-  test('schedule with useAirplaneMode is detected as active on Dashboard', async ({ page }) => {
+  test('schedule with useAirplaneMode detects as active and creates detailed logs', async ({ page }) => {
     // Create a schedule with useAirplaneMode ENABLED that starts NOW
     const now = new Date();
     const pad = (n: number) => String(n).padStart(2, '0');
@@ -180,8 +180,8 @@ test.describe('Dashboard', () => {
     const endTime = `${pad(endHour)}:${pad(endMinute % 60)}`;
 
     const schedule = {
-      id: 'test-robot-airplane',
-      name: 'Test Robot Airplane',
+      id: 'test-robot-airplane-logs',
+      name: 'Test Robot Airplane Logs',
       enabled: true,
       startTime,
       endTime,
@@ -195,18 +195,68 @@ test.describe('Dashboard', () => {
 
     await page.evaluate((s) => {
       localStorage.setItem('schedules', JSON.stringify([s]));
+      localStorage.setItem('settings', JSON.stringify({
+        themeMode: 'light',
+        logLevel: 'ultraverbose',
+        notificationsEnabled: false,
+      }));
     }, schedule);
 
     // Navigate to Dashboard
     await page.goto('/');
 
-    // Wait for scheduler tick to detect the active schedule
+    // Wait for scheduler tick to detect the active schedule (need at least one tick cycle)
     await page.waitForTimeout(7000);
 
-    // Verify the active warning banner appears
+    // Check 1: Verify the active warning banner appears on Dashboard
     const activeWarning = page.getByText(/reminder active/i);
     await expect(activeWarning).toBeVisible();
+    console.log('✅ Check 1 PASSED: Schedule is marked ACTIVE on Dashboard');
 
-    console.log('✅ Schedule with useAirplaneMode correctly detected as ACTIVE');
+    // Check 2: Verify schedule activation logs exist
+    const scheduleLogs = page.getByText(/⚡ Schedule.*JUST ACTIVATED/i);
+    const scheduleLogsVisible = await scheduleLogs.isVisible().catch(() => false);
+    console.log(`✅ Check 2: Schedule activation logs visible = ${scheduleLogsVisible}`);
+
+    // Check 3: Verify ANDROID CHECK log appears
+    const androidCheckLog = page.getByText(/⚙️ ANDROID CHECK/i);
+    const androidCheckVisible = await androidCheckLog.isVisible().catch(() => false);
+    console.log(`✅ Check 3: Android check log visible = ${androidCheckVisible}`);
+
+    // Check 4: Navigate to Logs page to see all logs
+    await page.getByRole('link', { name: /logs/i }).click();
+    await expect(page).toHaveURL('/logs');
+    await page.waitForTimeout(1000);
+
+    console.log('\n=== CHECKING LOGS PAGE FOR ACTIVATION SEQUENCE ===');
+
+    // Get all log text
+    const allLogs = await page.getByRole('listitem').allTextContents().catch(() => []);
+    console.log(`Total logs found: ${allLogs.length}`);
+    allLogs.slice(-20).forEach((log, i) => console.log(`Log ${i}: ${log.substring(0, 100)}`));
+
+    // Check for critical logs
+    const hasMountLog = allLogs.some((l) => l.includes('Component mounted'));
+    const hasActivationLog = allLogs.some((l) => l.includes('⚡ Schedule') && l.includes('JUST ACTIVATED'));
+    const hasAndroidCheckLog = allLogs.some((l) => l.includes('⚙️ ANDROID CHECK'));
+    const hasCallLog = allLogs.some((l) => l.includes('🚀') && l.includes('CALLING'));
+
+    console.log(`\n=== ACTIVATION SEQUENCE LOGS ===`);
+    console.log(`✅ Mount log found: ${hasMountLog}`);
+    console.log(`✅ Schedule activation log found: ${hasActivationLog}`);
+    console.log(`✅ Android check log found: ${hasAndroidCheckLog}`);
+    console.log(`✅ Robot actions call log found: ${hasCallLog}`);
+
+    // Final assertion: at minimum, mount and activation logs must exist
+    expect(hasMountLog && hasActivationLog && hasAndroidCheckLog).toBe(true);
+
+    if (!hasCallLog) {
+      console.log('\n⚠️ WARNING: 🚀 CALLING log not found');
+      console.log('This means robot action execution code was not reached');
+      console.log('Possible reasons:');
+      console.log('  1. isAndroid() returned false (expected in browser test)');
+      console.log('  2. Robot action path not executed even though isAndroid=true');
+      console.log('  3. Logs not persisted to localStorage');
+    }
   });
 });
