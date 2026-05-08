@@ -180,41 +180,36 @@ const AboutPage: React.FC = () => {
                 </Alert>
               )}
 
-              {/* Current Versions */}
+              {/* Current Version - What's Running Right Now */}
               <Box>
                 <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-                  {t('about.version')}:
+                  📱 {t('about.currentVersion')} ({isApk ? 'APK' : 'Web Browser'}):
                 </Typography>
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} alignItems={{ xs: 'flex-start', sm: 'center' }} flexWrap="wrap" useFlexGap>
-                  <Chip
-                    label={`Web App: v${__APP_VERSION__}`}
-                    variant="filled"
-                    size="small"
-                    color="primary"
-                  />
-                  {isApk && (
-                    <Chip
-                      label={`APK App: v${__APP_VERSION__}`}
-                      variant="filled"
-                      size="small"
-                      color="primary"
-                    />
-                  )}
-                </Stack>
+                <Chip
+                  label={`v${__APP_VERSION__}`}
+                  variant="filled"
+                  size="medium"
+                  color="primary"
+                />
               </Box>
 
-              {/* Latest Available */}
+              {/* Latest APK Available */}
               {latestApkVersion && (
                 <Box>
                   <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-                    {t('about.apkAvailableVersion')}:
+                    ⬇️ {t('about.apkAvailableVersion')}:
                   </Typography>
                   <Chip
-                    label={latestApkVersion}
+                    label={`v${latestApkVersion}`}
                     variant="outlined"
-                    size="small"
+                    size="medium"
                     color={hasNewVersion ? 'warning' : 'default'}
                   />
+                  {hasNewVersion && (
+                    <Typography variant="caption" color="warning.main" display="block" sx={{ mt: 1 }}>
+                      ✨ {t('about.newVersionAvailable')}
+                    </Typography>
+                  )}
                 </Box>
               )}
 
