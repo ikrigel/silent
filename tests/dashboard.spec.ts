@@ -99,4 +99,74 @@ test.describe('Dashboard', () => {
     // Active schedules list should be empty (time window 03:00-04:00 doesn't match current time)
     await expect(page.getByText(/no active reminder schedules/i)).toBeVisible();
   });
+
+  test('Dashboard scheduler loop runs when active schedule exists', async ({ page }) => {
+    // Set log level to ultraverbose to capture scheduler logs
+    await page.evaluate(() => {
+      localStorage.setItem('settings', JSON.stringify({
+        themeMode: 'light',
+        logLevel: 'ultraverbose',
+        notificationsEnabled: false,
+      }));
+    });
+
+    // Create a schedule that will be active NOW (2-minute window)
+    const now = new Date();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const startTime = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    const endMinute = now.getMinutes() + 2;
+    const endHour = endMinute < 60 ? now.getHours() : now.getHours() + 1;
+    const endTime = `${pad(endHour)}:${pad(endMinute % 60)}`;
+
+    const schedule = {
+      id: 'test-scheduler-loop',
+      name: 'Test Scheduler Loop',
+      enabled: true,
+      startTime,
+      endTime,
+      repeatMode: 'daily',
+      daysOfWeek: [now.getDay()],
+      createdAt: new Date().toISOString(),
+      silenceWEAOnStart: false,
+      useAirplaneMode: false,
+    };
+
+    await page.evaluate((s) => {
+      localStorage.setItem('schedules', JSON.stringify([s]));
+    }, schedule);
+
+    // Navigate to Dashboard
+    await page.goto('/');
+
+    // Wait long enough for scheduler to run several tick cycles (5s interval)
+    await page.waitForTimeout(7000);
+
+    // Check the active schedules display - if scheduler is running, it should show the active schedule
+    const activeWarning = page.getByText(/reminder active/i);
+    const activeWarningVisible = await activeWarning.isVisible().catch(() => false);
+
+    console.log('Active schedule warning visible:', activeWarningVisible);
+
+    if (activeWarningVisible) {
+      console.log('SUCCESS: Dashboard detected active schedule - scheduler is running!');
+      expect(activeWarningVisible).toBe(true);
+    } else {
+      // If scheduler is not running, the active warning won't show
+      console.log('FAILURE: Dashboard did not detect active schedule');
+      console.log('This means the scheduler tick loop is NOT running');
+
+      // Go to Logs to check what's happening
+      await page.getByRole('link', { name: /logs/i }).click();
+      await page.waitForTimeout(1000);
+
+      // Check if ANY scheduler service logs appear
+      const schedulerLogs = page.getByText(/isScheduleActive.*is.*active/i);
+      const schedulerLogsVisible = await schedulerLogs.isVisible().catch(() => false);
+
+      console.log('Scheduler service logs visible:', schedulerLogsVisible);
+      console.log('If scheduler service logs exist but active warning does not, the Dashboard is not receiving updates');
+
+      expect(activeWarningVisible).toBe(true); // Fail and show the problem
+    }
+  });
 });
