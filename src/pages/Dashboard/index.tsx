@@ -142,9 +142,9 @@ const Dashboard: React.FC = () => {
                 });
 
                 if (s.useAirplaneMode) {
+                  const ctx: EnableContext = { scheduleId: s.id, scheduleName: s.name };
                   try {
                     writeLog('info', `Dashboard: 📡 AIRPLANE MODE: Starting enable sequence for "${s.name}"`);
-                    const ctx: EnableContext = { scheduleId: s.id, scheduleName: s.name };
                     writeLog('ultraverbose', `Dashboard: Calling airplaneModeService.getState()`, { scheduleId: s.id });
                     const wasActive = await airplaneModeService.getState();
                     writeLog('info', `Dashboard: 📡 AIRPLANE MODE: Current state = ${wasActive ? 'ON' : 'OFF'}`);
