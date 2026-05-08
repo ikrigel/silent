@@ -3,7 +3,7 @@
 ## Project Overview
 **Silent** is a React SPA for scheduling emergency alert silencing periods on Android devices.
 
-**Latest Version:** 1.0.97 (2026-05-08)
+**Latest Version:** 1.0.98 (2026-05-08)
 
 ---
 
@@ -309,6 +309,14 @@ tests/
 
 ## Version History & Key Changes
 
+### v1.0.98 (2026-05-08) — Comprehensive Diagnostic Logging & Version Display
+- ✅ Added: Extensive emoji-prefixed logging throughout robot action execution (⚡, ⚙️, 🚀, 📡, 🔇, 🏁)
+- ✅ Added: Error stacks in all catch blocks for detailed debugging
+- ✅ Added: Outer error handlers to catch unexpected failures
+- ✅ Fixed: Version display in About page — clearly shows current vs available
+- ✅ Added: Quick version check in header (click ℹ️ icon)
+- ✅ Shows: Environment (Web Browser or APK) with each version
+
 ### v1.0.97 (2026-05-08) — Robot Action Execution Fix & Version Sync
 - ✅ Fixed: Robot actions (airplane mode, WEA silence) now execute when schedules become active
 - ✅ Fixed: prevActiveIds initialization bug — now tracks currently active schedules at mount
@@ -496,4 +504,4 @@ git push origin master v1.0.XX
 
 ---
 
-**Last Updated:** 2026-05-08 (v1.0.97)
+**Last Updated:** 2026-05-08 (v1.0.98)

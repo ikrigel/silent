@@ -1,11 +1,78 @@
-# Release Notes: v1.0.88 to v1.0.97
+# Release Notes: v1.0.88 to v1.0.98
 
 ## Overview
-These releases focused on **WEA silence calibration**, **airplane mode learning mode**, **scheduler robot action execution**, and **comprehensive debugging** for device-specific automation issues.
+These releases focused on **WEA silence calibration**, **airplane mode learning mode**, **scheduler robot action execution**, **comprehensive diagnostic logging**, and **version visibility** for better user experience and debugging.
 
 ---
 
 ## Release Summary
+
+### v1.0.98 (2026-05-08) — Comprehensive Diagnostic Logging & Clear Version Display
+**Focus**: Enable detailed troubleshooting of robot action execution + make version info always visible
+
+#### Problems Addressed
+- ❌ Scheduler fires actions but logs weren't visible in browser
+- ❌ User couldn't quickly see what version they're running
+- ❌ No clear distinction between current version and available version
+- ❌ Difficult to diagnose robot action failures
+
+#### Changes
+**1. Enhanced Dashboard Logging (src/pages/Dashboard/index.tsx):**
+- Added emoji-prefixed logging at every step: ⚡, ⚙️, 🚀, 📡, 🔇, 🏁
+- Error stacks included in all catch blocks
+- Outer error handlers to catch unexpected failures
+- Clear indication when robot actions are skipped (browser environment)
+
+**Example Log Sequence:**
+```
+⚡ Schedule "Test" JUST ACTIVATED
+⚙️ ANDROID CHECK: YES - Will fire robot actions
+🚀 CALLING runScheduleActions for "Test"
+🚀 STARTING ROBOT ACTIONS for schedule "Test"
+📡 AIRPLANE MODE: Starting enable sequence
+📡 AIRPLANE MODE: Current state = OFF
+📡 AIRPLANE MODE: ✅ Enable sequence completed
+🏁 ALL ROBOT ACTIONS COMPLETED for "Test"
+```
+
+**2. Clear Version Display (src/pages/About/index.tsx):**
+- Changed from confusing "Web App v1.0.98 | APK App v1.0.98" 
+- Now shows: "📱 You are running (Web Browser): v1.0.98"
+- Clearly separates current from available: "⬇️ Latest APK Available: v1.0.99"
+- Shows environment (Web/APK) with each version
+
+**3. Header Version Button (src/components/Layout/Header.tsx):**
+- Added quick version check to header (always visible)
+- Click ℹ️ v1.0.98 button to see popover
+- Shows current version + environment (Web/APK)
+- Shows latest available if different
+- Link to full About page
+
+#### Code Example - Header Version Display
+```typescript
+<Tooltip title="Click to see version details">
+  <IconButton color="inherit" size="small" onClick={handleVersionClick}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+      <Info fontSize="small" />
+      <Typography variant="caption">v{__APP_VERSION__}</Typography>
+    </Box>
+  </IconButton>
+</Tooltip>
+```
+
+#### Impact
+✅ Every robot action step is logged with emoji for visibility
+✅ Error stacks help identify exact failure points
+✅ Version confusion eliminated — current vs available instantly clear
+✅ Quick version check without leaving page
+✅ Users can diagnose their own issues with comprehensive logs
+
+#### Testing
+- Test on APK: Create schedule, go to Logs, see full emoji-prefixed sequence
+- Test on web: Click ℹ️ version button to see popover
+- Test version display: Go to About page, see clear current/available separation
+
+---
 
 ### v1.0.97 (2026-05-08) — Robot Action Execution Fix & Version Sync
 **Focus**: Fix critical bug where robot actions don't execute when schedules become active
@@ -293,4 +360,4 @@ npm run test:ui       # Interactive mode
 
 ---
 
-**Last Updated:** 2026-05-08 (v1.0.97)
+**Last Updated:** 2026-05-08 (v1.0.98)
