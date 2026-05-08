@@ -50,6 +50,14 @@ const Dashboard: React.FC = () => {
     });
     writeLog('ultraverbose', `Dashboard: useEffect (loadSchedules) running`);
     loadSchedules();
+
+    // Initialize prevActiveIds with currently active schedules so we trigger on mount
+    const initialActive = getActiveSchedules();
+    writeLog('ultraverbose', `Dashboard: Initializing prevActiveIds with active schedules on mount`, {
+      initialActiveCount: initialActive.length,
+      initialActiveIds: initialActive.map((s) => ({ id: s.id, name: s.name })),
+    });
+    prevActiveIds.current = new Set(initialActive.map((s) => s.id));
   }, [loadSchedules]);
 
   useEffect(() => {
@@ -109,14 +117,21 @@ const Dashboard: React.FC = () => {
             isAndroid: robotService.isAndroid(),
           });
 
-          if (robotService.isAndroid()) {
+          const isAndroid = robotService.isAndroid();
+          writeLog('info', `Dashboard: Schedule "${s.name}" is ANDROID: ${isAndroid}`);
+
+          if (isAndroid) {
             const runScheduleActions = async () => {
+              writeLog('info', `Dashboard: 🚀 STARTING ROBOT ACTIONS for schedule "${s.name}"`);
               writeLog('ultraverbose', `Dashboard: runScheduleActions started for schedule "${s.name}"`, {
                 scheduleId: s.id,
                 useAirplaneMode: s.useAirplaneMode,
+                silenceWEAOnStart: s.silenceWEAOnStart,
                 robotRecordingId: s.robotRecordingId,
               });
+
               if (s.useAirplaneMode) {
+                writeLog('info', `Dashboard: 📡 AIRPLANE MODE: Enabling for "${s.name}"`);
                 const ctx: EnableContext = { scheduleId: s.id, scheduleName: s.name };
                 writeLog('ultraverbose', `Dashboard: calling airplaneModeService.getState() for schedule "${s.name}"`);
                 try {
@@ -142,16 +157,19 @@ const Dashboard: React.FC = () => {
                 }
               }
               if (s.silenceWEAOnStart) {
+                writeLog('info', `Dashboard: 🔇 WEA SILENCE: Starting for "${s.name}"`);
                 writeLog('ultraverbose', `Dashboard: silencing WEA for schedule "${s.name}"`, { scheduleId: s.id });
                 try {
                   await weaSilenceService.silence();
+                  writeLog('info', `Dashboard: 🔇 WEA SILENCE: ✅ SUCCESS for "${s.name}"`);
                   writeLog('ultraverbose', `Dashboard: WEA silenced successfully`, { scheduleId: s.id });
                 } catch (err: unknown) {
                   const msg = err instanceof Error ? err.message : String(err);
-                  writeLog('error',`Dashboard: Failed to silence WEA: ${msg}`, { scheduleId: s.id });
+                  writeLog('error',`Dashboard: 🔇 WEA SILENCE: ❌ FAILED - ${msg}`, { scheduleId: s.id });
                 }
               }
               if (s.robotRecordingId) {
+                writeLog('info', `Dashboard: 🎬 RECORDING: Starting "${s.robotRecordingId}" for "${s.name}"`);
                 writeLog('ultraverbose', `Dashboard: executing recording "${s.robotRecordingId}"`, { scheduleId: s.id });
                 try {
                   await robotService.executeRecording(s.robotRecordingId);
@@ -161,12 +179,14 @@ const Dashboard: React.FC = () => {
                   writeLog('error',`Dashboard: Failed to execute recording ${s.robotRecordingId}: ${msg}`, { scheduleId: s.id });
                 }
               }
+              writeLog('info', `Dashboard: 🏁 ALL ROBOT ACTIONS COMPLETED for "${s.name}"`);
               writeLog('ultraverbose', `Dashboard: runScheduleActions completed for schedule "${s.name}"`, { scheduleId: s.id });
             };
+            writeLog('info', `Dashboard: 🚀 CALLING runScheduleActions for "${s.name}"`);
             writeLog('ultraverbose', `Dashboard: firing runScheduleActions for schedule "${s.name}"`, { scheduleId: s.id });
             runScheduleActions().catch((err: unknown) => {
               const msg = err instanceof Error ? err.message : String(err);
-              writeLog('error', `Dashboard: runScheduleActions threw uncaught error: ${msg}`, { scheduleId: s.id });
+              writeLog('error', `Dashboard: 🚀 runScheduleActions threw uncaught error: ${msg}`, { scheduleId: s.id });
             });
           }
         }

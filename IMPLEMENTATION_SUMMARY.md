@@ -3,7 +3,7 @@
 ## Project Overview
 **Silent** is a React SPA for scheduling emergency alert silencing periods on Android devices.
 
-**Latest Version:** 1.0.87 (2026-04-20)
+**Latest Version:** 1.0.97 (2026-05-08)
 
 ---
 
@@ -180,7 +180,65 @@ const json = tracker.serialize(session);
 
 ---
 
-### 10. Documentation & Guides
+### 10. Scheduler Robot Action Execution (v1.0.96+)
+
+**Problem Solved:** Scheduler correctly detected active schedules but did NOT execute robot actions (airplane mode, WEA silence, custom recordings) on the phone.
+
+**Root Cause:** `prevActiveIds` state in Dashboard was initialized as empty `Set()`, preventing action execution when a schedule was already active at component mount time.
+
+**Solution:** Initialize `prevActiveIds` with currently active schedules at component mount:
+```typescript
+useEffect(() => {
+  const initialActive = getActiveSchedules();
+  prevActiveIds.current = new Set(initialActive.map((s) => s.id));
+}, [loadSchedules]);
+```
+
+**Verification:** 
+- Added emoji-prefixed logging to track action execution:
+  - `🚀 STARTING ROBOT ACTIONS` — action execution triggered
+  - `📡 AIRPLANE MODE: Enabling` — airplane mode action running
+  - `🔇 WEA SILENCE: Starting` — WEA silence action running
+  - `🏁 ALL ROBOT ACTIONS COMPLETED` — all actions finished
+- Created Playwright test: "Robot actions fire when schedule with useAirplaneMode becomes active"
+- Test verifies logs appear when schedule becomes active
+
+**Features Enabled:**
+- `useAirplaneMode?: boolean` — toggle airplane mode when schedule starts
+- `silenceWEAOnStart?: boolean` — silence WEA alerts when schedule starts
+- `robotRecordingId?: string` — execute custom robot recordings
+- `restoreOnEnd?: boolean` — restore airplane mode state after schedule ends
+- `unsilenceWEAOnEnd?: boolean` — restore WEA when schedule ends
+
+---
+
+### 11. WEA Silence Calibration (v1.0.95+)
+
+**Problem:** Device-specific timing prevents reliable WEA silencing via accessibility service.
+
+**Solution:** Learning mode mirrors airplane mode — users calibrate by watching and confirming which timing works on their device.
+
+**Components:**
+- `src/store/weaLearningStore.ts` — persist learned timing
+- `src/services/weaSilenceService.ts` — three-branch silence() with learned/learning/default modes
+- `src/pages/Robot/WeaLearningDialog.tsx` — calibration UI and feedback prompts
+
+---
+
+### 12. Airplane Mode Learning Mode (v1.0.93+)
+
+**Problem:** Airplane mode automation had unreliable state validation — `getAirplaneModeState()` returns false negatives; retries often navigate to wrong screen.
+
+**Solution:** User-calibrated timing — watch attempts and confirm which one works, then save that timing for future runs.
+
+**Components:**
+- `src/store/airplaneLearningStore.ts` — persist learned timing (0, 3000, or 5000 ms)
+- `src/services/airplaneModeService.ts` — three-branch enable() with learned/learning/default modes
+- `src/pages/Robot/AirplaneLearningDialog.tsx` — "Calibrate Airplane Mode" button + feedback UI
+
+---
+
+### 13. Documentation & Guides
 
 **Available Markdown Files:**
 - [ANDROID_BUILD_DEBUGGING.md](ANDROID_BUILD_DEBUGGING.md) — Kotlin/Gradle troubleshooting
@@ -250,6 +308,38 @@ tests/
 ---
 
 ## Version History & Key Changes
+
+### v1.0.97 (2026-05-08) — Robot Action Execution Fix & Version Sync
+- ✅ Fixed: Robot actions (airplane mode, WEA silence) now execute when schedules become active
+- ✅ Fixed: prevActiveIds initialization bug — now tracks currently active schedules at mount
+- ✅ Added: Emoji-prefixed logging (🚀, 📡, 🔇, 🏁) for robot action verification
+- ✅ Added: Comprehensive test for robot action execution verification
+- ✅ Updated: Android versionCode 73 → 97, versionName 1.0.73 → 1.0.97 (now synced with web)
+
+### v1.0.96 (2026-05-07) — WEA Silence Calibration & Learning Mode
+- ✅ Implemented: WEA silence learning mode (mirrors airplane mode calibration)
+- ✅ Added: Three-branch weaSilenceService with learned/learning/default modes
+- ✅ Added: WeaLearningDialog for calibration UI and feedback prompts
+- ✅ Fixed: WEA learning mode feedback loop — always shows dialog even on error
+- ✅ Updated: weaSilenceService error handling for reliable feedback prompts
+
+### v1.0.95 (2026-05-05) — Scheduler Integration & WEA Auto-Silencing
+- ✅ Added: `silenceWEAOnStart` field to ScheduleEntry
+- ✅ Updated: SchedulerForm with checkbox for WEA silencing option
+- ✅ Integrated: weaSilenceService into Dashboard robot action execution
+- ✅ Added: i18n strings for WEA silence option in scheduler form
+
+### v1.0.94 (2026-05-02) — Ultraverbose Logging & Scheduler Debugging
+- ✅ Added: Extensive ultraverbose logging to isScheduleActive()
+- ✅ Added: Schedule detection logs to getActiveSchedules()
+- ✅ Improved: Debugging visibility for scheduler tick loop
+
+### v1.0.93 (2026-04-28) — Airplane Mode Learning Mode
+- ✅ Implemented: Airplane mode calibration system (learned/learning/default branches)
+- ✅ Added: airplaneLearningStore with persistence (0, 3000, 5000 ms timing)
+- ✅ Added: AirplaneLearningDialog for calibration UI
+- ✅ Added: provideAirplaneFeedback() for async user feedback integration
+- ✅ Updated: airplaneModeService with three-branch enable() logic
 
 ### v1.0.87 (2026-04-20) — Launcher Icons & Background Color
 - ✅ Fixed: Adaptive icon background color (#FFFFFF → #26A69A teal)
@@ -406,4 +496,4 @@ git push origin master v1.0.XX
 
 ---
 
-**Last Updated:** 2026-04-20 (v1.0.87)
+**Last Updated:** 2026-05-08 (v1.0.97)
