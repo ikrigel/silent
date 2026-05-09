@@ -43,8 +43,13 @@ const Dashboard: React.FC = () => {
 
   // Load schedules from localStorage on mount (needed for tests that set localStorage directly)
   useEffect(() => {
-    writeLog('info', `Dashboard: Component mounted/rendered`);
+    writeLog('info', `═══════════════════════════════════════════════════`);
+    writeLog('info', `🚀 DASHBOARD MOUNTED - App Version: v${__APP_VERSION__}`);
+    writeLog('info', `═══════════════════════════════════════════════════`);
+    writeLog('info', `Dashboard: Running on ${robotService.isAndroid() ? 'ANDROID (APK)' : 'WEB BROWSER'}`);
     writeLog('ultraverbose', `Dashboard: Component state`, {
+      appVersion: __APP_VERSION__,
+      isAndroid: robotService.isAndroid(),
       schedulesCount: schedules.length,
       settingsNotificationsEnabled: settings.notificationsEnabled,
     });
@@ -61,8 +66,10 @@ const Dashboard: React.FC = () => {
   }, [loadSchedules]);
 
   useEffect(() => {
-    writeLog('info', `Dashboard: useEffect (scheduler tick) mounting - setting up 5s interval`);
+    writeLog('info', `Dashboard: ⏱️ SCHEDULER LOOP STARTING - 5 second interval`);
     writeLog('ultraverbose', `Dashboard: useEffect dependencies`, {
+      appVersion: __APP_VERSION__,
+      isAndroid: robotService.isAndroid(),
       schedulesCount: schedules.length,
       settingsNotificationsEnabled: settings.notificationsEnabled,
     });
@@ -74,7 +81,9 @@ const Dashboard: React.FC = () => {
 
       const nowIds = new Set(nowActive.map((s) => s.id));
 
-      writeLog('ultraverbose', `Dashboard: tick() called, checking ${schedules.length} schedules, ${nowActive.length} are currently active`, {
+      writeLog('info', `📊 SCHEDULER TICK v${__APP_VERSION__} - ${schedules.length} total schedules, ${nowActive.length} active`);
+      writeLog('ultraverbose', `Dashboard: ⏱️ TICK - Checking ${schedules.length} schedules, ${nowActive.length} are currently active`, {
+        appVersion: __APP_VERSION__,
         activeCount: nowActive.length,
         totalCount: schedules.length,
         activeIds: Array.from(nowIds),
@@ -126,10 +135,13 @@ const Dashboard: React.FC = () => {
           });
 
           if (isAndroid) {
+            writeLog('info', `Dashboard: ✅ isAndroid = TRUE - Will execute robot actions`);
             const runScheduleActions = async () => {
               try {
                 writeLog('info', `Dashboard: 🚀 STARTING ROBOT ACTIONS for schedule "${s.name}"`);
+                writeLog('info', `Dashboard: Actions to execute: airplane=${s.useAirplaneMode}, wea=${s.silenceWEAOnStart}, recording=${!!s.robotRecordingId}`);
                 writeLog('ultraverbose', `Dashboard: runScheduleActions started for schedule "${s.name}"`, {
+                  appVersion: __APP_VERSION__,
                   scheduleId: s.id,
                   useAirplaneMode: s.useAirplaneMode,
                   silenceWEAOnStart: s.silenceWEAOnStart,
@@ -202,7 +214,10 @@ const Dashboard: React.FC = () => {
                 }
 
                 writeLog('info', `Dashboard: 🏁 ALL ROBOT ACTIONS COMPLETED for "${s.name}"`);
-                writeLog('ultraverbose', `Dashboard: runScheduleActions completed for schedule "${s.name}"`, { scheduleId: s.id });
+                writeLog('ultraverbose', `Dashboard: runScheduleActions completed for schedule "${s.name}"`, {
+                  appVersion: __APP_VERSION__,
+                  scheduleId: s.id
+                });
               } catch (outerErr: unknown) {
                 const msg = outerErr instanceof Error ? outerErr.message : String(outerErr);
                 const stack = outerErr instanceof Error ? outerErr.stack : '';
