@@ -3,7 +3,7 @@
 ## Project Overview
 **Silent** is a React SPA for scheduling emergency alert silencing periods on Android devices.
 
-**Latest Version:** 1.0.98 (2026-05-08)
+**Latest Version:** 1.0.99 (2026-05-09)
 
 ---
 
