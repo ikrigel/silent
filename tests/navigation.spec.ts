@@ -7,18 +7,30 @@ import { test, expect, Page } from '@playwright/test';
 
 // Helper function to open mobile menu if needed
 async function ensureMenuVisible(page: Page) {
-  // Find the hamburger menu button in the header/banner (not the "Pin menu" button in sidebar)
-  const menuButton = page
-    .getByRole('banner')  // Scope to AppBar header
-    .getByRole('button')
-    .first();  // First button in header is typically the menu
-  const isMenuButtonVisible = await menuButton.isVisible().catch(() => false);
+  // Check if on mobile layout by looking at viewport width
+  const viewportSize = page.viewportSize();
+  const isMobileLayout = viewportSize && viewportSize.width < 600;
 
-  if (isMenuButtonVisible) {
-    // Mobile layout — open the menu
-    await menuButton.scrollIntoViewIfNeeded().catch(() => {});
-    await menuButton.click();
-    await page.waitForTimeout(300);
+  if (!isMobileLayout) {
+    // Desktop layout - sidebar is always visible
+    return;
+  }
+
+  // Mobile layout - find and click hamburger menu button
+  // The hamburger button is a button with a MenuIcon (first button in AppBar that shows on mobile)
+  // Look for buttons in the AppBar header
+  const buttons = page.locator('header button');
+  const buttonCount = await buttons.count();
+
+  // The first button is typically the hamburger menu on mobile
+  // (other buttons are theme toggle, language switcher, auth - which appear after)
+  if (buttonCount > 0) {
+    const firstButton = buttons.first();
+    const isVisible = await firstButton.isVisible().catch(() => false);
+    if (isVisible) {
+      await firstButton.click();
+      await page.waitForTimeout(300);
+    }
   }
 }
 
