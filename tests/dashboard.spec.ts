@@ -73,6 +73,7 @@ test.describe('Dashboard', () => {
   test('schedule with restoreOnEnd field saves without error', async ({ page }) => {
     // Verify that new ScheduleEntry fields (restoreOnEnd, unsilenceWEAOnEnd) don't cause issues
     // Use a guaranteed-inactive time window: 03:00–04:00 (unlikely to be current time)
+    const now = new Date();
     const schedule = {
       id: 'test-restore',
       name: 'Test Restore State',
@@ -80,7 +81,7 @@ test.describe('Dashboard', () => {
       startTime: '03:00',
       endTime: '04:00',
       repeatMode: 'daily',
-      daysOfWeek: [],
+      daysOfWeek: [now.getDay()], // Include today so schedule is evaluated
       createdAt: new Date().toISOString(),
       useAirplaneMode: false,
       restoreOnEnd: true,
