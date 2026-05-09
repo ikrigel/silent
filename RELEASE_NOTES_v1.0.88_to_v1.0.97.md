@@ -1,11 +1,54 @@
-# Release Notes: v1.0.88 to v1.0.98
+# Release Notes: v1.0.88 to v1.0.99
 
 ## Overview
-These releases focused on **WEA silence calibration**, **airplane mode learning mode**, **scheduler robot action execution**, **comprehensive diagnostic logging**, and **version visibility** for better user experience and debugging.
+These releases focused on **WEA silence calibration**, **airplane mode learning mode**, **scheduler robot action execution**, **comprehensive diagnostic logging**, **version visibility**, and **debugging confirmation logging** for better user experience and debugging.
 
 ---
 
 ## Release Summary
+
+### v1.0.99 (2026-05-09) — Explicit Scheduler Version Confirmation Logging
+**Focus**: Add explicit version info to scheduler ticks for APK version verification during debugging
+
+#### Problems Addressed
+- ❌ Users unable to confirm which APK version is actually installed/running
+- ❌ No visible scheduler tick logs in app Logs page even when enabled
+- ❌ Difficult to distinguish between "old APK still cached" vs "fix not working"
+
+#### Changes
+**1. Explicit Scheduler Tick Logging (src/pages/Dashboard/index.tsx):**
+- Added info-level log on every scheduler tick (every 5 seconds): `"📊 SCHEDULER TICK v1.0.99 - X total schedules, Y active"`
+- Version number appears in log, visible even at `info` log level (not just `ultraverbose`)
+- Ensures users see confirmation they're running v1.0.99 in Logs page
+- Kept all existing ultraverbose detail logs for full debugging
+
+**Example Log Sequence with v1.0.99:**
+```
+═══════════════════════════════════════════════════
+🚀 DASHBOARD MOUNTED - App Version: v1.0.99
+═══════════════════════════════════════════════════
+Dashboard: Running on ANDROID (APK)
+📊 SCHEDULER TICK v1.0.99 - 2 total schedules, 0 active
+📊 SCHEDULER TICK v1.0.99 - 2 total schedules, 1 active
+⚡ Schedule "Morning Silence" JUST ACTIVATED
+⚙️ ANDROID CHECK: YES - Will fire robot actions
+🚀 STARTING ROBOT ACTIONS for schedule "Morning Silence"
+📡 AIRPLANE MODE: Starting enable sequence
+🏁 ALL ROBOT ACTIONS COMPLETED for "Morning Silence"
+```
+
+#### Impact
+✅ Users can confirm APK version in Logs without opening About page
+✅ Scheduler loop visible on every tick (not just when actions trigger)
+✅ Debugging workflow: open Logs → wait 5s → see version confirmation
+✅ Helps distinguish APK version issues from action execution issues
+
+#### Testing
+- Scheduler tick log appears every 5 seconds at `info` level
+- Version (v1.0.99) visible in all scheduler logs
+- Works alongside existing emoji-prefixed action logs
+
+---
 
 ### v1.0.98 (2026-05-08) — Comprehensive Diagnostic Logging & Clear Version Display
 **Focus**: Enable detailed troubleshooting of robot action execution + make version info always visible
