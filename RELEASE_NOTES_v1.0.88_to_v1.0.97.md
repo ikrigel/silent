@@ -1,11 +1,67 @@
-# Release Notes: v1.0.88 to v1.0.100
+# Release Notes: v1.0.88 to v1.0.102
 
 ## Overview
-These releases focused on **WEA silence calibration**, **airplane mode learning mode**, **scheduler robot action execution**, **comprehensive diagnostic logging**, **version visibility**, **scheduler confirmation logging**, and **comprehensive robot action execution visibility** for better user experience and debugging.
+These releases focused on **WEA silence calibration**, **airplane mode learning mode**, **scheduler robot action execution**, **comprehensive diagnostic logging**, **version visibility**, **scheduler confirmation logging**, **comprehensive robot action execution visibility**, and **enhanced quick action selection UI with actionable error messages** for better user experience and debugging.
 
 ---
 
 ## Release Summary
+
+### v1.0.102 (2026-05-17) — Enhanced Quick Actions UI & Actionable Error Logging
+**Focus**: Make quick action selection obvious in Scheduler form and provide clear, actionable error messages when robot actions don't trigger
+
+#### Problems Addressed
+- ❌ Users don't see quick action options in Scheduler form clearly
+- ❌ When schedule has no robot actions, no indication of what's missing
+- ❌ Logs don't clearly show why robot actions were skipped
+- ❌ Users don't know what to fix when actions don't trigger
+
+#### Changes
+**1. Enhanced Scheduler Form (src/pages/Scheduler/SchedulerForm.tsx):**
+- Added visually distinct "📱 Quick Actions" section with background highlight
+- Clear emoji labels:
+  - ✈️ "Enable Airplane Mode"
+  - 🔇 "Silence Wireless Emergency Alerts"
+- Quick actions grouped together in highlighted box
+- Makes it impossible to miss quick action options when creating schedule
+
+**2. Comprehensive Activation Logging (src/pages/Dashboard/index.tsx):**
+- Added "📋 QUICK ACTIONS CONFIGURED" section to activation logs
+- Shows each action status: ✅ YES or ❌ NO
+- Clear indication of what's configured:
+  ```
+  ✈️ Enable Airplane Mode: ✅ YES
+  🔇 Silence WEA: ✅ YES
+  🎬 Recording: ❌ NO
+  ```
+
+**3. Actionable Error Messages:**
+- If schedule has NO quick actions:
+  ```
+  ❌ ROBOT ACTIONS SKIPPED: NO QUICK ACTIONS CONFIGURED
+     ➜ Edit this schedule and enable: ✈️ Enable Airplane Mode OR 🔇 Silence WEA
+  ```
+- Error log includes specific action recommendation
+- Platform check logs clearly show ANDROID ✅ vs WEB BROWSER ❌
+- Actions exist check shows YES ✅ vs NO ❌
+
+#### User Experience Flow
+1. User creates schedule without quick actions
+2. Schedule becomes active but no robot actions trigger
+3. User goes to Logs
+4. Sees clear error: "NO QUICK ACTIONS CONFIGURED"
+5. Sees recommendation: "Edit this schedule and enable ✈️ or 🔇"
+6. User edits schedule, enables quick action
+7. Next activation triggers robot actions successfully
+
+#### Impact
+✅ Quick actions impossible to miss in Scheduler form
+✅ Users know exactly what's wrong when actions don't trigger
+✅ Logs provide actionable recommendations
+✅ Reduces user confusion and support questions
+✅ Clear emoji indicators for visual scanning
+
+---
 
 ### v1.0.100 (2026-05-11) — Comprehensive Robot Action Execution Logging
 **Focus**: Enable complete visibility into every step of robot action execution for debugging automation failures
