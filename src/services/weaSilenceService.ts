@@ -22,7 +22,7 @@ class WeaSilenceService {
 
   async silence(): Promise<string> {
     if (this.isExecuting) {
-      writeLog('verbose', 'weaSilenceService: Silence already in progress, skipping');
+      writeLog('verbose', `[v${__APP_VERSION__}] weaSilenceService: Silence already in progress, skipping`);
       return 'Already executing';
     }
 
@@ -30,7 +30,7 @@ class WeaSilenceService {
     const store = useWeaLearningStore.getState();
     const { learned, learnedDelay, isLearning } = store;
 
-    writeLog('ultraverbose', 'weaSilenceService.silence() called', {
+    writeLog('ultraverbose', `[v${__APP_VERSION__}] weaSilenceService.silence() called`, {
       learned,
       learnedDelay,
       isLearning,
@@ -39,70 +39,70 @@ class WeaSilenceService {
     try {
       // Branch A: learned sequence — use saved delay, skip retry
       if (learned && !isLearning) {
-        writeLog('ultraverbose', 'weaSilenceService: Branch A (learned mode) - applying learned delay', { learnedDelay });
+        writeLog('ultraverbose', `[v${__APP_VERSION__}] weaSilenceService: Branch A (learned mode) - applying learned delay`, { learnedDelay });
         await this.delay(learnedDelay);
         const msg = await robotService.silenceWEA();
-        writeLog('info', `weaSilenceService: used learned delay ${learnedDelay}ms`);
-        writeLog('ultraverbose', 'weaSilenceService: Branch A completed successfully', { msg });
+        writeLog('info', `[v${__APP_VERSION__}] weaSilenceService: used learned delay ${learnedDelay}ms`);
+        writeLog('ultraverbose', `[v${__APP_VERSION__}] weaSilenceService: Branch A completed successfully`, { msg });
         return msg;
       }
 
       // Branch B: learning mode — retry with user feedback
       if (isLearning) {
-        writeLog('ultraverbose', 'weaSilenceService: Branch B (learning mode) - entering retry loop with feedback');
+        writeLog('ultraverbose', `[v${__APP_VERSION__}] weaSilenceService: Branch B (learning mode) - entering retry loop with feedback`);
         for (let i = 0; i < MAX_ATTEMPTS; i++) {
-          writeLog('ultraverbose', `weaSilenceService: learning mode attempt ${i + 1}/${MAX_ATTEMPTS}`, { attempt: i + 1 });
+          writeLog('ultraverbose', `[v${__APP_VERSION__}] weaSilenceService: learning mode attempt ${i + 1}/${MAX_ATTEMPTS}`, { attempt: i + 1 });
           if (i > 0) {
             const delayMs = RETRY_DELAYS_MS[i];
-            writeLog('ultraverbose', `weaSilenceService: waiting ${delayMs}ms before attempt ${i + 1}`);
+            writeLog('ultraverbose', `[v${__APP_VERSION__}] weaSilenceService: waiting ${delayMs}ms before attempt ${i + 1}`);
             await this.delay(delayMs);
           }
 
           let msg = '';
           let attemptError: string | undefined;
           try {
-            writeLog('ultraverbose', `weaSilenceService: calling robotService.silenceWEA() for attempt ${i + 1}`);
+            writeLog('ultraverbose', `[v${__APP_VERSION__}] weaSilenceService: calling robotService.silenceWEA() for attempt ${i + 1}`);
             msg = await robotService.silenceWEA();
-            writeLog('ultraverbose', `weaSilenceService: robotService.silenceWEA() returned: ${msg}`);
+            writeLog('ultraverbose', `[v${__APP_VERSION__}] weaSilenceService: robotService.silenceWEA() returned: ${msg}`);
           } catch (err: unknown) {
             attemptError = String(err);
-            writeLog('error', `weaSilenceService: silenceWEA attempt ${i + 1} failed: ${attemptError}`);
+            writeLog('error', `[v${__APP_VERSION__}] weaSilenceService: silenceWEA attempt ${i + 1} failed: ${attemptError}`);
             msg = 'Operation failed (see logs)';
           }
 
-          writeLog('ultraverbose', `weaSilenceService: waiting ${POST_SILENCE_WAIT_MS}ms before requesting feedback`);
+          writeLog('ultraverbose', `[v${__APP_VERSION__}] weaSilenceService: waiting ${POST_SILENCE_WAIT_MS}ms before requesting feedback`);
           await this.delay(POST_SILENCE_WAIT_MS);
 
           // Show feedback prompt (even if operation failed — user might confirm it worked anyway)
-          writeLog('ultraverbose', `weaSilenceService: setting pendingFeedback for attempt ${i + 1}`, { attempt: i + 1 });
+          writeLog('ultraverbose', `[v${__APP_VERSION__}] weaSilenceService: setting pendingFeedback for attempt ${i + 1}`, { attempt: i + 1 });
           store.setPendingFeedback(i + 1);
-          writeLog('ultraverbose', `weaSilenceService: waiting for user feedback on attempt ${i + 1}`);
+          writeLog('ultraverbose', `[v${__APP_VERSION__}] weaSilenceService: waiting for user feedback on attempt ${i + 1}`);
           const confirmed: boolean = await new Promise(resolve => {
             feedbackResolver = resolve;
           });
-          writeLog('ultraverbose', `weaSilenceService: user feedback received: ${confirmed}`, { attempt: i + 1, confirmed });
+          writeLog('ultraverbose', `[v${__APP_VERSION__}] weaSilenceService: user feedback received: ${confirmed}`, { attempt: i + 1, confirmed });
           store.clearPendingFeedback();
 
           if (confirmed) {
             store.saveLearned(RETRY_DELAYS_MS[i]);
-            writeLog('info', `weaSilenceService: learning confirmed on attempt ${i + 1}, delay=${RETRY_DELAYS_MS[i]}ms`);
-            writeLog('ultraverbose', 'weaSilenceService: Branch B completed with confirmation', { confirmedAttempt: i + 1, delay: RETRY_DELAYS_MS[i] });
+            writeLog('info', `[v${__APP_VERSION__}] weaSilenceService: learning confirmed on attempt ${i + 1}, delay=${RETRY_DELAYS_MS[i]}ms`);
+            writeLog('ultraverbose', `[v${__APP_VERSION__}] weaSilenceService: Branch B completed with confirmation`, { confirmedAttempt: i + 1, delay: RETRY_DELAYS_MS[i] });
             return msg;
           }
-          writeLog('ultraverbose', `weaSilenceService: user denied attempt ${i + 1}, continuing to next attempt`);
+          writeLog('ultraverbose', `[v${__APP_VERSION__}] weaSilenceService: user denied attempt ${i + 1}, continuing to next attempt`);
         }
 
-        writeLog('error', 'weaSilenceService: Learning mode exhausted all attempts, user did not confirm any');
+        writeLog('error', `[v${__APP_VERSION__}] weaSilenceService: Learning mode exhausted all attempts, user did not confirm any`);
         throw new Error('No confirmed attempt in learning mode');
       }
 
       // Branch C: default (no learning, not learned) — call once and return
-      writeLog('ultraverbose', 'weaSilenceService: Branch C (default mode) - calling silenceWEA once');
+      writeLog('ultraverbose', `[v${__APP_VERSION__}] weaSilenceService: Branch C (default mode) - calling silenceWEA once`);
       const msg = await robotService.silenceWEA();
-      writeLog('ultraverbose', 'weaSilenceService: Branch C completed successfully', { msg });
+      writeLog('ultraverbose', `[v${__APP_VERSION__}] weaSilenceService: Branch C completed successfully`, { msg });
       return msg;
     } finally {
-      writeLog('ultraverbose', 'weaSilenceService.silence() exiting', { isExecuting: true });
+      writeLog('ultraverbose', `[v${__APP_VERSION__}] weaSilenceService.silence() exiting`, { isExecuting: true });
       this.isExecuting = false;
     }
   }
