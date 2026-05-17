@@ -27,6 +27,20 @@ test.describe('Logs', () => {
     // Wait for initial UI/animations to settle
     await page.waitForTimeout(800);
 
+    // Clear any logs written by app initialization
+    await page.evaluate(() => {
+      try {
+        localStorage.removeItem('logs');
+        localStorage.removeItem('logs_storage');
+      } catch (e) {
+        /* ignore */
+      }
+    });
+
+    // Reload to ensure empty state is rendered
+    await page.reload();
+    await page.waitForTimeout(600);
+
     const emptyTextRegex = /no logs|no log entries|nothing here|no records|no entries/i;
 
     // Try a couple of roles / fallbacks to be resilient to markup changes
@@ -58,6 +72,20 @@ test.describe('Logs', () => {
   });
 
   test('Clear All button is disabled with no logs', async ({ page }) => {
+    // Clear any logs written by app initialization
+    await page.evaluate(() => {
+      try {
+        localStorage.removeItem('logs');
+        localStorage.removeItem('logs_storage');
+      } catch (e) {
+        /* ignore */
+      }
+    });
+
+    // Reload to ensure button is disabled
+    await page.reload();
+    await page.waitForTimeout(600);
+
     // On small viewports the control might be collapsed into an overflow menu.
     // Try to locate the button directly first, otherwise open the menu and re-try.
     let clearBtn = page.getByRole('button', { name: /clear( all| logs)?/i });
