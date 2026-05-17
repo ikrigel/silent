@@ -112,6 +112,27 @@ const Dashboard: React.FC = () => {
           writeLog('info', `════════════════════════════════════════════════════════`);
           writeLog('info', `⚡ SCHEDULE ACTIVATION DETECTED: "${s.name}"`);
           writeLog('info', `════════════════════════════════════════════════════════`);
+
+          // Log what robot actions are configured for this schedule
+          const hasQuickActions = !!(s.useAirplaneMode || s.silenceWEAOnStart);
+          const hasRecording = !!s.robotRecordingId;
+          writeLog('info', `📋 QUICK ACTIONS CONFIGURED:`);
+          writeLog('info', `   ✈️  Enable Airplane Mode: ${s.useAirplaneMode ? '✅ YES' : '❌ NO'}`);
+          writeLog('info', `   🔇 Silence WEA: ${s.silenceWEAOnStart ? '✅ YES' : '❌ NO'}`);
+          writeLog('info', `   🎬 Recording: ${hasRecording ? `✅ YES (${s.robotRecordingId})` : '❌ NO'}`);
+
+          if (!hasQuickActions && !hasRecording) {
+            writeLog('error', `⚠️  NO QUICK ACTIONS CONFIGURED - Schedule will activate but NO robot actions will execute!`);
+            writeLog('ultraverbose', `Dashboard: Schedule has NO robot actions configured`, {
+              scheduleId: s.id,
+              scheduleName: s.name,
+              hasAirplaneMode: s.useAirplaneMode,
+              hasWEASilence: s.silenceWEAOnStart,
+              hasRecording: hasRecording,
+              recommendation: 'Edit schedule and enable at least one quick action: Airplane Mode or WEA Silence',
+            });
+          }
+
           writeLog('ultraverbose', `Dashboard: Schedule "${s.name}" TRANSITION from INACTIVE → ACTIVE`, {
             id: s.id,
             scheduleConfig: {
@@ -135,14 +156,19 @@ const Dashboard: React.FC = () => {
           });
 
           const isAndroid = robotService.isAndroid();
-          writeLog('info', `⚙️ PLATFORM CHECK: ${isAndroid ? '✅ ANDROID - Robot actions WILL execute' : '❌ WEB BROWSER - Robot actions skipped'}`);
-          writeLog('ultraverbose', `Dashboard: isAndroid() returned: ${isAndroid}`, {
+          const hasAnyActions = !!(s.useAirplaneMode || s.silenceWEAOnStart || s.robotRecordingId);
+
+          writeLog('info', `⚙️ PLATFORM CHECK: ${isAndroid ? '✅ ANDROID' : '❌ WEB BROWSER'}`);
+          writeLog('info', `📦 ACTIONS EXIST: ${hasAnyActions ? '✅ YES - Will execute' : '❌ NO - Skipping'}`);
+
+          writeLog('ultraverbose', `Dashboard: isAndroid() returned: ${isAndroid}, hasActions: ${hasAnyActions}`, {
             scheduleId: s.id,
             scheduleName: s.name,
-            hasRobotActions: !!(s.useAirplaneMode || s.silenceWEAOnStart || s.robotRecordingId),
+            isAndroid,
+            hasRobotActions: hasAnyActions,
           });
 
-          if (isAndroid) {
+          if (isAndroid && hasAnyActions) {
             writeLog('info', `✅ ROBOT ACTIONS ENABLED - Executing for "${s.name}"`);
             const runScheduleActions = async () => {
               try {
@@ -355,7 +381,12 @@ const Dashboard: React.FC = () => {
               });
             }
           } else {
-            writeLog('info', `Dashboard: ⚠️ ROBOT ACTIONS SKIPPED (not on Android): Schedule "${s.name}"`);
+            if (!isAndroid) {
+              writeLog('info', `⚠️ ROBOT ACTIONS SKIPPED: Not on Android (WEB BROWSER only) - Schedule "${s.name}"`);
+            } else {
+              writeLog('error', `❌ ROBOT ACTIONS SKIPPED: NO QUICK ACTIONS CONFIGURED - Schedule "${s.name}"`);
+              writeLog('error', `   ➜ Edit this schedule and enable: ✈️ Enable Airplane Mode OR 🔇 Silence WEA`);
+            }
           }
         }
       });

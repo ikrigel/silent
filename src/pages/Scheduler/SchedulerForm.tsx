@@ -190,26 +190,29 @@ const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, 
             )}
             {robotService.isAndroid() && (
               <Grid item xs={12}>
-                <Controller name="useAirplaneMode" control={control}
-                  render={({ field }) => (
-                    <FormControlLabel
-                      control={<Checkbox {...field} checked={field.value} />}
-                      label={t('scheduler.useAirplaneMode')}
-                    />
-                  )}
-                />
-              </Grid>
-            )}
-            {robotService.isAndroid() && (
-              <Grid item xs={12}>
-                <Controller name="silenceWEAOnStart" control={control}
-                  render={({ field }) => (
-                    <FormControlLabel
-                      control={<Checkbox {...field} checked={field.value} />}
-                      label={t('scheduler.silenceWEAOnStart')}
-                    />
-                  )}
-                />
+                <Box sx={{ p: 2, bgcolor: 'action.hover', borderRadius: 1, mb: 1 }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                    📱 {t('scheduler.quickActions') || 'Quick Actions'}
+                  </Typography>
+                  <Controller name="useAirplaneMode" control={control}
+                    render={({ field }) => (
+                      <FormControlLabel
+                        control={<Checkbox {...field} checked={field.value} />}
+                        label={`✈️ ${t('scheduler.useAirplaneMode') || 'Enable Airplane Mode'}`}
+                        sx={{ display: 'block', mb: 1 }}
+                      />
+                    )}
+                  />
+                  <Controller name="silenceWEAOnStart" control={control}
+                    render={({ field }) => (
+                      <FormControlLabel
+                        control={<Checkbox {...field} checked={field.value} />}
+                        label={`🔇 ${t('scheduler.silenceWEAOnStart') || 'Silence Wireless Emergency Alerts'}`}
+                        sx={{ display: 'block' }}
+                      />
+                    )}
+                  />
+                </Box>
               </Grid>
             )}
             {robotService.isAndroid() && (robotRecordingId || useAirplaneMode) && (
