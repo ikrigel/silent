@@ -199,21 +199,10 @@ class AirplaneModeService {
     const startTime = Date.now();
 
     try {
-      writeLog('info', `[v${__APP_VERSION__}] airplaneModeService: Creating new disable instance`);
-
-      const isCurrentlyEnabled = await robotService.getAirplaneModeState();
-      if (!isCurrentlyEnabled) {
-        writeLog('info', `[v${__APP_VERSION__}] airplaneModeService: Airplane mode already disabled, skipping`);
-        return 'Already disabled';
-      }
-
-      writeLog('info', `[v${__APP_VERSION__}] airplaneModeService: Current state ON, triggering disable`);
-
+      writeLog('info', `[v${__APP_VERSION__}] airplaneModeService: Calling disableAirplaneMode`);
       const result = await robotService.disableAirplaneMode();
-
       const elapsed = Date.now() - startTime;
       writeLog('info', `[v${__APP_VERSION__}] airplaneModeService: Disable completed in ${elapsed}ms: ${result}`);
-
       return result;
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);

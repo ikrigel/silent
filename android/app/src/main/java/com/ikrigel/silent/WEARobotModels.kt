@@ -140,6 +140,8 @@ object BuiltInRecordings {
             RobotStep("scroll_down",   ""),  // Scroll to find Connections section if not visible
             RobotStep("click_any",     connectionsLabels.joinToString("|")),  // Navigate to Connections
             RobotStep("toggle_on_any", airplaneLabels.joinToString("|")),     // Enable airplane mode
+            RobotStep("press_back",    ""),  // Close Connections → back to Settings
+            RobotStep("press_back",    ""),  // Close Settings → return to app
         ),
     )
 
@@ -153,6 +155,8 @@ object BuiltInRecordings {
             RobotStep("scroll_down",   ""),  // Scroll to find Connections section if not visible
             RobotStep("click_any",     connectionsLabels.joinToString("|")),  // Navigate to Connections
             RobotStep("toggle_off_any", airplaneLabels.joinToString("|")),    // Disable airplane mode
+            RobotStep("press_back",    ""),  // Close Connections → back to Settings
+            RobotStep("press_back",    ""),  // Close Settings → return to app
         ),
     )
 

@@ -156,6 +156,14 @@ class WEARobotAccessibilityService : AccessibilityService() {
                 android.util.Log.d("WEARobotAccessibilityService", "Scrolling down")
                 scrollDown()
             }
+            "press_back" -> {
+                android.util.Log.d("WEARobotAccessibilityService", "Pressing Back")
+                performGlobalAction(GLOBAL_ACTION_BACK)
+                serviceScope.launch {
+                    delay(500)
+                    executeNextStep()
+                }
+            }
         }
     }
 
@@ -245,9 +253,13 @@ class WEARobotAccessibilityService : AccessibilityService() {
                     // Ignore
                 }
 
-                state = RobotState.IDLE
-                WEARobotAccessibilityService.cancelStateTimeout()
-                onStepResult?.invoke(true, "Toggled successfully")
+                if (pendingSteps.isNotEmpty()) {
+                    executeNextStep()
+                } else {
+                    state = RobotState.IDLE
+                    WEARobotAccessibilityService.cancelStateTimeout()
+                    onStepResult?.invoke(true, "Toggled successfully")
+                }
                 return
             }
 
@@ -269,9 +281,13 @@ class WEARobotAccessibilityService : AccessibilityService() {
                 } else {
                     android.util.Log.d("WEARobotAccessibilityService", "Quick Settings tile already in correct state")
                 }
-                state = RobotState.IDLE
-                WEARobotAccessibilityService.cancelStateTimeout()
-                onStepResult?.invoke(true, "Toggled successfully")
+                if (pendingSteps.isNotEmpty()) {
+                    executeNextStep()
+                } else {
+                    state = RobotState.IDLE
+                    WEARobotAccessibilityService.cancelStateTimeout()
+                    onStepResult?.invoke(true, "Toggled successfully")
+                }
                 return
             }
         }

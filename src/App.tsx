@@ -132,10 +132,7 @@ const App: React.FC = () => {
           if (entry.useAirplaneMode && isAndroid && shouldRestore) {
             if (snapshot && !snapshot.airplaneModeWasActive) {
               airplaneModeService
-                .getState()
-                .then((on) => {
-                  if (on) return airplaneModeService.disable();
-                })
+                .disable()
                 .catch((e) => writeLog('error', `[v${__APP_VERSION__}] Restore airplane error: ${e}`));
             }
             clearSnapshot(id);
