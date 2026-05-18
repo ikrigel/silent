@@ -37,6 +37,15 @@ test.describe('Logs', () => {
       }
     });
 
+    // Prevent App.tsx from re-seeding the 'logs' key on the upcoming reload
+    await page.addInitScript(() => {
+      const _orig = Storage.prototype.setItem;
+      Storage.prototype.setItem = function (key, value) {
+        if (key === 'logs' || key === 'logs_storage') return;
+        _orig.call(this, key, value);
+      };
+    });
+
     // Reload to ensure empty state is rendered
     await page.reload();
     await page.waitForTimeout(600);
@@ -80,6 +89,15 @@ test.describe('Logs', () => {
       } catch (e) {
         /* ignore */
       }
+    });
+
+    // Prevent App.tsx from re-seeding the 'logs' key on the upcoming reload
+    await page.addInitScript(() => {
+      const _orig = Storage.prototype.setItem;
+      Storage.prototype.setItem = function (key, value) {
+        if (key === 'logs' || key === 'logs_storage') return;
+        _orig.call(this, key, value);
+      };
     });
 
     // Reload to ensure button is disabled
