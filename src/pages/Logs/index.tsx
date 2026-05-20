@@ -17,13 +17,13 @@ const LogsPage: React.FC = () => {
 
   const handleExport = () => {
     const data = exportLogs();
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
+    // data: URIs work in Android WebView; blob URLs require a DownloadListener that Capacitor doesn't set up
     const a = document.createElement('a');
-    a.href = url;
+    a.href = `data:application/json;charset=utf-8,${encodeURIComponent(data)}`;
     a.download = `silent-logs-${Date.now()}.json`;
+    document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   };
 
   /** Build failure report JSON from error-level logs with device info */
@@ -53,14 +53,13 @@ const LogsPage: React.FC = () => {
 
   /** Export failure report as a downloadable JSON file */
   const handleExportFailureReport = () => {
-    const blob = new Blob([reportJson], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
     const today = new Date().toISOString().split('T')[0];
+    const a = document.createElement('a');
+    a.href = `data:application/json;charset=utf-8,${encodeURIComponent(reportJson)}`;
     a.download = `silent-failure-report-${today}.json`;
+    document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   };
 
   /** Copy failure report JSON to clipboard */
