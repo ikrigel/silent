@@ -68,7 +68,8 @@ object BuiltInRecordings {
             RobotStep("click_any",      safetyLabels.joinToString("|")),
             RobotStep("click_any",      weaLabels.joinToString("|")),
             RobotStep("toggle_off_any", extremeLabels.joinToString("|")),
-            RobotStep("press_back",     ""),  // WEA settings → Safety & Emergency
+            RobotStep("press_back",     ""),  // WEA settings → Emergency Alerts
+            RobotStep("press_back",     ""),  // Emergency Alerts → Safety & Emergency
             RobotStep("press_back",     ""),  // Safety & Emergency → Settings
             RobotStep("press_back",     ""),  // Settings → return to app
         ),
@@ -86,7 +87,8 @@ object BuiltInRecordings {
             RobotStep("click_any",      safetyLabels.joinToString("|")),
             RobotStep("click_any",      weaLabels.joinToString("|")),
             RobotStep("toggle_on_any",  extremeLabels.joinToString("|")),
-            RobotStep("press_back",     ""),  // WEA settings → Safety & Emergency
+            RobotStep("press_back",     ""),  // WEA settings → Emergency Alerts
+            RobotStep("press_back",     ""),  // Emergency Alerts → Safety & Emergency
             RobotStep("press_back",     ""),  // Safety & Emergency → Settings
             RobotStep("press_back",     ""),  // Settings → return to app
         ),

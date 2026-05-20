@@ -4,6 +4,7 @@ import { Delete, DeleteSweep, Send, Refresh, ErrorOutline } from '@mui/icons-mat
 import { useTranslation } from 'react-i18next';
 import { useLogStore } from '@/store/logStore';
 import { exportLogs, writeLog } from '@/services/logService';
+import { robotService } from '@/services/robotService';
 import LogList from './LogList';
 
 /** Logs page — view, select, delete, and export application logs */
@@ -15,15 +16,31 @@ const LogsPage: React.FC = () => {
 
   useEffect(() => { loadLogs(); }, [loadLogs]);
 
-  const handleExport = () => {
+  const handleExport = async () => {
     const data = exportLogs();
-    // data: URIs work in Android WebView; blob URLs require a DownloadListener that Capacitor doesn't set up
+    const filename = `silent-logs-${Date.now()}.json`;
+    const blob = new Blob([data], { type: 'application/json' });
+
+    // Android WebView ignores the <a download> attribute; use the native share sheet instead
+    if (robotService.isAndroid() && typeof navigator.share === 'function') {
+      try {
+        await navigator.share({ files: [new File([blob], filename, { type: 'application/json' })], title: 'Silent Logs' });
+      } catch (err) {
+        if (err instanceof Error && err.name !== 'AbortError') {
+          writeLog('error', `Export share failed: ${err.message}`);
+        }
+      }
+      return;
+    }
+
+    const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = `data:application/json;charset=utf-8,${encodeURIComponent(data)}`;
-    a.download = `silent-logs-${Date.now()}.json`;
+    a.href = url;
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   /** Build failure report JSON from error-level logs with device info */
@@ -52,14 +69,30 @@ const LogsPage: React.FC = () => {
   const reportJson = buildFailureReport();
 
   /** Export failure report as a downloadable JSON file */
-  const handleExportFailureReport = () => {
+  const handleExportFailureReport = async () => {
     const today = new Date().toISOString().split('T')[0];
+    const filename = `silent-failure-report-${today}.json`;
+    const blob = new Blob([reportJson], { type: 'application/json' });
+
+    if (robotService.isAndroid() && typeof navigator.share === 'function') {
+      try {
+        await navigator.share({ files: [new File([blob], filename, { type: 'application/json' })], title: 'Silent Failure Report' });
+      } catch (err) {
+        if (err instanceof Error && err.name !== 'AbortError') {
+          writeLog('error', `Report share failed: ${err.message}`);
+        }
+      }
+      return;
+    }
+
+    const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = `data:application/json;charset=utf-8,${encodeURIComponent(reportJson)}`;
-    a.download = `silent-failure-report-${today}.json`;
+    a.href = url;
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   /** Copy failure report JSON to clipboard */
