@@ -144,6 +144,7 @@ class WEARobotPlugin : Plugin() {
         WEARobotAccessibilityService.pendingSteps.clear()
         WEARobotAccessibilityService.pendingSteps.addAll(recording.steps)
         WEARobotAccessibilityService.state = RobotState.PLAYING
+        WEARobotAccessibilityService.windowDepth = 0
         WEARobotAccessibilityService.scheduleStateTimeout()
         WEARobotAccessibilityService.onStepResult = { ok, msg ->
             WEARobotAccessibilityService.cancelStateTimeout()
@@ -155,6 +156,7 @@ class WEARobotPlugin : Plugin() {
         val first = WEARobotAccessibilityService.pendingSteps.firstOrNull()
         if (first?.action == "open_settings") {
             WEARobotAccessibilityService.pendingSteps.removeFirst()
+            WEARobotAccessibilityService.windowDepth++
             val intent = Intent(Settings.ACTION_SETTINGS).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
@@ -196,6 +198,7 @@ class WEARobotPlugin : Plugin() {
         WEARobotAccessibilityService.pendingSteps.clear()
         WEARobotAccessibilityService.pendingSteps.addAll(recording.steps)
         WEARobotAccessibilityService.state = RobotState.PLAYING
+        WEARobotAccessibilityService.windowDepth = 0
         WEARobotAccessibilityService.onStepResult = { ok, msg ->
             WEARobotAccessibilityService.onStepResult = null
             if (ok) call.resolve(JSObject().put("message", msg))
@@ -204,6 +207,7 @@ class WEARobotPlugin : Plugin() {
         val first = WEARobotAccessibilityService.pendingSteps.firstOrNull()
         if (first?.action == "open_settings") {
             WEARobotAccessibilityService.pendingSteps.removeFirst()
+            WEARobotAccessibilityService.windowDepth++
             val intent = Intent(Settings.ACTION_SETTINGS).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }

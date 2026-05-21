@@ -30,6 +30,8 @@ class WEARobotAccessibilityService : AccessibilityService() {
         var recordedSteps: MutableList<RobotStep> = mutableListOf()
         /** Callback invoked by service after each step (success / error) */
         var onStepResult: ((ok: Boolean, msg: String) -> Unit)? = null
+        /** Tracks open screens; must be 0 at completion or on failure cleanup */
+        var windowDepth: Int = 0
         /** Timeout job to reset stuck state */
         private var stateTimeoutJob: Job? = null
         private var globalServiceScope: CoroutineScope? = null
@@ -126,6 +128,12 @@ class WEARobotAccessibilityService : AccessibilityService() {
 
     private fun executeNextStep() {
         val step = pendingSteps.removeFirstOrNull() ?: run {
+            if (windowDepth != 0) {
+                android.util.Log.w(
+                    "WEARobotAccessibilityService",
+                    "⚠ Completed with windowDepth=$windowDepth (expected 0) — screen imbalance"
+                )
+            }
             state = RobotState.IDLE
             WEARobotAccessibilityService.cancelStateTimeout()
             onStepResult?.invoke(true, "Done")
@@ -136,7 +144,8 @@ class WEARobotAccessibilityService : AccessibilityService() {
 
         when (step.action) {
             "open_settings" -> {
-                android.util.Log.d("WEARobotAccessibilityService", "Opening Settings app")
+                windowDepth++
+                android.util.Log.d("WEARobotAccessibilityService", "Opening Settings app, depth=$windowDepth")
                 val intent = Intent(Settings.ACTION_SETTINGS).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }
@@ -157,7 +166,8 @@ class WEARobotAccessibilityService : AccessibilityService() {
                 scrollDown()
             }
             "press_back" -> {
-                android.util.Log.d("WEARobotAccessibilityService", "Pressing Back")
+                windowDepth = maxOf(0, windowDepth - 1)
+                android.util.Log.d("WEARobotAccessibilityService", "Pressing Back, depth=$windowDepth")
                 performGlobalAction(GLOBAL_ACTION_BACK)
                 serviceScope.launch {
                     delay(500)
@@ -173,11 +183,10 @@ class WEARobotAccessibilityService : AccessibilityService() {
         val root = rootInActiveWindow ?: return
         val node = findNodeByText(root, text)
         if (node != null) {
+            windowDepth++
             clickNode(node)
         } else {
-            onStepResult?.invoke(false, "Node not found: $text")
-            state = RobotState.IDLE
-            WEARobotAccessibilityService.cancelStateTimeout()
+            cleanupAndFail("Node not found: $text")
         }
     }
 
@@ -197,6 +206,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
             val node = findNodeByText(root, label.trim())
             if (node != null) {
                 android.util.Log.d("WEARobotAccessibilityService", "Found match for label: '$label'")
+                windowDepth++
                 clickNode(node)
                 return
             }
@@ -204,8 +214,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
 
         val errorMsg = "None of ${labels} found on screen. Discovered: $discoveredLabels"
         android.util.Log.e("WEARobotAccessibilityService", errorMsg)
-        onStepResult?.invoke(false, errorMsg)
-        state = RobotState.IDLE
+        cleanupAndFail(errorMsg)
     }
 
     private fun toggleByAnyLabel(labels: List<String>, targetState: Boolean) {
@@ -295,8 +304,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
         // Failed to find any label — log all discovered for user debugging
         val errorMsg = "Toggle not found for: $labels. Discovered on screen: $discoveredLabels"
         android.util.Log.e("WEARobotAccessibilityService", errorMsg)
-        onStepResult?.invoke(false, errorMsg)
-        state = RobotState.IDLE
+        cleanupAndFail(errorMsg)
     }
 
     /** Recursively collect all text and content description labels from tree */
@@ -350,9 +358,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
 
     private fun scrollDown() {
         val root = rootInActiveWindow ?: run {
-            onStepResult?.invoke(false, "No active window for scrolling")
-            state = RobotState.IDLE
-            WEARobotAccessibilityService.cancelStateTimeout()
+            cleanupAndFail("No active window for scrolling")
             return
         }
 
@@ -381,9 +387,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
 
         // Scroll failed completely
         android.util.Log.w("WEARobotAccessibilityService", "Could not scroll: no scrollable container found")
-        onStepResult?.invoke(false, "Could not scroll")
-        state = RobotState.IDLE
-        WEARobotAccessibilityService.cancelStateTimeout()
+        cleanupAndFail("Could not scroll")
     }
 
     /** Find the first scrollable node (RecyclerView, ListView, ScrollView, etc.) */
@@ -395,6 +399,33 @@ class WEARobotAccessibilityService : AccessibilityService() {
             if (result != null) return result
         }
         return null
+    }
+
+    /** Fail and cleanup: press Back [windowDepth] times to close open Settings screens */
+    private fun cleanupAndFail(reason: String) {
+        val depth = windowDepth
+        windowDepth = 0
+        state = RobotState.IDLE
+        WEARobotAccessibilityService.cancelStateTimeout()
+        android.util.Log.e(
+            "WEARobotAccessibilityService",
+            "⚠ CLEANUP FAIL: closing $depth screen(s). Reason: $reason"
+        )
+        if (depth > 0) {
+            serviceScope.launch {
+                repeat(depth) { i ->
+                    android.util.Log.d(
+                        "WEARobotAccessibilityService",
+                        "Cleanup back-press ${i + 1}/$depth"
+                    )
+                    performGlobalAction(GLOBAL_ACTION_BACK)
+                    delay(400)
+                }
+                onStepResult?.invoke(false, "FAILED [$depth screen(s) closed]: $reason")
+            }
+        } else {
+            onStepResult?.invoke(false, reason)
+        }
     }
 
     private fun findToggleAncestor(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {

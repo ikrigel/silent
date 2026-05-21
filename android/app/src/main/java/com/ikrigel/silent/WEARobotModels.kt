@@ -48,7 +48,8 @@ object BuiltInRecordings {
     private val weaLabels     = listOf(
         "Wireless Emergency Alerts", "Emergency alert settings", "Alerts",
         "Wireless,Emergency,Alerts", "Emergency,alert,settings",  // Samsung comma format
-        "הצעות התרעות"  // Hebrew: Alerts/Notifications offers
+        "הצעות התרעות",  // Hebrew: Alerts/Notifications offers
+        "התרעות חירום"   // Hebrew Samsung: Emergency alerts (WEA entry on Safety & Emergency page)
     )
     private val extremeLabels = listOf(
         "Extreme threats", "Extreme alerts", "Extreme alert", "Extreme",
