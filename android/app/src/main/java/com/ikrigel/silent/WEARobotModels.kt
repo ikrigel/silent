@@ -145,12 +145,9 @@ object BuiltInRecordings {
         isBuiltIn = true,
         createdAt = "built-in",
         steps     = listOf(
-            RobotStep("open_settings", ""),
-            RobotStep("scroll_down",   ""),  // Scroll to find Connections section if not visible
-            RobotStep("click_any",     connectionsLabels.joinToString("|")),  // Navigate to Connections
-            RobotStep("toggle_on_any", airplaneLabels.joinToString("|")),     // Enable airplane mode
-            RobotStep("press_back",    ""),  // Close Connections → back to Settings
-            RobotStep("press_back",    ""),  // Close Settings → return to app
+            RobotStep("quick_settings", ""),                               // Open Quick Settings panel (depth→1)
+            RobotStep("toggle_on_any", airplaneLabels.joinToString("|")), // Toggle ON via QS tile
+            RobotStep("press_back",    ""),                                // Close QS panel → app (depth→0)
         ),
     )
 
@@ -160,12 +157,9 @@ object BuiltInRecordings {
         isBuiltIn = true,
         createdAt = "built-in",
         steps     = listOf(
-            RobotStep("open_settings", ""),
-            RobotStep("scroll_down",   ""),  // Scroll to find Connections section if not visible
-            RobotStep("click_any",     connectionsLabels.joinToString("|")),  // Navigate to Connections
-            RobotStep("toggle_off_any", airplaneLabels.joinToString("|")),    // Disable airplane mode
-            RobotStep("press_back",    ""),  // Close Connections → back to Settings
-            RobotStep("press_back",    ""),  // Close Settings → return to app
+            RobotStep("quick_settings", ""),                                // Open Quick Settings panel (depth→1)
+            RobotStep("toggle_off_any", airplaneLabels.joinToString("|")), // Toggle OFF via QS tile
+            RobotStep("press_back",     ""),                                // Close QS panel → app (depth→0)
         ),
     )
 

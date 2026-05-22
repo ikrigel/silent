@@ -69,7 +69,8 @@
     "failureDialog": "דוח כישלונות",
     "copyJson": "העתק JSON",
     "copied": "הועתק!",
-    "download": "הורד"
+    "download": "הורד",
+    "exportCopied": "100 הלוגים האחרונים הועתקו ללוח"
   },
   "settings": {
     "title": "הגדרות",

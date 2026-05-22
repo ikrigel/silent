@@ -165,7 +165,8 @@
     "failureDialog": "Failure Report",
     "copyJson": "Copy JSON",
     "copied": "Copied!",
-    "download": "Download"
+    "download": "Download",
+    "exportCopied": "Last 100 logs copied to clipboard"
   },
   "settings": {
     "title": "Settings",

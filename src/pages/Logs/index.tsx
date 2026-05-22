@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Button, Stack, Alert, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
+import { Box, Typography, Button, Stack, Alert, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Snackbar } from '@mui/material';
 import { Delete, DeleteSweep, Send, Refresh, ErrorOutline } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { useLogStore } from '@/store/logStore';
@@ -13,26 +13,28 @@ const LogsPage: React.FC = () => {
   const { logs, selectedIds, loadLogs, removeSelected, clearAll, toggleSelect, selectAll, clearSelection } = useLogStore();
   const [reportOpen, setReportOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [exportCopied, setExportCopied] = useState(false);
 
   useEffect(() => { loadLogs(); }, [loadLogs]);
 
   const handleExport = async () => {
     const data = exportLogs();
     const filename = `silent-logs-${Date.now()}.json`;
-    const blob = new Blob([data], { type: 'application/json' });
 
-    // Android WebView ignores the <a download> attribute; use the native share sheet instead
-    if (robotService.isAndroid() && typeof navigator.share === 'function') {
+    if (robotService.isAndroid()) {
       try {
-        await navigator.share({ files: [new File([blob], filename, { type: 'application/json' })], title: 'Silent Logs' });
+        const allLogs = JSON.parse(data) as object[];
+        const last100 = allLogs.slice(-100);
+        await navigator.clipboard.writeText(JSON.stringify(last100, null, 2));
+        setExportCopied(true);
+        setTimeout(() => setExportCopied(false), 3000);
       } catch (err) {
-        if (err instanceof Error && err.name !== 'AbortError') {
-          writeLog('error', `Export share failed: ${err.message}`);
-        }
+        writeLog('error', `Export copy failed: ${err instanceof Error ? err.message : String(err)}`);
       }
       return;
     }
 
+    const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -172,6 +174,14 @@ const LogsPage: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Export copied snackbar (Android) */}
+      <Snackbar
+        open={exportCopied}
+        message={t('logs.exportCopied')}
+        autoHideDuration={3000}
+        onClose={() => setExportCopied(false)}
+      />
     </Box>
   );
 };

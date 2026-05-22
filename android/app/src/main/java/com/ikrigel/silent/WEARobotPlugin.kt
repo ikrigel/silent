@@ -152,7 +152,7 @@ class WEARobotPlugin : Plugin() {
             if (ok) call.resolve(JSObject().put("message", msg))
             else    call.reject(msg)
         }
-        // Kick off first step: open Settings (or wait for next window event)
+        // Kick off first step: open Settings, Quick Settings, or wait for next window event
         val first = WEARobotAccessibilityService.pendingSteps.firstOrNull()
         if (first?.action == "open_settings") {
             WEARobotAccessibilityService.pendingSteps.removeFirst()
@@ -161,6 +161,10 @@ class WEARobotPlugin : Plugin() {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
             context.startActivity(intent)
+        } else if (first?.action == "quick_settings") {
+            WEARobotAccessibilityService.pendingSteps.removeFirst()
+            WEARobotAccessibilityService.windowDepth++
+            WEARobotAccessibilityService.launchQuickSettings()
         }
     }
 
@@ -212,6 +216,10 @@ class WEARobotPlugin : Plugin() {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
             context.startActivity(intent)
+        } else if (first?.action == "quick_settings") {
+            WEARobotAccessibilityService.pendingSteps.removeFirst()
+            WEARobotAccessibilityService.windowDepth++
+            WEARobotAccessibilityService.launchQuickSettings()
         }
     }
 }

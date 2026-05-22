@@ -32,12 +32,23 @@ class WEARobotAccessibilityService : AccessibilityService() {
         var onStepResult: ((ok: Boolean, msg: String) -> Unit)? = null
         /** Tracks open screens; must be 0 at completion or on failure cleanup */
         var windowDepth: Int = 0
+        /** Service instance for plugin to trigger global actions */
+        var serviceInstance: WEARobotAccessibilityService? = null
         /** Timeout job to reset stuck state */
         private var stateTimeoutJob: Job? = null
         private var globalServiceScope: CoroutineScope? = null
 
         fun setServiceScope(scope: CoroutineScope) {
             globalServiceScope = scope
+        }
+
+        /** Open Quick Settings panel (called from plugin for first-step quick_settings) */
+        fun launchQuickSettings() {
+            globalServiceScope?.launch {
+                serviceInstance?.performGlobalAction(
+                    android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_QUICK_SETTINGS
+                )
+            }
         }
 
         /** Reset state to IDLE if stuck for 15 seconds */
@@ -65,6 +76,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         WEARobotAccessibilityService.setServiceScope(serviceScope)
+        WEARobotAccessibilityService.serviceInstance = this
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -121,7 +133,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
 
         // Small delay so the new window fully renders before we search it
         serviceScope.launch {
-            delay(600)
+            delay(1000)
             executeNextStep()
         }
     }
@@ -153,7 +165,8 @@ class WEARobotAccessibilityService : AccessibilityService() {
                 // Next step will be triggered by the window-state-changed event
             }
             "quick_settings" -> {
-                android.util.Log.d("WEARobotAccessibilityService", "Opening Quick Settings")
+                windowDepth++
+                android.util.Log.d("WEARobotAccessibilityService", "Opening Quick Settings, depth=$windowDepth")
                 performGlobalAction(GLOBAL_ACTION_QUICK_SETTINGS)
                 // Next step will be triggered by the window-state-changed event
             }
