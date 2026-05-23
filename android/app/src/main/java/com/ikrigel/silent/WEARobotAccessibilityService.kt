@@ -215,7 +215,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
 
         var discoveredLabels = mutableListOf<String>()
 
-        for (pass in 0..3) {
+        for (pass in 0..6) {
             discoveredLabels = mutableListOf()
             collectAllLabels(root, discoveredLabels)
             android.util.Log.d("WEARobotAccessibilityService", "clickByAnyLabel pass $pass: ${labels.size} labels, ${discoveredLabels.size} discovered")
@@ -231,7 +231,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
                 return
             }
 
-            if (pass < 3) {
+            if (pass < 6) {
                 android.util.Log.d("WEARobotAccessibilityService", "clickByAnyLabel: not found on pass $pass, scrolling...")
                 val scrolled = root.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD) ||
                     (findScrollableNode(root)?.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD) == true)
@@ -253,7 +253,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
         var root = rootInActiveWindow ?: return
         var discoveredLabels = mutableListOf<String>()
 
-        for (pass in 0..2) {
+        for (pass in 0..6) {
             discoveredLabels = mutableListOf()
             collectAllLabels(root, discoveredLabels)
             android.util.Log.d("WEARobotAccessibilityService", "toggleByAnyLabel pass $pass: ${labels.size} labels, ${discoveredLabels.size} discovered")
@@ -307,7 +307,7 @@ class WEARobotAccessibilityService : AccessibilityService() {
                 }
             }
 
-            if (pass < 2) {
+            if (pass < 6) {
                 android.util.Log.d("WEARobotAccessibilityService", "toggleByAnyLabel: not found on pass $pass, scrolling...")
                 val scrolled = root.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD) ||
                     (findScrollableNode(root)?.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD) == true)
