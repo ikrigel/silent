@@ -525,20 +525,6 @@ class WEARobotAccessibilityService : AccessibilityService() {
         return null
     }
 
-    /** Find a scrollable container (ListView, ScrollView, etc.) in the tree */
-    private fun findScrollableNode(root: AccessibilityNodeInfo): AccessibilityNodeInfo? {
-        val queue = ArrayDeque<AccessibilityNodeInfo>()
-        queue.add(root)
-        while (queue.isNotEmpty()) {
-            val node = queue.removeFirst()
-            if (node.isScrollable) return node
-            for (i in 0 until node.childCount) {
-                queue.addLast(node.getChild(i) ?: continue)
-            }
-        }
-        return null
-    }
-
     override fun onInterrupt() {
         state = RobotState.IDLE
         serviceScope.cancel()
