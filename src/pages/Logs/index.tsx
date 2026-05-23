@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Box, Typography, Button, Stack, Alert, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Snackbar } from '@mui/material';
 import { Delete, DeleteSweep, Send, Refresh, ErrorOutline } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { useLogStore } from '@/store/logStore';
 import { exportLogs, writeLog } from '@/services/logService';
 import { robotService } from '@/services/robotService';
+import type { LogLevel } from '@/types';
 import LogList from './LogList';
+import LogFilterBar from './LogFilterBar';
 
 /** Logs page — view, select, delete, and export application logs */
 const LogsPage: React.FC = () => {
@@ -14,8 +16,32 @@ const LogsPage: React.FC = () => {
   const [reportOpen, setReportOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [exportCopied, setExportCopied] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [levelFilter, setLevelFilter] = useState<Exclude<LogLevel, 'none'> | 'all' | 'failures'>('all');
+  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
 
   useEffect(() => { loadLogs(); }, [loadLogs]);
+
+  const filteredLogs = useMemo(() => {
+    let result = [...logs];
+    if (levelFilter === 'failures') {
+      result = result.filter(l => l.level === 'error' && /failed|FAILED|failure/i.test(l.message));
+    } else if (levelFilter !== 'all') {
+      result = result.filter(l => l.level === levelFilter);
+    }
+    if (searchTerm.trim()) {
+      const q = searchTerm.toLowerCase();
+      result = result.filter(l =>
+        l.message.toLowerCase().includes(q) ||
+        (l.meta && JSON.stringify(l.meta).toLowerCase().includes(q))
+      );
+    }
+    result.sort((a, b) => {
+      const cmp = new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+      return sortOrder === 'newest' ? cmp : -cmp;
+    });
+    return result;
+  }, [logs, searchTerm, levelFilter, sortOrder]);
 
   const handleExport = async () => {
     const data = exportLogs();
@@ -119,17 +145,16 @@ const LogsPage: React.FC = () => {
       </Box>
 
       {hasErrors && (
-        <Alert severity="warning" sx={{ mb: 2 }} action={
-          <Stack direction="row" spacing={1}>
-            <Button size="small" onClick={() => setReportOpen(true)}>
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          Robot automation failures detected ({errorLogs.length}).
+          <Stack direction="row" spacing={1} mt={1} flexWrap="wrap">
+            <Button size="small" variant="outlined" onClick={() => setReportOpen(true)}>
               {t('logs.viewReport')}
             </Button>
-            <Button size="small" startIcon={<ErrorOutline />} onClick={handleExportFailureReport}>
+            <Button size="small" variant="outlined" startIcon={<ErrorOutline />} onClick={handleExportFailureReport}>
               {t('logs.download')}
             </Button>
           </Stack>
-        }>
-          Robot automation failures detected ({errorLogs.length}). {t('logs.viewReport')} or {t('logs.download').toLowerCase()}.
         </Alert>
       )}
 
@@ -147,8 +172,18 @@ const LogsPage: React.FC = () => {
           {t('logs.exportJson')}
         </Button>
       </Stack>
-      {logs.length === 0 && <Alert severity="info" sx={{ mb: 2 }}>{t('logs.noLogs')}</Alert>}
-      <LogList logs={logs} selectedIds={selectedIds} onToggleSelect={toggleSelect} onSelectAll={selectAll} onClearSelection={clearSelection} />
+      <LogFilterBar
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        levelFilter={levelFilter}
+        onLevelChange={setLevelFilter}
+        sortOrder={sortOrder}
+        onSortToggle={() => setSortOrder(sortOrder === 'newest' ? 'oldest' : 'newest')}
+        totalCount={logs.length}
+        filteredCount={filteredLogs.length}
+      />
+      {filteredLogs.length === 0 && <Alert severity="info" sx={{ mb: 2 }}>{t('logs.noLogs')}</Alert>}
+      <LogList logs={filteredLogs} searchTerm={searchTerm} selectedIds={selectedIds} onToggleSelect={toggleSelect} onSelectAll={selectAll} onClearSelection={clearSelection} />
 
       {/* Failure Report Dialog */}
       <Dialog open={reportOpen} onClose={() => setReportOpen(false)} maxWidth="sm" fullWidth>

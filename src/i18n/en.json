@@ -166,7 +166,17 @@
     "copyJson": "Copy JSON",
     "copied": "Copied!",
     "download": "Download",
-    "exportCopied": "Last 100 logs copied to clipboard"
+    "exportCopied": "Last 100 logs copied to clipboard",
+    "searchPlaceholder": "Search logs...",
+    "sortNewest": "Newest first",
+    "sortOldest": "Oldest first",
+    "showing": "Showing {{filtered}} of {{total}}",
+    "filter_all": "All",
+    "filter_error": "Errors",
+    "filter_failures": "Failures",
+    "filter_info": "Info",
+    "filter_verbose": "Verbose",
+    "filter_ultraverbose": "Ultraverbose"
   },
   "settings": {
     "title": "Settings",

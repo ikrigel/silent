@@ -70,7 +70,17 @@
     "copyJson": "העתק JSON",
     "copied": "הועתק!",
     "download": "הורד",
-    "exportCopied": "100 הלוגים האחרונים הועתקו ללוח"
+    "exportCopied": "100 הלוגים האחרונים הועתקו ללוח",
+    "searchPlaceholder": "חפש לוגים...",
+    "sortNewest": "חדש לישן",
+    "sortOldest": "ישן לחדש",
+    "showing": "מציג {{filtered}} מתוך {{total}}",
+    "filter_all": "הכל",
+    "filter_error": "שגיאות",
+    "filter_failures": "כישלונות",
+    "filter_info": "מידע",
+    "filter_verbose": "מפורט",
+    "filter_ultraverbose": "מפורט מאוד"
   },
   "settings": {
     "title": "הגדרות",
