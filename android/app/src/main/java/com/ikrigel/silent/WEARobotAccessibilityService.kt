@@ -204,117 +204,122 @@ class WEARobotAccessibilityService : AccessibilityService() {
     }
 
     private fun clickByAnyLabel(labels: List<String>) {
-        val root = rootInActiveWindow ?: return
-
-        // Collect all discovered labels for debugging
-        val discoveredLabels = mutableListOf<String>()
-        collectAllLabels(root, discoveredLabels)
-
-        android.util.Log.d("WEARobotAccessibilityService", "clickByAnyLabel: Looking for any of ${labels.size} labels. Discovered ${discoveredLabels.size} total labels on screen.")
-        if (discoveredLabels.isNotEmpty()) {
-            android.util.Log.d("WEARobotAccessibilityService", "All discovered labels: $discoveredLabels")
+        var root = rootInActiveWindow ?: run { cleanupAndFail("No active window"); return }
+        var waitMs = 0
+        while (root.childCount == 0 && waitMs < 2000) {
+            try { Thread.sleep(300) } catch (e: InterruptedException) { }
+            waitMs += 300
+            root = rootInActiveWindow ?: run { cleanupAndFail("No active window"); return }
         }
+        android.util.Log.d("WEARobotAccessibilityService", "clickByAnyLabel: tree ready after ${waitMs}ms wait")
 
-        for (label in labels) {
-            val node = findNodeByText(root, label.trim())
-            if (node != null) {
-                android.util.Log.d("WEARobotAccessibilityService", "Found match for label: '$label'")
+        var discoveredLabels = mutableListOf<String>()
+
+        for (pass in 0..3) {
+            discoveredLabels = mutableListOf()
+            collectAllLabels(root, discoveredLabels)
+            android.util.Log.d("WEARobotAccessibilityService", "clickByAnyLabel pass $pass: ${labels.size} labels, ${discoveredLabels.size} discovered")
+            if (discoveredLabels.isNotEmpty()) {
+                android.util.Log.d("WEARobotAccessibilityService", "Discovered: $discoveredLabels")
+            }
+
+            for (label in labels) {
+                val node = findNodeByText(root, label.trim()) ?: continue
+                android.util.Log.d("WEARobotAccessibilityService", "Found '$label' on pass $pass")
                 windowDepth++
                 clickNode(node)
                 return
             }
+
+            if (pass < 3) {
+                android.util.Log.d("WEARobotAccessibilityService", "clickByAnyLabel: not found on pass $pass, scrolling...")
+                val scrolled = root.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD) ||
+                    (findScrollableNode(root)?.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD) == true)
+                if (!scrolled) {
+                    android.util.Log.w("WEARobotAccessibilityService", "clickByAnyLabel: cannot scroll, stopping")
+                    break
+                }
+                try { Thread.sleep(600) } catch (e: InterruptedException) { }
+                root = rootInActiveWindow ?: break
+            }
         }
 
-        val errorMsg = "None of ${labels} found on screen. Discovered: $discoveredLabels"
+        val errorMsg = "None of $labels found on screen (${discoveredLabels.size} labels). Discovered: $discoveredLabels"
         android.util.Log.e("WEARobotAccessibilityService", errorMsg)
         cleanupAndFail(errorMsg)
     }
 
     private fun toggleByAnyLabel(labels: List<String>, targetState: Boolean) {
-        val root = rootInActiveWindow ?: return
+        var root = rootInActiveWindow ?: return
+        var discoveredLabels = mutableListOf<String>()
 
-        // Collect all discovered labels for debugging
-        val discoveredLabels = mutableListOf<String>()
-        collectAllLabels(root, discoveredLabels)
-
-        android.util.Log.d("WEARobotAccessibilityService", "toggleByAnyLabel: Looking for any of ${labels.size} labels. Discovered ${discoveredLabels.size} total labels on screen.")
-        if (discoveredLabels.isNotEmpty()) {
-            android.util.Log.d("WEARobotAccessibilityService", "All discovered labels: $discoveredLabels")
-        }
-
-        for (label in labels) {
-            val node = findNodeByText(root, label.trim()) ?: continue
-            android.util.Log.d("WEARobotAccessibilityService", "Found match for label: '$label'")
-
-            // Strategy 1: Search UP the parent chain for Switch/CheckBox ancestor
-            var switchAncestor = findToggleAncestor(node)
-
-            // Strategy 2: If not found in parents, search siblings of ancestors
-            // (Samsung Settings puts text in sibling container, switch in widget_frame sibling)
-            if (switchAncestor == null) {
-                switchAncestor = findToggleSibling(node)
+        for (pass in 0..2) {
+            discoveredLabels = mutableListOf()
+            collectAllLabels(root, discoveredLabels)
+            android.util.Log.d("WEARobotAccessibilityService", "toggleByAnyLabel pass $pass: ${labels.size} labels, ${discoveredLabels.size} discovered")
+            if (discoveredLabels.isNotEmpty()) {
+                android.util.Log.d("WEARobotAccessibilityService", "All discovered labels: $discoveredLabels")
             }
 
-            // Strategy 3: Direct click if node itself is a switch
-            if (switchAncestor == null && node.className?.toString()?.contains("Switch") == true) {
-                switchAncestor = node
+            for (label in labels) {
+                val node = findNodeByText(root, label.trim()) ?: continue
+                android.util.Log.d("WEARobotAccessibilityService", "Found match for label: '$label' on pass $pass")
+
+                var switchAncestor = findToggleAncestor(node)
+                if (switchAncestor == null) switchAncestor = findToggleSibling(node)
+                if (switchAncestor == null && node.className?.toString()?.contains("Switch") == true) {
+                    switchAncestor = node
+                }
+
+                if (switchAncestor != null) {
+                    android.util.Log.d("WEARobotAccessibilityService", "Found toggle, clicking for targetState=$targetState")
+                    clickNode(switchAncestor)
+                    try { Thread.sleep(300) } catch (e: InterruptedException) { }
+                    if (pendingSteps.isNotEmpty()) executeNextStep()
+                    else {
+                        state = RobotState.IDLE
+                        WEARobotAccessibilityService.cancelStateTimeout()
+                        onStepResult?.invoke(true, "Toggled successfully")
+                    }
+                    return
+                }
+
+                val desc = node.contentDescription?.toString() ?: ""
+                val isOn = desc.contains(",On,", ignoreCase = true)
+                val isOff = desc.contains(",Off,", ignoreCase = true)
+                android.util.Log.d("WEARobotAccessibilityService", "QS tile check: desc='$desc' isOn=$isOn isOff=$isOff")
+
+                if (isOn || isOff) {
+                    if ((isOn && !targetState) || (isOff && targetState)) {
+                        android.util.Log.d("WEARobotAccessibilityService", "Toggling QS tile: ${if (isOn) "ON" else "OFF"} → ${if (targetState) "ON" else "OFF"}")
+                        clickNode(node)
+                        try { Thread.sleep(200) } catch (e: InterruptedException) { }
+                    } else {
+                        android.util.Log.d("WEARobotAccessibilityService", "QS tile already in correct state")
+                    }
+                    if (pendingSteps.isNotEmpty()) executeNextStep()
+                    else {
+                        state = RobotState.IDLE
+                        WEARobotAccessibilityService.cancelStateTimeout()
+                        onStepResult?.invoke(true, "Toggled successfully")
+                    }
+                    return
+                }
             }
 
-            if (switchAncestor != null) {
-                android.util.Log.d("WEARobotAccessibilityService", "Found toggle, attempting to click for targetState=$targetState")
-
-                // Click regardless of current state - accessibility tree might be out of sync
-                // Samsung devices often show stale isChecked values
-                android.util.Log.d("WEARobotAccessibilityService", "Clicking toggle (current state may be stale)")
-                clickNode(switchAncestor)
-
-                // Wait for state change to propagate
-                try {
-                    Thread.sleep(300)
-                } catch (e: InterruptedException) {
-                    // Ignore
+            if (pass < 2) {
+                android.util.Log.d("WEARobotAccessibilityService", "toggleByAnyLabel: not found on pass $pass, scrolling...")
+                val scrolled = root.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD) ||
+                    (findScrollableNode(root)?.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD) == true)
+                if (!scrolled) {
+                    android.util.Log.w("WEARobotAccessibilityService", "toggleByAnyLabel: cannot scroll")
+                    break
                 }
-
-                if (pendingSteps.isNotEmpty()) {
-                    executeNextStep()
-                } else {
-                    state = RobotState.IDLE
-                    WEARobotAccessibilityService.cancelStateTimeout()
-                    onStepResult?.invoke(true, "Toggled successfully")
-                }
-                return
-            }
-
-            // Fall back to Quick Settings tile (ViewGroup with state in content-desc)
-            // QS content-desc format: "Airplane,mode,Off,Button" or "Airplane,mode,On,Button"
-            val desc = node.contentDescription?.toString() ?: ""
-            val isOn = desc.contains(",On,", ignoreCase = true)
-            val isOff = desc.contains(",Off,", ignoreCase = true)
-            val hasQSFormat = isOn || isOff
-
-            android.util.Log.d("WEARobotAccessibilityService", "Quick Settings tile check: desc='$desc' isOn=$isOn isOff=$isOff")
-
-            if (hasQSFormat) {
-                if ((isOn && !targetState) || (isOff && targetState)) {
-                    // State mismatch — click to toggle
-                    android.util.Log.d("WEARobotAccessibilityService", "Toggling Quick Settings tile from ${if (isOn) "ON" else "OFF"} to ${if (targetState) "ON" else "OFF"}")
-                    clickNode(node)
-                    Thread.sleep(200)
-                } else {
-                    android.util.Log.d("WEARobotAccessibilityService", "Quick Settings tile already in correct state")
-                }
-                if (pendingSteps.isNotEmpty()) {
-                    executeNextStep()
-                } else {
-                    state = RobotState.IDLE
-                    WEARobotAccessibilityService.cancelStateTimeout()
-                    onStepResult?.invoke(true, "Toggled successfully")
-                }
-                return
+                try { Thread.sleep(600) } catch (e: InterruptedException) { }
+                root = rootInActiveWindow ?: break
             }
         }
 
-        // Failed to find any label — log all discovered for user debugging
         val errorMsg = "Toggle not found for: $labels. Discovered on screen: $discoveredLabels"
         android.util.Log.e("WEARobotAccessibilityService", errorMsg)
         cleanupAndFail(errorMsg)
@@ -517,6 +522,20 @@ class WEARobotAccessibilityService : AccessibilityService() {
             if (result != null) return result
         }
 
+        return null
+    }
+
+    /** Find a scrollable container (ListView, ScrollView, etc.) in the tree */
+    private fun findScrollableNode(root: AccessibilityNodeInfo): AccessibilityNodeInfo? {
+        val queue = ArrayDeque<AccessibilityNodeInfo>()
+        queue.add(root)
+        while (queue.isNotEmpty()) {
+            val node = queue.removeFirst()
+            if (node.isScrollable) return node
+            for (i in 0 until node.childCount) {
+                queue.addLast(node.getChild(i) ?: continue)
+            }
+        }
         return null
     }
 
