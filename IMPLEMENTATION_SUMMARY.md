@@ -3,7 +3,7 @@
 ## Project Overview
 **Silent** is a React SPA for scheduling emergency alert silencing periods on Android devices.
 
-**Latest Version:** 1.0.102 (2026-05-17)
+**Latest Version:** 1.0.110 (2026-05-23)
 
 ---
 
@@ -31,6 +31,19 @@
 - Helps debug cross-device UI automation issues
 - Labels vary by device, language, and Samsung/stock Android differences
 - See [ROBOT_ACCESSIBILITY_SETUP.md](ROBOT_ACCESSIBILITY_SETUP.md) and [ADB_ACCESSIBILITY_TREE.md](ADB_ACCESSIBILITY_TREE.md)
+
+**Multi-Page Navigation with Scroll-Retry (v1.0.110+):**
+- **Problem Solved:** Robot automation failed when target UI was on second/third pages of scrollable containers (QS panels, Settings screens)
+- **Solution:** Implemented scroll-retry loops in `clickByAnyLabel()` and `toggleByAnyLabel()`
+- **Features:**
+  - `clickByAnyLabel()`: Empty-tree wait (0–2s) + 4-pass scroll-retry with 600ms delays
+  - `toggleByAnyLabel()`: 3-pass outer loop for scroll-retry with 600ms delays between passes
+  - `findScrollableNode()` helper finds next scrollable container via accessibility tree
+  - Detailed logging shows which pass element was found on
+- **Benefits:**
+  - Eliminates "element not found" failures for multi-page screens
+  - Configurable pass counts balance thoroughness vs. speed
+  - Handles WEA (Settings page extends beyond fold) and Airplane Mode (QS paginated panel)
 
 ---
 
@@ -88,6 +101,17 @@
 - Used for debugging robot automation and native Firebase auth
 - All logs stored in localStorage (max 500 entries)
 - Exportable as JSON from Logs page
+
+**Logs Page UI (v1.0.110+):**
+- **Search:** Real-time text search with yellow highlighting across message + metadata
+- **Level Filters:** Chips for all, error, failures, info, verbose, ultraverbose
+- **Sort Toggle:** Switch between newest (default) and oldest first
+- **Count Display:** "Showing X of Y" when filters active
+- **Index Column:** Row numbers (#) for easy log reference
+- **Components:**
+  - `src/pages/Logs/LogFilterBar.tsx` — Filter controls
+  - `src/pages/Logs/LogList.tsx` — Enhanced table with highlighting
+  - `src/pages/Logs/index.tsx` — Filter state + useMemo for `filteredLogs`
 
 ---
 

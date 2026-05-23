@@ -161,6 +161,8 @@ npm run build && npx cap sync android && cd android && ./gradlew assembleRelease
 - Language switcher: `src/components/LanguageSwitcher.tsx` (EN / עב button group in header)
 
 ## Logging
+
+### Log Levels & Configuration
 - **5 levels**: `none`, `error`, `info`, `verbose`, `ultraverbose`
   - `none` — no logging
   - `error` — errors only
@@ -169,12 +171,73 @@ npm run build && npx cap sync android && cd android && ./gradlew assembleRelease
   - `ultraverbose` — ultra-detailed APK debugging (native auth, robot automation)
 - Configured in Settings page
 - All logs stored in localStorage (max 500 entries)
-- Exportable as JSON from Logs page
 - **Ultraverbose logs** (v1.0.70+):
   - Capture every step of native Firebase auth in APK
   - Full Capacitor config dump for troubleshooting
   - Complete error objects with stack traces
   - Robot automation label discovery and matching logs
+
+### Logs Page UI (v1.0.110+)
+**New filtering, search, and sorting features** in the Logs page for easier navigation and analysis:
+
+**Components**:
+- `src/pages/Logs/LogFilterBar.tsx` — Filter controls (search, level chips, sort toggle, count)
+- `src/pages/Logs/LogList.tsx` — Enhanced table with search highlighting and index column
+- `src/pages/Logs/index.tsx` — Integrated filter state and computed `filteredLogs` via `useMemo`
+
+**Features**:
+1. **Search** (`searchTerm` state)
+   - Real-time text search across log message and metadata
+   - Matches highlighted in yellow with `<mark>` tag
+   - Searches both message text and JSON-stringified metadata
+   - Case-insensitive matching
+
+2. **Level Filtering** (`levelFilter` state)
+   - Quick filter chips: `all`, `error`, `failures`, `info`, `verbose`, `ultraverbose`
+   - Failures filter: `error` level + regex match for "failed|FAILED|failure"
+   - Only one level filter active at a time
+
+3. **Sort Order** (`sortOrder` state)
+   - `newest` (default): Sort by timestamp descending (most recent first)
+   - `oldest`: Sort by timestamp ascending
+   - Toggle via SwapVert icon button
+
+4. **Count Display**
+   - Shows "Showing X of Y" when any filter is active
+   - Helps users understand how much was filtered out
+
+5. **Index Column**
+   - Row numbers (#) in log table for easy reference
+   - Helps users discuss specific log entries
+
+**Computed State**:
+```tsx
+const filteredLogs = useMemo(() => {
+  // Filter by levelFilter (all/error/failures/info/verbose/ultraverbose)
+  // Filter by searchTerm (message + metadata)
+  // Sort by timestamp + sortOrder
+  // Returns filtered and sorted array
+}, [logs, searchTerm, levelFilter, sortOrder]);
+```
+
+**Styling**:
+- Search highlight: `backgroundColor: '#FFD700'` (yellow) with black text
+- Level chips: MUI color variants (error=red, warning=orange, info=blue, success=green, default=gray)
+- Filter bar spacing: `mb={2}` (margin bottom)
+- Count text: caption variant, secondary color, displayed below chips when active
+
+**Translations** (added in v1.0.110):
+- `logs.searchPlaceholder` — "Search logs..."
+- `logs.sortNewest` — "Newest first"
+- `logs.sortOldest` — "Oldest first"
+- `logs.showing` — "Showing {{filtered}} of {{total}}"
+- `logs.filter_*` — Level labels (all, error, failures, info, verbose, ultraverbose)
+- Both English and Hebrew translations included in `src/i18n/`
+
+**Export & Selection**:
+- Selection checkboxes still work independently of filters
+- Export and delete operations work on selected logs (not filtered subset)
+- Refresh button reloads logs from store and clears filters
 
 ## Email & Version Services
 ### EmailJS Config
@@ -521,3 +584,23 @@ See [APK_INSTALLATION.md](APK_INSTALLATION.md) for detailed instructions on:
 - **Solution**: Extract accessibility labels directly from device using ADB uiautomator dump
 - **Fix**: Verified "Airplane mode" label via XML accessibility dump; documented label variants and extraction process
 - **Documentation**: See [AIRPLANE_MODE_LABEL_DISCOVERY.md](AIRPLANE_MODE_LABEL_DISCOVERY.md)
+
+#### Issue 9: Multi-Page UI Navigation Failures (v1.0.110)
+- **Problem**: Robot automation failed when target UI elements were on second/third pages of scrollable containers
+  - WEA silencing: Settings page extends beyond initial view; "Safety & Emergency" ~5 items below fold
+  - Airplane mode: QS panel is paginated; airplane mode tile on page 2 of 3-page panel
+- **Symptoms**: 
+  - Airplane mode: "Airplane,mode toggle not found" even though tile exists on page 2
+  - WEA: "Safety & Emergency not found" after 2 scroll attempts
+  - Both: automation fails 100% of time when element requires scroll-down to reach
+- **Solution**: Implement scroll-retry loops in accessibility service with configurable pass counts
+- **Fix**: 
+  - `clickByAnyLabel()`: Added empty-tree wait loop (0–2s with 300ms intervals) to ensure page loads, then 4-pass scroll-retry loop (600ms sleep between scrolls)
+  - `toggleByAnyLabel()`: Wrapped entire label search in 3-pass outer loop, with ACTION_SCROLL_FORWARD + 600ms delay between passes
+  - Both functions log discovered labels for each pass, aiding future debugging
+- **Benefits**:
+  - Eliminates element-not-found failures for multi-page screens
+  - Configurable pass count (4 for click, 3 for toggle) balances thoroughness vs. speed
+  - Empty-tree wait prevents premature search on still-loading pages
+  - Detailed logging shows which pass the element was found on
+- **Files Modified**: `android/app/src/main/java/com/ikrigel/silent/WEARobotAccessibilityService.kt`
