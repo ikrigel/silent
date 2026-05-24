@@ -232,13 +232,38 @@ class WEARobotAccessibilityService : AccessibilityService() {
             }
 
             if (pass < 6) {
-                android.util.Log.d("WEARobotAccessibilityService", "clickByAnyLabel: not found on pass $pass, scrolling...")
-                val scrolled = root.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD) ||
-                    (findScrollableNode(root)?.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD) == true)
+                android.util.Log.d("WEARobotAccessibilityService",
+                    "clickByAnyLabel pass $pass: label not found, attempting scroll...")
+
+                val scrollableNode = findScrollableNode(root)
+                android.util.Log.d("WEARobotAccessibilityService",
+                    "scrollableNode: ${scrollableNode != null}, class=${scrollableNode?.className}")
+
+                // Attempt 1: SCROLL_FORWARD on root
+                var scrolled = root.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)
+                android.util.Log.d("WEARobotAccessibilityService",
+                    "pass $pass: root.SCROLL_FORWARD=$scrolled")
+
+                // Attempt 2: SCROLL_FORWARD on scrollable node
+                if (!scrolled && scrollableNode != null) {
+                    scrolled = scrollableNode.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)
+                    android.util.Log.d("WEARobotAccessibilityService",
+                        "pass $pass: node.SCROLL_FORWARD=$scrolled")
+                }
+
+                // Attempt 3: SCROLL_BACKWARD on scrollable node (horizontal pagination)
+                if (!scrolled && scrollableNode != null) {
+                    scrolled = scrollableNode.performAction(AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD)
+                    android.util.Log.d("WEARobotAccessibilityService",
+                        "pass $pass: node.SCROLL_BACKWARD (horizontal)=$scrolled")
+                }
+
                 if (!scrolled) {
-                    android.util.Log.w("WEARobotAccessibilityService", "clickByAnyLabel: cannot scroll, stopping")
+                    android.util.Log.w("WEARobotAccessibilityService",
+                        "clickByAnyLabel pass $pass: all scroll attempts failed, stopping")
                     break
                 }
+
                 try { Thread.sleep(600) } catch (e: InterruptedException) { }
                 root = rootInActiveWindow ?: break
             }
@@ -308,13 +333,38 @@ class WEARobotAccessibilityService : AccessibilityService() {
             }
 
             if (pass < 6) {
-                android.util.Log.d("WEARobotAccessibilityService", "toggleByAnyLabel: not found on pass $pass, scrolling...")
-                val scrolled = root.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD) ||
-                    (findScrollableNode(root)?.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD) == true)
+                android.util.Log.d("WEARobotAccessibilityService",
+                    "toggleByAnyLabel pass $pass: label not found, attempting scroll...")
+
+                val scrollableNode = findScrollableNode(root)
+                android.util.Log.d("WEARobotAccessibilityService",
+                    "scrollableNode: ${scrollableNode != null}, class=${scrollableNode?.className}")
+
+                // Attempt 1: SCROLL_FORWARD on root
+                var scrolled = root.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)
+                android.util.Log.d("WEARobotAccessibilityService",
+                    "pass $pass: root.SCROLL_FORWARD=$scrolled")
+
+                // Attempt 2: SCROLL_FORWARD on scrollable node
+                if (!scrolled && scrollableNode != null) {
+                    scrolled = scrollableNode.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)
+                    android.util.Log.d("WEARobotAccessibilityService",
+                        "pass $pass: node.SCROLL_FORWARD=$scrolled")
+                }
+
+                // Attempt 3: SCROLL_BACKWARD on scrollable node (horizontal pagination)
+                if (!scrolled && scrollableNode != null) {
+                    scrolled = scrollableNode.performAction(AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD)
+                    android.util.Log.d("WEARobotAccessibilityService",
+                        "pass $pass: node.SCROLL_BACKWARD (horizontal)=$scrolled")
+                }
+
                 if (!scrolled) {
-                    android.util.Log.w("WEARobotAccessibilityService", "toggleByAnyLabel: cannot scroll")
+                    android.util.Log.w("WEARobotAccessibilityService",
+                        "toggleByAnyLabel pass $pass: all scroll attempts failed, stopping")
                     break
                 }
+
                 try { Thread.sleep(600) } catch (e: InterruptedException) { }
                 root = rootInActiveWindow ?: break
             }
