@@ -170,9 +170,9 @@ test.describe('Logs', () => {
     await page.reload();
     await page.waitForTimeout(300);
 
-    await expect(page.getByText(/Info entry|Info/)).toBeVisible();
-    await expect(page.getByText(/Error entry|Error/)).toBeVisible();
-    await expect(page.getByText(/Verbose entry|Verbose/)).toBeVisible();
+    await expect(page.getByText('Info entry')).toBeVisible();
+    await expect(page.getByText('Error entry')).toBeVisible();
+    await expect(page.getByText('Verbose entry')).toBeVisible();
   });
 
   test('can select all logs and clear them', async ({ page }) => {
