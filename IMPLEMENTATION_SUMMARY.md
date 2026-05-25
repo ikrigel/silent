@@ -3,7 +3,7 @@
 ## Project Overview
 **Silent** is a React SPA for scheduling emergency alert silencing periods on Android devices.
 
-**Latest Version:** 1.0.110 (2026-05-23)
+**Latest Version:** 1.0.113 (2026-05-25)
 
 ---
 
@@ -32,18 +32,23 @@
 - Labels vary by device, language, and Samsung/stock Android differences
 - See [ROBOT_ACCESSIBILITY_SETUP.md](ROBOT_ACCESSIBILITY_SETUP.md) and [ADB_ACCESSIBILITY_TREE.md](ADB_ACCESSIBILITY_TREE.md)
 
-**Multi-Page Navigation with Scroll-Retry (v1.0.110+):**
+**Multi-Page Navigation with Scroll-Retry (v1.0.110+, Enhanced v1.0.112+):**
 - **Problem Solved:** Robot automation failed when target UI was on second/third pages of scrollable containers (QS panels, Settings screens)
-- **Solution:** Implemented scroll-retry loops in `clickByAnyLabel()` and `toggleByAnyLabel()`
+- **Solution v1.0.110:** Implemented scroll-retry loops in `clickByAnyLabel()` and `toggleByAnyLabel()` with vertical scrolling
+- **Solution v1.0.112:** Added 3-scroll strategy for horizontal pagination:
+  1. Try ACTION_SCROLL_FORWARD on root (vertical)
+  2. Try ACTION_SCROLL_FORWARD on scrollable node (vertical)
+  3. Try ACTION_SCROLL_BACKWARD on scrollable node (horizontal pagination to next page)
 - **Features:**
-  - `clickByAnyLabel()`: Empty-tree wait (0–2s) + 4-pass scroll-retry with 600ms delays
-  - `toggleByAnyLabel()`: 3-pass outer loop for scroll-retry with 600ms delays between passes
+  - `clickByAnyLabel()`: Empty-tree wait (0–2s) + 7-pass scroll-retry with 3-scroll strategy
+  - `toggleByAnyLabel()`: 7-pass outer loop with 3-scroll strategy and 600ms delays between passes
   - `findScrollableNode()` helper finds next scrollable container via accessibility tree
-  - Detailed logging shows which pass element was found on
+  - Detailed logging shows scroll results and which pass element was found on
 - **Benefits:**
+  - Handles horizontally-paginated QS panels (Samsung Quick Settings pages 1-3)
   - Eliminates "element not found" failures for multi-page screens
-  - Configurable pass counts balance thoroughness vs. speed
-  - Handles WEA (Settings page extends beyond fold) and Airplane Mode (QS paginated panel)
+  - Configurable pass counts (7) balance thoroughness vs. speed
+  - Supports both vertical and horizontal pagination on same device
 
 ---
 
