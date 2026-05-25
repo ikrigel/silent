@@ -58,6 +58,7 @@ const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, 
   const repeatMode = watch('repeatMode');
   const useAirplaneMode = watch('useAirplaneMode');
   const robotRecordingId = watch('robotRecordingId');
+  const silenceWEAOnStart = watch('silenceWEAOnStart');
 
   // Re-sync form values when dialog opens or entry changes
   useEffect(() => {
@@ -215,7 +216,7 @@ const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, 
                 </Box>
               </Grid>
             )}
-            {robotService.isAndroid() && (robotRecordingId || useAirplaneMode) && (
+            {robotService.isAndroid() && (robotRecordingId || useAirplaneMode || silenceWEAOnStart) && (
               <Grid item xs={12}>
                 <Controller name="unsilenceWEAOnEnd" control={control}
                   render={({ field }) => (
@@ -227,7 +228,7 @@ const SchedulerForm: React.FC<SchedulerFormProps> = ({ open, initial, onSubmit, 
                 />
               </Grid>
             )}
-            {robotService.isAndroid() && (useAirplaneMode || robotRecordingId) && (
+            {robotService.isAndroid() && (useAirplaneMode || robotRecordingId || silenceWEAOnStart) && (
               <Grid item xs={12}>
                 <Controller name="restoreOnEnd" control={control}
                   render={({ field }) => (
