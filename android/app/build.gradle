@@ -1,3 +1,5 @@
+import java.nio.file.Files
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
@@ -60,6 +62,22 @@ android {
     // Kotlin compiler options
     kotlinOptions {
         jvmTarget = "21"
+    }
+}
+
+// Copy versioned APK to generic app-release.apk for easy automation access
+task copyReleaseApk {
+    dependsOn 'assembleRelease'
+    doLast {
+        def releaseDir = new File("${projectDir}/build/outputs/apk/release")
+        def versionedApk = new File(releaseDir, "app-release-${android.defaultConfig.versionName}.apk")
+        def genericApk = new File(releaseDir, "app-release.apk")
+
+        if (versionedApk.exists()) {
+            Files.copy(versionedApk.toPath(), genericApk.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+            logger.info("Created: ${genericApk.absolutePath}")
+            logger.info("Created: ${versionedApk.absolutePath}")
+        }
     }
 }
 
