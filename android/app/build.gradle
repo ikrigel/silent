@@ -43,6 +43,15 @@ android {
         }
     }
 
+    // Rename APK output to include version name: app-release-1.0.113.apk
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            if (variant.buildType.name == 'release') {
+                outputFileName = "app-release-${android.defaultConfig.versionName}.apk"
+            }
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_21
         targetCompatibility JavaVersion.VERSION_21
